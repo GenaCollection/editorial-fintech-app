@@ -5,7 +5,7 @@ import { t } from '../i18n/labels'
 export default function Sidebar({ language }) {
   const location = useLocation()
   const base = 'flex items-center px-4 py-3 mx-2 rounded-xl transition-all duration-200 hover:translate-x-1'
-  const active = base + ' text-primary dark:text-blue-400 bg-primary-fixed/60 dark:bg-blue-900/30 font-semibold'
+  const active = base + ' text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 font-semibold'
   const inactive = base + ' text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
   const cls = (path) => location.pathname === path ? active : inactive
 
@@ -13,12 +13,16 @@ export default function Sidebar({ language }) {
     <aside className="hidden lg:flex flex-col py-6 h-[calc(100vh-5rem)] w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 sticky top-20 shrink-0">
       <div className="px-6 mb-8">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-blue-700 flex items-center justify-center">
             <span className="material-symbols-outlined text-white text-xl">account_balance</span>
           </div>
           <div>
-            <div className="text-sm font-bold text-on-surface dark:text-slate-100">{t(language, 'sidebar', 'planner')}</div>
-            <div className="text-[10px] text-on-surface-variant dark:text-slate-500 uppercase tracking-widest">{t(language, 'sidebar', 'access')}</div>
+            <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
+              {t(language, 'sidebar', 'planner')}
+            </div>
+            <div className="text-[10px] text-slate-400 uppercase tracking-widest">
+              {t(language, 'sidebar', 'access')}
+            </div>
           </div>
         </div>
       </div>
@@ -43,7 +47,7 @@ export default function Sidebar({ language }) {
       </nav>
 
       <div className="px-6 py-4">
-        <button className="w-full py-3 bg-primary text-on-primary rounded-xl font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20">
+        <button className="w-full py-3 bg-blue-700 text-white rounded-xl font-bold text-sm hover:bg-blue-800 active:scale-95 transition-all shadow-lg shadow-blue-700/20">
           {t(language, 'sidebar', 'apply')}
         </button>
       </div>
