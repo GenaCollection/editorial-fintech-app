@@ -1,46 +1,50 @@
 # Editorial Fintech — Loan Planning Suite
 
-Multi-language (AM / RU / EN) loan calculator web application built with React 18, React Router 6, and Tailwind CSS.
+Multi-language (AM / RU / EN) loan calculator web application.
+Built with React 18, React Router 6, Tailwind CSS (Material Design 3 tokens).
+
+## Live features
+
+- ✅ Annuity loan calculator with real-time sliders + editable number inputs
+- ✅ Global state via React Context (LoanContext) — calculator state shared across all pages
+- ✅ Full amortization schedule generation (all N months, paginated)
+- ✅ Extra/early payments — add any extra amount to any month, see impact immediately
+- ✅ Savings Forecast with real SVG chart (balance curve vs original)
+- ✅ Early Repayment Intelligence page with scenario comparison table
+- ✅ Dark mode toggle (persists in session)
+- ✅ Mobile hamburger menu with drawer
+- ✅ Mobile FAB navigates to schedule page
+- ✅ Active link highlighting in Sidebar
+- ✅ Print / PDF via browser print dialog (nav/sidebar hidden in print CSS)
+- ✅ Input validation (min/max guards on all numeric fields)
+- ✅ Full i18n AM / RU / EN on all pages
+- ✅ Loan breakdown bar (Principal vs Interest %)
 
 ## Project Structure
 
 ```
 editorial-fintech-app/
-├── index.html                  # Entry point
-├── src/
-│   ├── tailwind.config.js      # Tailwind theme (Material Design 3 tokens)
-│   ├── styles/
-│   │   └── global.css          # Global styles
-│   ├── i18n/
-│   │   └── labels.js           # All translation strings (AM/RU/EN)
-│   ├── hooks/
-│   │   └── useLoanCalculator.js # Annuity calculation logic
-│   ├── components/
-│   │   ├── Navigation.jsx      # Top nav with language switcher
-│   │   ├── Sidebar.jsx         # Left sidebar (desktop only)
-│   │   └── Footer.jsx          # Footer with links
-│   └── pages/
-│       ├── CalculatorPage.jsx  # Main calculator page
-│       ├── SchedulePage.jsx    # Payment schedule page
-│       └── EarlyPage.jsx       # Early repayment info page
+├── index.html
+└── src/
+    ├── tailwind.config.js
+    ├── styles/global.css
+    ├── i18n/labels.js              ← All translations
+    ├── context/LoanContext.js      ← Global state + amortization engine
+    ├── hooks/useLoanCalculator.js
+    ├── components/
+    │   ├── Navigation.jsx          ← Dark mode, mobile menu
+    │   ├── Sidebar.jsx             ← Active link highlight
+    │   └── Footer.jsx
+    └── pages/
+        ├── CalculatorPage.jsx      ← Sliders + breakdown bar + preview table
+        ├── SchedulePage.jsx        ← Full table + pagination + extra payments
+        └── EarlyPage.jsx           ← Scenarios + KPI cards
 ```
 
-## Known Issues / TODO
+## Next steps (roadmap)
 
-- [ ] `SchedulePage`: amortization table uses **hardcoded mock data** — needs real calculation from calculator state
-- [ ] Calculator state is **not shared** between pages (no global context/store)
-- [ ] `EarlyPage` labels are **partially hardcoded** (not using i18n helper)
-- [ ] Mobile navigation (hamburger menu) is missing
-- [ ] Dark mode toggle button is missing
-- [ ] PDF download button has no implementation
-- [ ] `Savings Forecast` on SchedulePage shows static values
-- [ ] No input validation on loan amount / rate / term fields
-
-## Roadmap
-
-1. Add React Context for global loan state sharing between pages
-2. Implement real amortization table generation
-3. Add mobile bottom navigation
-4. Add dark mode toggle
-5. Add PDF export (jsPDF or print CSS)
-6. Migrate to Vite + React project for production build & Vercel deploy
+- [ ] Migrate to Vite + React (for production build & Vercel deploy)
+- [ ] jsPDF export for proper PDF generation
+- [ ] Differential payment type (alongside annuity)
+- [ ] Save calculations to localStorage
+- [ ] Comparison mode: compare two loan scenarios side by side
