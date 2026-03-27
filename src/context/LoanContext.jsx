@@ -33,15 +33,6 @@ export const generateAmortization = (amount, rate, term, extraPayments = []) => 
 export const LoanProvider = ({ children }) => {
   const [loanState, setLoanState] = useState({ amount: 5000000, rate: 12, term: 24 })
   const [extraPayments, setExtraPayments] = useState([])
-  const [theme, setTheme] = useState('light')
-
-  const toggleTheme = () => {
-    setTheme(prev => {
-      const next = prev === 'light' ? 'dark' : 'light'
-      document.documentElement.className = next
-      return next
-    })
-  }
 
   const { schedule, monthlyPayment } = useMemo(
     () => generateAmortization(loanState.amount, loanState.rate, loanState.term, extraPayments),
@@ -54,11 +45,18 @@ export const LoanProvider = ({ children }) => {
   )
 
   const addExtraPayment = (month, amount) => {
-    setExtraPayments(prev => [...prev.filter(ep => ep.month !== month), { month: Number(month), amount: Number(amount) }])
+    setExtraPayments(prev => [
+      ...prev.filter(ep => ep.month !== Number(month)),
+      { month: Number(month), amount: Number(amount) }
+    ])
   }
 
   return (
-    <LoanContext.Provider value={{ loanState, setLoanState, schedule, monthlyPayment, totalInterest, extraPayments, addExtraPayment, theme, toggleTheme }}>
+    <LoanContext.Provider value={{
+      loanState, setLoanState,
+      schedule, monthlyPayment, totalInterest,
+      extraPayments, addExtraPayment
+    }}>
       {children}
     </LoanContext.Provider>
   )

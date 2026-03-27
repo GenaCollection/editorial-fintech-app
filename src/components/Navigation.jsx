@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useLoan } from '../context/LoanContext'
 import { t } from '../i18n/labels'
 
-export default function Navigation({ language, setLanguage }) {
+export default function Navigation({ language, setLanguage, theme, toggleTheme }) {
   const location = useLocation()
-  const { theme, toggleTheme } = useLoan()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const linkCls = (path) =>
@@ -36,28 +34,43 @@ export default function Navigation({ language, setLanguage }) {
         </div>
 
         <div className="flex items-center gap-2 md:gap-3">
-          <div className="flex items-center gap-1 bg-surface-container-low dark:bg-slate-800 p-1 rounded-lg">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
             {['AM','RU','EN'].map(lang => (
               <button key={lang} onClick={() => setLanguage(lang)}
                 className={`px-2 py-1 text-[10px] font-bold rounded transition-colors ${
                   language === lang
-                    ? 'bg-primary text-on-primary'
-                    : 'text-on-surface-variant dark:text-slate-400 hover:bg-surface-container-high dark:hover:bg-slate-700'
+                    ? 'bg-blue-700 text-white'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                 }`}>{lang}</button>
             ))}
           </div>
-          <button onClick={toggleTheme}
-            className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-            {theme === 'light' ? 'dark_mode' : 'light_mode'}
+
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400 text-xl"
+            aria-label="Toggle theme"
+          >
+            {theme === 'light' ? '🌙' : '☀️'}
           </button>
-          <button className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">notifications</button>
-          <button className="material-symbols-outlined text-on-surface-variant dark:text-slate-400 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">account_circle</button>
-          <button className="hidden md:block bg-primary text-on-primary px-5 py-2.5 rounded-xl font-headline font-bold hover:brightness-110 active:scale-95 transition-all">
+
+          <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span className="material-symbols-outlined text-slate-500 dark:text-slate-400" style={{fontSize:'22px'}}>notifications</span>
+          </button>
+          <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span className="material-symbols-outlined text-slate-500 dark:text-slate-400" style={{fontSize:'22px'}}>account_circle</span>
+          </button>
+
+          <button className="hidden md:block bg-blue-700 text-white px-5 py-2.5 rounded-xl font-headline font-bold hover:bg-blue-800 active:scale-95 transition-all">
             {t(language, 'navigation', 'apply')}
           </button>
-          <button onClick={() => setMobileOpen(v => !v)}
-            className="md:hidden material-symbols-outlined text-on-surface-variant dark:text-slate-300 p-2">
-            {mobileOpen ? 'close' : 'menu'}
+
+          <button
+            onClick={() => setMobileOpen(v => !v)}
+            className="md:hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <span className="material-symbols-outlined text-slate-600 dark:text-slate-300" style={{fontSize:'22px'}}>
+              {mobileOpen ? 'close' : 'menu'}
+            </span>
           </button>
         </div>
       </nav>
@@ -66,11 +79,17 @@ export default function Navigation({ language, setLanguage }) {
         <div className="fixed inset-0 z-40 md:hidden">
           <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
           <div className="absolute top-20 left-0 right-0 bg-white dark:bg-slate-900 shadow-2xl">
-            <Link to="/" className={mobileLinkCls('/')} onClick={() => setMobileOpen(false)}>{t(language, 'navigation', 'calculator')}</Link>
-            <Link to="/schedule" className={mobileLinkCls('/schedule')} onClick={() => setMobileOpen(false)}>{t(language, 'navigation', 'schedule')}</Link>
-            <Link to="/early" className={mobileLinkCls('/early')} onClick={() => setMobileOpen(false)}>{t(language, 'navigation', 'earlyInfo')}</Link>
+            <Link to="/" className={mobileLinkCls('/')} onClick={() => setMobileOpen(false)}>
+              {t(language, 'navigation', 'calculator')}
+            </Link>
+            <Link to="/schedule" className={mobileLinkCls('/schedule')} onClick={() => setMobileOpen(false)}>
+              {t(language, 'navigation', 'schedule')}
+            </Link>
+            <Link to="/early" className={mobileLinkCls('/early')} onClick={() => setMobileOpen(false)}>
+              {t(language, 'navigation', 'earlyInfo')}
+            </Link>
             <div className="px-6 py-4">
-              <button className="w-full bg-primary text-on-primary py-3 rounded-xl font-headline font-bold">
+              <button className="w-full bg-blue-700 text-white py-3 rounded-xl font-headline font-bold">
                 {t(language, 'navigation', 'apply')}
               </button>
             </div>
