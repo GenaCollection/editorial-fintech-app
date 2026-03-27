@@ -2,79 +2,79 @@ var L = {
   brand: { AM: 'ArmFinCredit', RU: 'ArmFinCredit', EN: 'ArmFinCredit' },
 
   nav: {
-    calc:    { AM: '\u0540\u0561\u0577\u057e\u056b\u0579', RU: '\u041a\u0430\u043b\u044c\u043a\u0443\u043b\u044f\u0442\u043e\u0440', EN: 'Calculator' },
-    sched:   { AM: '\u054e\u0579. \u053a\u0561\u0574.',    RU: '\u0413\u0440\u0430\u0444\u0438\u043a',                              EN: 'Schedule' },
-    early:   { AM: '\u054e\u0561\u0572. \u0544\u0561\u0580.', RU: '\u0414\u043e\u0441\u0440. \u043f\u043e\u0563.',                 EN: 'Early Repayment' },
-    apply:   { AM: '\u0564\u056b\u0574\u0565\u056c',        RU: '\u041f\u043e\u0434\u0430\u0442\u044c \u0437\u0430\u044f\u0432\u043a\u0443', EN: 'Apply Now' }
+    calc:    { AM: 'Հաշվիչ',           RU: 'Калькулятор',    EN: 'Calculator' },
+    sched:   { AM: 'Վճ. Ժամ.',         RU: 'График',         EN: 'Schedule' },
+    early:   { AM: 'Վաղ. Մար.',        RU: 'Досроч. пог.',   EN: 'Early Repayment' },
+    apply:   { AM: 'Դիմել',            RU: 'Подать заявку',  EN: 'Apply Now' }
   },
 
   sidebar: {
-    planner:  { AM: '\u054e\u0561\u0580\u056f\u056b \u054a\u056c\u0561\u0576.', RU: '\u041f\u043b\u0430\u043d\u0438\u0440\u043e\u0432\u0449\u0438\u043a', EN: 'Loan Planner' },
-    inst:     { AM: '\u053b\u0576\u057d\u057f. \u0544\u0578\u0582\u057f\u0584', RU: '\u0418\u043d\u0441\u0442\u0438\u0442\u0443\u0446.',               EN: 'Institutional' },
-    newCalc:  { AM: '\u0546\u0578\u0580 \u0540\u0561\u0577\u057e.',             RU: '\u041d\u043e\u0432\u044b\u0439 \u0440\u0430\u0441\u0447\u0435\u0442', EN: 'New Calculation' },
-    saved:    { AM: '\u054a\u0561\u0570\u057e\u0561\u056e',                     RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u043d\u043e\u0435',  EN: 'Saved' },
-    settings: { AM: '\u053f\u0561\u0580\u0563.',                               RU: '\u041d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438',             EN: 'Settings' },
-    help:     { AM: '\u0555\u0563\u0576\u0578\u0582\u0569.',                   RU: '\u041f\u043e\u043c\u043e\u0449\u044c',                             EN: 'Help' },
-    newApp:   { AM: '\u0546\u0578\u0580 \u0540\u0561\u0575\u057f',             RU: '\u041d\u043e\u0432\u0430\u044f \u0437\u0430\u044f\u0432\u043a\u0430',  EN: 'New Application' }
+    planner:  { AM: 'Վարկի Պլան.',     RU: 'Планировщик',    EN: 'Loan Planner' },
+    inst:     { AM: 'Ինստ. Մութք',     RU: 'Институц.',      EN: 'Institutional' },
+    newCalc:  { AM: 'Նոր Հաշվ.',       RU: 'Новый расчет',   EN: 'New Calculation' },
+    saved:    { AM: 'Պահված',          RU: 'Сохраненное',    EN: 'Saved' },
+    settings: { AM: 'Կարգ.',           RU: 'Настройки',      EN: 'Settings' },
+    help:     { AM: 'Օգնութ.',         RU: 'Помощь',         EN: 'Help' },
+    newApp:   { AM: 'Նոր Հայտ',        RU: 'Новая заявка',   EN: 'New Application' }
   },
 
   calc: {
-    title:     { AM: '\u054e\u0561\u0580\u056f\u0561\u0575\u056b\u0576 \u0540\u0561\u0577\u057e\u056b\u0579', RU: '\u041a\u0440\u0435\u0434\u0438\u0442\u043d\u044b\u0439 \u043a\u0430\u043b\u044c\u043a\u0443\u043b\u044f\u0442\u043e\u0440', EN: 'Loan Calculator' },
-    desc:      { AM: '\u054d\u0561\u0570\u0574\u0561\u0576\u0565\u0584 \u057e\u0561\u0580\u056f\u056b \u057a\u0561\u0580\u0561\u0574\u0565\u057f\u0580\u0587\u0580\u0568', RU: '\u0417\u0430\u0434\u0430\u0439\u0442\u0435 \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043a\u0440\u0435\u0434\u0438\u0442\u0430', EN: 'Configure your loan parameters.' },
-    params:    { AM: '\u054e\u0561\u0580\u056f\u056b \u054a\u0561\u0580\u0561\u0574.',  RU: '\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b',         EN: 'Loan Parameters' },
-    amount:    { AM: '\u054e\u0561\u0580\u056f\u056b \u0533\u0578\u0582\u0574\u0561\u0580', RU: '\u0421\u0443\u043c\u043c\u0430 \u043a\u0440\u0435\u0434\u0438\u0442\u0430', EN: 'Loan Amount' },
-    rate:      { AM: '\u054f\u0578\u056f\u0578\u057d\u0561\u0564\u0580\u0578\u0582\u0575\u0584', RU: '\u041f\u0440\u043e\u0446\u0435\u043d\u0442\u043d\u0430\u044f \u0441\u0442\u0430\u0432\u043a\u0430', EN: 'Interest Rate' },
-    term:      { AM: '\u056a\u0561\u0574\u056f\u0565\u057f',              RU: '\u0421\u0440\u043e\u043a',        EN: 'Loan Term' },
-    months:    { AM: '\u0561\u0574\u056b\u057d',                         RU: '\u043c\u0565\u0441.',             EN: 'mos.' },
-    monthly:   { AM: '\u0531\u0574\u057d\u056f\u0561\u0576 \u054e\u0579\u0561\u0580', RU: '\u0415\u0436\u0435\u043c\u0435\u0441. \u043f\u043b\u0430\u0442\u0435\u0436', EN: 'Monthly Payment' },
-    totalInt:  { AM: '\u0538\u0576\u0564\u0570. \u054f\u0578\u056f\u0578\u057d', RU: '\u0421\u0443\u043c\u043c\u0430 \u043f\u0440\u043e\u0446\u0435\u043d\u0442\u043e\u0432', EN: 'Total Interest' },
-    total:     { AM: '\u0538\u0576\u0564\u0570\u0561\u0576\u0578\u0582\u0580', RU: '\u0418\u0442\u043e\u0433\u043e',  EN: 'Total' },
-    preview:   { AM: '\u056f\u0561\u0576\u056a\u0576\u0561\u056f',         RU: '\u041f\u0440\u0435\u0434\u043f\u0440\u043e\u0441\u043c\u043e\u0442\u0440', EN: 'Preview' },
-    viewFull:  { AM: '\u057f\u0565\u057d\u0576\u0565\u056c \u056a\u0561\u0574.', RU: '\u041f\u043e\u043b\u043d\u044b\u0439 \u0433\u0440\u0430\u0444\u0438\u043a', EN: 'View Full Schedule' },
-    print:     { AM: '\u054f\u057a\u0561\u0563\u0565\u056c',               RU: '\u041f\u0435\u0447\u0430\u0442\u044c',   EN: 'Print / PDF' },
-    breakd:    { AM: '\u0532\u0561\u0577\u056f\u0561\u056f\u0578\u0582\u0569\u0575\u0578\u0582\u0576', RU: '\u0421\u0442\u0440\u0443\u043a\u0442\u0443\u0440\u0430', EN: 'Breakdown' },
-    principal: { AM: '\u0531\u057d\u056c.',                               RU: '\u041e\u0441\u043d. \u0434\u043e\u043b\u0433', EN: 'Principal' }
+    title:     { AM: 'Վարկային Հաշվիչ',         RU: 'Кредитный калькулятор', EN: 'Loan Calculator' },
+    desc:      { AM: 'Սահմանեք վարկի պարամ.',   RU: 'Задайте параметры кредита', EN: 'Configure your loan parameters.' },
+    params:    { AM: 'Վարկի Պարամ.',             RU: 'Параметры',          EN: 'Loan Parameters' },
+    amount:    { AM: 'Վարկի Գումար',             RU: 'Сумма кредита',      EN: 'Loan Amount' },
+    rate:      { AM: 'Տոկոսադրույք',             RU: 'Процентная ставка',  EN: 'Interest Rate' },
+    term:      { AM: 'Ժամկետ',                  RU: 'Срок',               EN: 'Loan Term' },
+    months:    { AM: 'ամիս',                    RU: 'мес.',               EN: 'mos.' },
+    monthly:   { AM: 'Ամսական Վճար',             RU: 'Ежемес. платеж',     EN: 'Monthly Payment' },
+    totalInt:  { AM: 'Ընդհ. Տոկոս',             RU: 'Сумма процентов',    EN: 'Total Interest' },
+    total:     { AM: 'Ընդհանուր',               RU: 'Итого',              EN: 'Total' },
+    preview:   { AM: 'Կանխնայկ',               RU: 'Предпросмотр',        EN: 'Preview' },
+    viewFull:  { AM: 'Տեսնել Ժամ.',             RU: 'Полный график',       EN: 'View Full Schedule' },
+    print:     { AM: 'Տպագել',                  RU: 'Печать',             EN: 'Print / PDF' },
+    breakd:    { AM: 'Բաշխակություն',            RU: 'Структура',          EN: 'Breakdown' },
+    principal: { AM: 'Ասլ.',                    RU: 'Осн. долг',          EN: 'Principal' }
   },
 
   sched: {
-    title:     { AM: '\u054e\u0579. \u056a\u0561\u0574\u0561\u0576\u0561\u056f.', RU: '\u0413\u0440\u0430\u0444\u0438\u043a \u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439', EN: 'Payment Schedule' },
-    desc:      { AM: '\u0531\u0574\u0578\u0580\u057f. \u056a\u0561\u0574.', RU: '\u0410\u043c\u043e\u0440\u0442\u0438\u0437\u0430\u0446\u0438\u044f', EN: 'Amortization timeline.' },
-    addEarly:  { AM: '\u0531\u057e\u0565\u056c\u0561\u056c \u054e\u0561\u0572.', RU: '\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0434\u043e\u0441\u0440.', EN: 'Add Early Payment' },
-    month:     { AM: '\u0531\u0574\u056b\u057d',                 RU: '\u041c\u0435\u057d\u044f\u0446',    EN: 'Month' },
-    amount:    { AM: '\u0533\u0578\u0582\u0574\u0561\u0580',     RU: '\u0421\u0443\u043c\u043c\u0561',    EN: 'Amount' },
-    apply:     { AM: '\u053f\u056b\u0580\u0561\u057c\u0565\u056c', RU: '\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c', EN: 'Apply' },
-    saved:     { AM: '\u053c\u0580\u0561\u0581.',                 RU: '\u0421\u044d\u043a\u043e\u043d.',   EN: 'Mo. Saved' },
-    intSaved:  { AM: '\u054f\u0578\u056f. \u053c\u0580\u0561\u0581.', RU: '\u0422\u043e\u043a. \u0441\u044b\u043d.', EN: 'Int. Saved' },
-    payment:   { AM: '\u054e\u0579\u0561\u0580',                  RU: '\u041f\u043b\u0561\u0442\u0435\u0436', EN: 'Payment' },
-    principal: { AM: '\u0531\u057d\u056c.',                       RU: '\u041e\u0441\u043d.',               EN: 'Principal' },
-    interest:  { AM: '\u054f\u0578\u056f.',                       RU: '\u041f\u0440\u043e\u0446.',         EN: 'Interest' },
-    balance:   { AM: '\u0544\u0576\u0561\u0581.',                 RU: '\u041e\u0441\u0442\u0430\u0442\u043e\u043a', EN: 'Balance' },
-    prev:      { AM: '\u0531\u057c\u0561\u056b',                  RU: '\u041d\u0430\u0437\u0430\u0564',    EN: 'Prev' },
-    next:      { AM: '\u0540\u0561\u057b\u0578\u0580\u0564',      RU: '\u0414\u0430\u043b\u0435\u0435',    EN: 'Next' },
-    page:      { AM: '\u0535\u0565\u056f.',                       RU: '\u0421\u0442\u0440.',               EN: 'Page' },
-    table:     { AM: '\u0531\u056c\u0575\u0578\u0582\u057d\u056f', RU: '\u0422\u0430\u0431\u043b\u0438\u0446\u0430', EN: 'Table' },
-    forecast:  { AM: '\u056f\u0561\u0576\u056�\u0561\u0569\u056f\u0561\u0576', RU: '\u041f\u0440\u043e\u0433\u043d\u043e\u0437', EN: 'Forecast' }
+    title:     { AM: 'Վճ. Ժամանակ.',            RU: 'График платежей',    EN: 'Payment Schedule' },
+    desc:      { AM: 'Աmorт. Ժամ.',             RU: 'Амортизация',        EN: 'Amortization timeline.' },
+    addEarly:  { AM: 'Ավելալ Վաղ.',             RU: 'Добавить досроч.',   EN: 'Add Early Payment' },
+    month:     { AM: 'Ամիս',                   RU: 'Месяц',              EN: 'Month' },
+    amount:    { AM: 'Գումար',                 RU: 'Сумма',              EN: 'Amount' },
+    apply:     { AM: 'Կիրառել',                RU: 'Применить',          EN: 'Apply' },
+    saved:     { AM: 'Լրաց.',                  RU: 'Сэкон.',             EN: 'Mo. Saved' },
+    intSaved:  { AM: 'Տոկ. Լրաց.',             RU: 'Ток. сын.',          EN: 'Int. Saved' },
+    payment:   { AM: 'Վճար',                   RU: 'Платеж',             EN: 'Payment' },
+    principal: { AM: 'Ասլ.',                    RU: 'Осн.',               EN: 'Principal' },
+    interest:  { AM: 'Տոկ.',                    RU: 'Проц.',              EN: 'Interest' },
+    balance:   { AM: 'Մնաց.',                   RU: 'Остаток',            EN: 'Balance' },
+    prev:      { AM: 'Առاջ',                   RU: 'Назад',              EN: 'Prev' },
+    next:      { AM: 'Հաджорд',                RU: 'Далее',              EN: 'Next' },
+    page:      { AM: 'Եջ.',                     RU: 'Стр.',               EN: 'Page' },
+    table:     { AM: 'Ալյուск',                 RU: 'Таблица',            EN: 'Table' },
+    forecast:  { AM: 'Կանխատեսական',            RU: 'Прогноз',            EN: 'Forecast' }
   },
 
   early: {
-    title:     { AM: '\u054e\u0561\u0572. \u0544\u0561\u0580\u0578\u0582\u0574', RU: '\u0414\u043e\u0441\u0440. \u043f\u043e\u0433\u0430\u0448\u0435\u043d\u0438\u0435', EN: 'Early Repayment' },
-    desc:      { AM: '\u054c\u056f\u057d\u0565\u0584 \u053b\u0576\u056c\u056c \u054e\u0561\u0572.', RU: '\u0413\u0434\u0435 \u0432\u044b\u0438\u0433\u0440\u044b\u0432\u0430\u0435\u0442\u0435', EN: 'See where early payments win.' },
-    extra:     { AM: '\u0531\u057e\u0565\u056c.',                RU: '\u0414\u043e\u043f.',               EN: 'Extra / mo.' },
-    newTerm:   { AM: '\u0546\u0578\u0580 \u056a\u0561\u0574\u056f.', RU: '\u041d\u043e\u0432\u044b\u0439 \u0441\u0440\u043e\u043a', EN: 'New Term' },
-    reduction: { AM: '\u056f\u0580\u0579.',                       RU: '\u0421\u043e\u056f\u0440.',         EN: 'Reduction' },
-    intSaved:  { AM: '\u054f\u0578\u056f. \u053c\u0580.',         RU: '\u0415\u043a\u043e\u043d. \u0442\u043e\u043a.', EN: 'Int. Saved' },
-    scenarios: { AM: '\u054d\u0581\u0565\u0576\u0561\u0580.',     RU: '\u0421\u0446\u0435\u043d\u0430\u0440\u0438\u0438', EN: 'Scenarios' },
-    loanAmt:   { AM: '\u054e\u0561\u0580\u056f\u056b \u0533\u0578\u0582\u0574\u0561\u0580', RU: '\u0421\u0443\u043c\u043c\u0430', EN: 'Loan Amount' },
-    monthly:   { AM: '\u0531\u0574\u057d\u056f\u0561\u0576',      RU: '\u0415\u0436\u0435\u043c\u0435\u057d.', EN: 'Monthly' },
-    interest:  { AM: '\u054f\u0578\u056f\u0578\u057d',            RU: '\u041f\u0440\u043e\u0446.',         EN: 'Interest' },
-    totalMo:   { AM: '\u056a\u0561\u0574.',                       RU: '\u041c\u0565\u057d.',               EN: 'Months' }
+    title:     { AM: 'Վաղ. Մարում',             RU: 'Досроч. погашение',  EN: 'Early Repayment' },
+    desc:      { AM: 'Ռկսեք Վաղ.',              RU: 'Где выигрываете',    EN: 'See where early payments win.' },
+    extra:     { AM: 'Ավել.',                   RU: 'Доп.',               EN: 'Extra / mo.' },
+    newTerm:   { AM: 'Նոր Ժամկ.',               RU: 'Новый срок',         EN: 'New Term' },
+    reduction: { AM: 'կrч.',                    RU: 'Сокр.',              EN: 'Reduction' },
+    intSaved:  { AM: 'Տոկ. Լр.',               RU: 'Экон. ток.',         EN: 'Int. Saved' },
+    scenarios: { AM: 'Սцен.',                   RU: 'Сценарии',           EN: 'Scenarios' },
+    loanAmt:   { AM: 'Վارки Гумар',             RU: 'Сумма',              EN: 'Loan Amount' },
+    monthly:   { AM: 'Амскаyн',                 RU: 'Ежемес.',            EN: 'Monthly' },
+    interest:  { AM: 'Тoкos',                   RU: 'Проц.',              EN: 'Interest' },
+    totalMo:   { AM: 'Жам.',                    RU: 'Мес.',               EN: 'Months' }
   },
 
   footer: {
     rights:  { AM: '2024 ArmFinCredit.', RU: '2024 ArmFinCredit.', EN: '2024 ArmFinCredit. All rights reserved.' },
-    privacy: { AM: '\u0533\u0561\u0572\u057f.', RU: '\u041a\u043e\u043d\u0444\u0438\u0434.', EN: 'Privacy' },
-    terms:   { AM: '\u054a\u0561\u0575\u0574.', RU: '\u0423\u057d\u056c\u043e\u057e.',       EN: 'Terms' },
-    support: { AM: '\u0531\u056b\u056f.',       RU: '\u041f\u043e\u0564\u0434.',              EN: 'Support' }
+    privacy: { AM: 'Գաղտ.',  RU: 'Конфид.', EN: 'Privacy' },
+    terms:   { AM: 'Պայм.',  RU: 'Условия', EN: 'Terms' },
+    support: { AM: 'Աջկ.',  RU: 'Подд.',   EN: 'Support' }
   }
 }
 
