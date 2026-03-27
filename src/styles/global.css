@@ -1,8 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
 }
+
 .glass-effect {
-    backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
-.no-scrollbar::-webkit-scrollbar { display: none; }
-body { font-family: 'Inter', sans-serif; }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+@media print {
+  nav, aside, footer, .no-print { display: none !important; }
+  body { background: white !important; }
+  main { padding-top: 0 !important; }
+}
