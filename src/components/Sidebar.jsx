@@ -1,61 +1,44 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { t } from '../i18n/labels'
 
-export default function Sidebar({ language }) {
+export default function Sidebar() {
   const location = useLocation()
-  const base = 'flex items-center px-4 py-3 mx-2 rounded-xl transition-all duration-200 hover:translate-x-1'
+  const base = 'flex items-center px-4 py-3 mx-2 rounded-xl transition-all text-sm font-medium'
   const active = base + ' text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 font-semibold'
   const inactive = base + ' text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
   const cls = (path) => location.pathname === path ? active : inactive
 
   return (
-    <aside className="hidden lg:flex flex-col py-6 h-[calc(100vh-5rem)] w-64 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 sticky top-20 shrink-0">
-      <div className="px-6 mb-8">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-blue-700 flex items-center justify-center">
-            <span className="material-symbols-outlined text-white text-xl">account_balance</span>
-          </div>
-          <div>
-            <div className="text-sm font-bold text-slate-900 dark:text-slate-100">
-              {t(language, 'sidebar', 'planner')}
-            </div>
-            <div className="text-[10px] text-slate-400 uppercase tracking-widest">
-              {t(language, 'sidebar', 'access')}
-            </div>
-          </div>
+    <aside className="hidden lg:flex flex-col py-6 w-60 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 sticky top-16 h-[calc(100vh-4rem)] shrink-0">
+      <div className="px-6 mb-8 flex items-center gap-3">
+        <div className="w-9 h-9 rounded-xl bg-blue-700 flex items-center justify-center">
+          <span className="material-symbols-outlined text-white" style={{fontSize:'18px'}}>account_balance</span>
+        </div>
+        <div>
+          <div className="text-sm font-bold text-slate-900 dark:text-slate-100">Loan Planner</div>
+          <div className="text-[10px] text-slate-400 uppercase tracking-widest">Institutional</div>
         </div>
       </div>
-
-      <nav className="flex-1 space-y-1">
+      <nav className="flex-1 space-y-0.5">
         <Link to="/" className={cls('/')}>
-          <span className="material-symbols-outlined mr-3 text-xl">add_chart</span>
-          <span className="text-sm font-medium">{t(language, 'sidebar', 'newCalc')}</span>
+          <span className="material-symbols-outlined mr-3" style={{fontSize:'18px'}}>add_chart</span>New Calculation
         </Link>
         <Link to="/schedule" className={cls('/schedule')}>
-          <span className="material-symbols-outlined mr-3 text-xl">calendar_month</span>
-          <span className="text-sm font-medium">{t(language, 'sidebar', 'history')}</span>
+          <span className="material-symbols-outlined mr-3" style={{fontSize:'18px'}}>calendar_month</span>Payment Schedule
         </Link>
         <a href="#" className={inactive}>
-          <span className="material-symbols-outlined mr-3 text-xl">bookmark</span>
-          <span className="text-sm font-medium">{t(language, 'sidebar', 'saved')}</span>
+          <span className="material-symbols-outlined mr-3" style={{fontSize:'18px'}}>bookmark</span>Saved Estimates
         </a>
         <a href="#" className={inactive}>
-          <span className="material-symbols-outlined mr-3 text-xl">settings</span>
-          <span className="text-sm font-medium">{t(language, 'sidebar', 'settings')}</span>
+          <span className="material-symbols-outlined mr-3" style={{fontSize:'18px'}}>settings</span>Settings
         </a>
       </nav>
-
       <div className="px-6 py-4">
-        <button className="w-full py-3 bg-blue-700 text-white rounded-xl font-bold text-sm hover:bg-blue-800 active:scale-95 transition-all shadow-lg shadow-blue-700/20">
-          {t(language, 'sidebar', 'apply')}
-        </button>
+        <button className="w-full py-3 bg-blue-700 text-white rounded-xl font-bold text-sm hover:bg-blue-800">New Application</button>
       </div>
-
-      <div className="border-t border-slate-200 dark:border-slate-800 pt-4">
-        <a className={inactive} href="#">
-          <span className="material-symbols-outlined mr-3 text-xl">help</span>
-          <span className="text-sm font-medium">{t(language, 'sidebar', 'help')}</span>
+      <div className="border-t border-slate-200 dark:border-slate-800 pt-2">
+        <a href="#" className={inactive}>
+          <span className="material-symbols-outlined mr-3" style={{fontSize:'18px'}}>help</span>Help Center
         </a>
       </div>
     </aside>

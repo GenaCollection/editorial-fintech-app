@@ -22,23 +22,15 @@ export default function App() {
   return (
     <LoanProvider>
       <BrowserRouter>
-        <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
-          <Navigation
-            language={language}
-            setLanguage={setLanguage}
-            theme={theme}
-            toggleTheme={toggleTheme}
-          />
+        <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
+          <Navigation language={language} setLanguage={setLanguage} theme={theme} toggleTheme={toggleTheme} />
           <Routes>
-            <Route path="/" element={<CalculatorPage language={language} />} />
-            <Route path="/schedule" element={<SchedulePage language={language} />} />
-            <Route path="/early" element={<EarlyPage language={language} />} />
+            <Route path="/" element={<CalculatorPage />} />
+            <Route path="/schedule" element={<SchedulePage />} />
+            <Route path="/early" element={<EarlyPage />} />
           </Routes>
-          <Footer language={language} />
-          <Link
-            to="/schedule"
-            className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform z-40"
-          >
+          <Footer />
+          <Link to="/schedule" className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center z-40">
             <span className="material-symbols-outlined">calendar_month</span>
           </Link>
         </div>
