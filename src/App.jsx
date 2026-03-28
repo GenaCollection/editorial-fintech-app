@@ -7,6 +7,8 @@ import Footer from './components/Footer.jsx'
 import CalculatorPage from './pages/CalculatorPage.jsx'
 import SchedulePage from './pages/SchedulePage.jsx'
 import EarlyPage from './pages/EarlyPage.jsx'
+import PrivacyPage from './pages/PrivacyPage.jsx'
+import TermsPage from './pages/TermsPage.jsx'
 
 export default function App() {
   return (
@@ -40,6 +42,8 @@ function AppInner() {
         <Route path="/" element={<CalculatorPage />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/early" element={<EarlyPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
       </Routes>
       <Footer />
       <Link
