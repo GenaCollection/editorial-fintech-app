@@ -7,7 +7,7 @@ import { t } from '../i18n/labels.js'
 
 var SYM = '\u058f'
 
-// ── Pie chart (SVG, no deps) ──────────────────────────────────────────────────────────
+// ── Pie chart (SVG, no deps) ──────────────────────────────────────────────────
 function PieChart(props) {
   var principal = props.principal || 0
   var interest = props.interest || 0
@@ -52,7 +52,7 @@ function PieChart(props) {
   )
 }
 
-// ── Save modal ──────────────────────────────────────────────────────────────────
+// ── Save modal ────────────────────────────────────────────────────────────────
 function SaveModal(props) {
   var onSave = props.onSave
   var onClose = props.onClose
@@ -61,9 +61,9 @@ function SaveModal(props) {
   var name = nameArr[0]; var setName = nameArr[1]
 
   var lbl = {
-    title:       { AM: '\u054a\u0561\u0570\u057e\u0565\u056c \u0540\u0561\u0577\u057e\u0561\u0580\u056f\u0568', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0440\u0430\u0441\u0447\u0451\u0442', EN: 'Save Calculation' },
-    nameLbl:     { AM: '\u0531\u576\u0578ւն\u056f', RU: '\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435', EN: 'Name' },
-    placeholder: { AM: '\u0555\u0563.\u0562. \u053b\u0576 \u0562\u0576\u0561\u056f\u0561ր\u056b \u057e\u0561\u0580\u056f', RU: '\u041d\u0430\u043f\u0440., \u0418\u043f\u043e\u0442\u0565\u043a\u0430 2026', EN: 'e.g. Home Loan 2026' },
+    title:       { AM: '\u054a\u0561\u0570\u057e\u0565\u056c \u0540\u0561\u0577\u057e\u0561\u0580\u056f\u0568', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0440\u0561\u0441\u0447\u0451\u0442', EN: 'Save Calculation' },
+    nameLbl:     { AM: '\u0531\u576\u0578\u0578\u0582\u0576\u056f', RU: '\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435', EN: 'Name' },
+    placeholder: { AM: '\u0555\u0563.\u0562. \u053c\u0580\u0561\u056f\u056b \u057e\u0561\u0580\u056f 2026', RU: '\u041d\u0430\u043f\u0440., \u0418\u043f\u043e\u0442\u0435\u043a\u0430 2026', EN: 'e.g. Home Loan 2026' },
     save:        { AM: '\u054a\u0561\u0570\u057e\u0565\u056c', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c', EN: 'Save' },
     cancel:      { AM: '\u0531\u056c\u056c\u0565\u056c', RU: '\u041e\u0442\u043c\u0435\u043d\u0430', EN: 'Cancel' }
   }
@@ -212,11 +212,11 @@ function EarlyPanel(props) {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-5">
             <div className="text-xs font-bold text-slate-400 uppercase mb-1">{t(lang,'early','moSaved')}</div>
-            <div className="text-3xl font-extrabold text-emerald-600">{monthsSaved > 0 ? monthsSaved : '—'}</div>
+            <div className="text-3xl font-extrabold text-emerald-600">{monthsSaved > 0 ? monthsSaved : '\u2014'}</div>
           </div>
           <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-5">
             <div className="text-xs font-bold text-slate-400 uppercase mb-1">{t(lang,'early','intSavedLbl')}</div>
-            <div className="text-2xl font-extrabold text-blue-700">{interestSaved > 0 ? (SYM + Math.round(interestSaved).toLocaleString()) : '—'}</div>
+            <div className="text-2xl font-extrabold text-blue-700">{interestSaved > 0 ? (SYM + Math.round(interestSaved).toLocaleString()) : '\u2014'}</div>
           </div>
         </div>
       )}
@@ -272,8 +272,8 @@ function EarlyPanel(props) {
                   <tr key={i} className="border-t border-slate-50 dark:border-slate-800 hover:bg-blue-50/20">
                     <td className="px-4 py-3 font-bold">{SYM}{sc.extra.toLocaleString()}</td>
                     <td className="px-4 py-3 text-right text-slate-500">{sc.months}</td>
-                    <td className="px-4 py-3 text-right">{sc.monthsSaved > 0 ? <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 font-bold px-2 py-0.5 rounded text-xs">-{sc.monthsSaved}</span> : <span className="text-slate-300">—</span>}</td>
-                    <td className="px-4 py-3 text-right font-bold text-emerald-600">{sc.saved > 0 ? (SYM + Math.round(sc.saved).toLocaleString()) : '—'}</td>
+                    <td className="px-4 py-3 text-right">{sc.monthsSaved > 0 ? <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-700 font-bold px-2 py-0.5 rounded text-xs">-{sc.monthsSaved}</span> : <span className="text-slate-300">\u2014</span>}</td>
+                    <td className="px-4 py-3 text-right font-bold text-emerald-600">{sc.saved > 0 ? (SYM + Math.round(sc.saved).toLocaleString()) : '\u2014'}</td>
                   </tr>
                 )
               })}
@@ -402,15 +402,14 @@ export default function CalculatorPage() {
   }
 
   var totalPay = totalPayment || (monthlyPayment * term)
-  var pct = totalPay > 0 ? Math.round((amount / totalPay) * 100) : 50
   var isDiff = loanState.loanType === 'differentiated'
   var firstPayment = schedule.length > 0 ? schedule[0].payment : monthlyPayment
   var lastPayment  = schedule.length > 0 ? schedule[schedule.length - 1].payment : monthlyPayment
   var tabs = [{ key: 'params', icon: 'tune' }, { key: 'early', icon: 'rocket_launch' }, { key: 'advanced', icon: 'settings' }]
 
   var saveLbl = {
-    save: { AM: '\u054a\u0561\u0570\u057e\u0565\u056c', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c', EN: 'Save' },
-    share: { AM: '\u056f\u056b\u057d\u0561\u057c\u0565\u056c', RU: '\u041f\u043e\u0434\u0435\u043b\u0438\u0442\u044c\u057d\u044f', EN: 'Share' },
+    save:   { AM: '\u054a\u0561\u0570\u057e\u0565\u056c', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c', EN: 'Save' },
+    share:  { AM: '\u056f\u056b\u057d\u0561\u057c\u0565\u056c', RU: '\u041f\u043e\u0434\u0435\u043b\u0438\u0442\u044c\u0441\u044f', EN: 'Share' },
     copied: { AM: '\u054a\u0561\u057f\u056c\u057e\u0561\u056e!', RU: '\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e!', EN: 'Copied!' }
   }
   function sl(k) { return (saveLbl[k] && (saveLbl[k][lang] || saveLbl[k]['EN'])) || k }
@@ -425,13 +424,11 @@ export default function CalculatorPage() {
           <p className="text-lg text-slate-500 dark:text-slate-400">{t(lang,'calc','desc')}</p>
         </div>
         <div className="flex gap-2">
-          {/* Save button */}
           <button onClick={function() { setShowSave(true) }}
             className="flex items-center gap-2 px-4 py-2.5 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-400 rounded-xl text-sm font-bold hover:bg-blue-100 transition-all">
             <span className="material-symbols-outlined" style={{fontSize:'18px'}}>bookmark_add</span>
             {sl('save')}
           </button>
-          {/* Share button */}
           <button onClick={handleShare}
             className={'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ' +
               (copied
