@@ -61,11 +61,11 @@ function SaveModal(props) {
   var name = nameArr[0]; var setName = nameArr[1]
 
   var lbl = {
-    title:       { AM: '\u054a\u0561\u0570\u057e\u0565\u056c \u0540\u0561\u0577\u057e\u0561\u0580\u056f\u0568', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0440\u0561\u0441\u0447\u0451\u0442', EN: 'Save Calculation' },
-    nameLbl:     { AM: '\u0531\u576\u0578\u0578\u0582\u0576\u056f', RU: '\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435', EN: 'Name' },
-    placeholder: { AM: '\u0555\u0563.\u0562. \u053c\u0580\u0561\u056f\u056b \u057e\u0561\u0580\u056f 2026', RU: '\u041d\u0430\u043f\u0440., \u0418\u043f\u043e\u0442\u0435\u043a\u0430 2026', EN: 'e.g. Home Loan 2026' },
-    save:        { AM: '\u054a\u0561\u0570\u057e\u0565\u056c', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c', EN: 'Save' },
-    cancel:      { AM: '\u0531\u056c\u056c\u0565\u056c', RU: '\u041e\u0442\u043c\u0435\u043d\u0430', EN: 'Cancel' }
+    title:       { AM: 'Պahvel Հաշvark', RU: 'Сохранить расчёт', EN: 'Save Calculation' },
+    nameLbl:     { AM: 'Անուն', RU: 'Название', EN: 'Name' },
+    placeholder: { AM: 'Օր. Բն. Վarк 2026', RU: 'Напр., Ипотека 2026', EN: 'e.g. Home Loan 2026' },
+    save:        { AM: 'Պahvel', RU: 'Сохранить', EN: 'Save' },
+    cancel:      { AM: 'Allel', RU: 'Отмена', EN: 'Cancel' }
   }
   function lb(key) { return (lbl[key] && (lbl[key][lang] || lbl[key]['EN'])) || key }
 
@@ -408,9 +408,9 @@ export default function CalculatorPage() {
   var tabs = [{ key: 'params', icon: 'tune' }, { key: 'early', icon: 'rocket_launch' }, { key: 'advanced', icon: 'settings' }]
 
   var saveLbl = {
-    save:   { AM: '\u054a\u0561\u0570\u057e\u0565\u056c', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c', EN: 'Save' },
-    share:  { AM: '\u056f\u056b\u057d\u0561\u057c\u0565\u056c', RU: '\u041f\u043e\u0434\u0435\u043b\u0438\u0442\u044c\u0441\u044f', EN: 'Share' },
-    copied: { AM: '\u054a\u0561\u057f\u056c\u057e\u0561\u056e!', RU: '\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e!', EN: 'Copied!' }
+    save:   { AM: 'Պahvel', RU: 'Сохранить', EN: 'Save' },
+    share:  { AM: 'Կիsarc', RU: 'Поделиться', EN: 'Share' },
+    copied: { AM: 'Պатlvah!', RU: 'Скопировано!', EN: 'Copied!' }
   }
   function sl(k) { return (saveLbl[k] && (saveLbl[k][lang] || saveLbl[k]['EN'])) || k }
 
