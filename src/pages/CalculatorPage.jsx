@@ -1,10 +1,59 @@
-import React, { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useMemo, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useLoan, generateAmortization } from '../context/LoanContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 
 var SYM = '\u058f'
+
+// ── Pie chart (SVG, no deps) ──────────────────────────────────────────────────────────
+function PieChart(props) {
+  var principal = props.principal || 0
+  var interest = props.interest || 0
+  var lang = props.lang
+  var total = principal + interest
+  if (total <= 0) return null
+  var pctP = principal / total
+  var pctI = interest / total
+  var r = 56
+  var cx = 70; var cy = 70
+  // SVG arc helper
+  function arc(pct, startAngle) {
+    var angle = pct * 2 * Math.PI
+    var endAngle = startAngle + angle
+    var x1 = cx + r * Math.sin(startAngle)
+    var y1 = cy - r * Math.cos(startAngle)
+    var x2 = cx + r * Math.sin(endAngle)
+    var y2 = cy - r * Math.cos(endAngle)
+    var large = angle > Math.PI ? 1 : 0
+    return 'M ' + cx + ' ' + cy + ' L ' + x1 + ' ' + y1 + ' A ' + r + ' ' + r + ' 0 ' + large + ' 1 ' + x2 + ' ' + y2 + ' Z'
+  }
+  var pLabel = Math.round(pctP * 100) + '%'
+  var iLabel = Math.round(pctI * 100) + '%'
+  return (
+    <div className="flex items-center gap-5">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <path d={arc(pctP, 0)} fill="#1d4ed8" />
+        <path d={arc(pctI, pctP * 2 * Math.PI)} fill="#10b981" />
+        <circle cx={cx} cy={cy} r="32" fill="white" className="dark:fill-slate-900" />
+        <text x={cx} y={cy - 4} textAnchor="middle" fontSize="11" fontWeight="bold" fill="#1d4ed8">{pLabel}</text>
+        <text x={cx} y={cy + 10} textAnchor="middle" fontSize="9" fill="#64748b">{iLabel}</text>
+      </svg>
+      <div className="space-y-2 text-sm">
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-blue-700 inline-block"></span>
+          <span className="text-slate-600 dark:text-slate-300">{t(lang,'calc','principal')}</span>
+          <span className="font-bold text-slate-900 dark:text-white ml-auto">{pLabel}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+          <span className="text-slate-600 dark:text-slate-300">{t(lang,'calc','interest')}</span>
+          <span className="font-bold text-slate-900 dark:text-white ml-auto">{iLabel}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 // ── Reusable dual-input (slider + number field) ───────────────────────────────
 function DualInput(props) {
@@ -67,8 +116,8 @@ function LoanTypeToggle(props) {
   var onChange = props.onChange
   var lang = props.lang
   var types = [
-    { key: 'annuity',        label: function(l) { return t(l, 'calc', 'annuity') } },
-    { key: 'differentiated', label: function(l) { return t(l, 'calc', 'diff') } }
+    { key: 'annuity',        label: function(l) { return t(l,'calc','annuity') } },
+    { key: 'differentiated', label: function(l) { return t(l,'calc','diff') } }
   ]
   return (
     <div className="flex bg-slate-100 dark:bg-slate-800 rounded-xl p-1 gap-1 mb-6">
@@ -135,8 +184,7 @@ function EarlyPanel(props) {
       var res = generateAmortization(loanState.amount, loanState.rate, loanState.term, eps, loanState.loanType)
       var interest = 0; for (var j = 0; j < res.schedule.length; j++) interest += res.schedule[j].interest
       return {
-        extra: extra,
-        months: res.schedule.length,
+        extra: extra, months: res.schedule.length,
         monthsSaved: baseComputed.months > res.schedule.length ? baseComputed.months - res.schedule.length : 0,
         saved: baseComputed.interest > interest ? baseComputed.interest - interest : 0
       }
@@ -166,7 +214,6 @@ function EarlyPanel(props) {
           </div>
         </div>
       )}
-
       <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5">
         <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{t(lang,'early','addEarly')}</div>
         <div className="grid grid-cols-2 gap-3 mb-3">
@@ -189,7 +236,6 @@ function EarlyPanel(props) {
           {t(lang,'early','addPayment')}
         </button>
       </div>
-
       {extraPayments.length > 0 && (
         <div className="space-y-2">
           {extraPayments.map(function(ep) {
@@ -206,7 +252,6 @@ function EarlyPanel(props) {
           })}
         </div>
       )}
-
       <div>
         <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">{t(lang,'early','extraHdr')}</div>
         <div className="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-800">
@@ -283,14 +328,12 @@ function AdvancedPanel(props) {
           <p className="text-xs text-slate-400 mt-2">{t(lang,'adv','insNote')}</p>
         </div>
       </div>
-
       <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5">
         <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">{t(lang,'adv','startDate')}</label>
         <input type="month" value={loanState.startDate}
           onChange={function(e) { set('startDate')(e.target.value) }}
           className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 font-bold text-slate-900 dark:text-white outline-none focus:border-blue-400" />
       </div>
-
       <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-5 text-sm text-amber-800 dark:text-amber-200">
         <span className="font-bold">&#9432;</span>{' '}{t(lang,'adv','aprNote')}
       </div>
@@ -310,10 +353,38 @@ export default function CalculatorPage() {
   var apr = ctx.apr
   var navigate = useNavigate()
   var lang = useLanguage().language
+  var searchParamsArr = useSearchParams()
+  var searchParams = searchParamsArr[0]
+
+  // ─ E: Restore state from URL params on mount ──────────────────────────────
+  useEffect(function() {
+    var a = Number(searchParams.get('amount'))
+    var r = Number(searchParams.get('rate'))
+    var m = Number(searchParams.get('term'))
+    var tp = searchParams.get('type')
+    if (a > 0 || r > 0 || m > 0) {
+      setLoanState(function(prev) {
+        return {
+          amount:    a > 0 ? Math.min(100000000, Math.max(100000, a)) : prev.amount,
+          rate:      r > 0 ? Math.min(50, Math.max(0.1, r))           : prev.rate,
+          term:      m > 0 ? Math.min(360, Math.max(1, m))            : prev.term,
+          loanType:  tp === 'differentiated' ? 'differentiated'       : prev.loanType,
+          fee:       prev.fee,
+          insurance: prev.insurance,
+          startDate: prev.startDate
+        }
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   var tabArr = useState('params')
   var activeTab = tabArr[0]
   var setTab = tabArr[1]
+
+  var copiedArr = useState(false)
+  var copied = copiedArr[0]
+  var setCopied = copiedArr[1]
 
   var amount = loanState.amount
   var rate = loanState.rate
@@ -326,6 +397,21 @@ export default function CalculatorPage() {
         var n = { amount: prev.amount, rate: prev.rate, term: prev.term, loanType: prev.loanType, fee: prev.fee, insurance: prev.insurance, startDate: prev.startDate }
         n[key] = v; return n
       })
+    }
+  }
+
+  // ─ E: Copy share link ────────────────────────────────────────────────────
+  function handleShare() {
+    var url = window.location.origin + '/?amount=' + amount + '&rate=' + rate + '&term=' + term + '&type=' + loanState.loanType
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function() {
+        setCopied(true)
+        setTimeout(function() { setCopied(false) }, 2000)
+      })
+    } else {
+      var el = document.createElement('textarea')
+      el.value = url; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el)
+      setCopied(true); setTimeout(function() { setCopied(false) }, 2000)
     }
   }
 
@@ -344,16 +430,28 @@ export default function CalculatorPage() {
 
   return (
     <main className="flex-1 px-4 md:px-10 pt-20 pb-16 max-w-7xl mx-auto w-full">
-      <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-2">
-          {t(lang,'calc','title')}
-        </h1>
-        <p className="text-lg text-slate-500 dark:text-slate-400">{t(lang,'calc','desc')}</p>
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-2">
+            {t(lang,'calc','title')}
+          </h1>
+          <p className="text-lg text-slate-500 dark:text-slate-400">{t(lang,'calc','desc')}</p>
+        </div>
+        {/* E: Share button */}
+        <button onClick={handleShare}
+          className={'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ' +
+            (copied
+              ? 'bg-emerald-50 border-emerald-300 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-700 dark:text-emerald-400'
+              : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-blue-400 hover:text-blue-700')}>
+          <span className="material-symbols-outlined" style={{fontSize:'18px'}}>{copied ? 'check_circle' : 'share'}</span>
+          {copied
+            ? (lang === 'RU' ? 'Скопировано!' : lang === 'AM' ? 'Պատլվածալ է!' : 'Copied!')
+            : (lang === 'RU' ? 'Поделитьսя' : lang === 'AM' ? 'կիսառել' : 'Share')}
+        </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-5 space-y-4">
-
           <div className="flex bg-slate-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
             {tabs.map(function(tb) {
               return (
@@ -382,28 +480,19 @@ export default function CalculatorPage() {
                 }}
                 lang={lang}
               />
-              <DualInput
-                label={t(lang,'calc','amount')}
-                value={amount} min={100000} max={100000000} step={100000}
+              <DualInput label={t(lang,'calc','amount')} value={amount} min={100000} max={100000000} step={100000}
                 onChange={set('amount',100000,100000000)}
                 format={function(v) { return SYM + v.toLocaleString() }}
-                minLabel={SYM+'100K'} maxLabel={SYM+'100M'}
-              />
-              <DualInput
-                label={t(lang,'calc','rate')}
-                value={rate} min={1} max={50} step={0.5}
+                minLabel={SYM+'100K'} maxLabel={SYM+'100M'} />
+              <DualInput label={t(lang,'calc','rate')} value={rate} min={1} max={50} step={0.5}
                 onChange={set('rate',0.1,50)}
                 format={function(v) { return v }}
-                suffix="%" minLabel="1%" maxLabel="50%"
-              />
-              <DualInput
-                label={t(lang,'calc','term')}
-                value={term} min={1} max={360} step={1}
+                suffix="%" minLabel="1%" maxLabel="50%" />
+              <DualInput label={t(lang,'calc','term')} value={term} min={1} max={360} step={1}
                 onChange={set('term',1,360)}
                 format={function(v) { return v }}
                 suffix={' '+t(lang,'calc','months')}
-                minLabel={'1 '+t(lang,'calc','months')} maxLabel={'360 '+t(lang,'calc','months')}
-              />
+                minLabel={'1 '+t(lang,'calc','months')} maxLabel={'360 '+t(lang,'calc','months')} />
               <div className="grid grid-cols-5 gap-2">
                 {[6,12,24,36,60].map(function(v) {
                   return (
@@ -414,15 +503,10 @@ export default function CalculatorPage() {
                   )
                 })}
               </div>
+              {/* G: Pie chart */}
               <div className="mt-5 pt-5 border-t border-slate-100 dark:border-slate-800">
-                <div className="flex justify-between text-xs text-slate-400 mb-2">
-                  <span>{t(lang,'calc','principal')} {pct}%</span>
-                  <span>{t(lang,'calc','interest')} {100-pct}%</span>
-                </div>
-                <div className="flex rounded-full overflow-hidden h-3">
-                  <div className="bg-blue-700 transition-all" style={{width:pct+'%'}} />
-                  <div className="bg-emerald-500 transition-all" style={{width:(100-pct)+'%'}} />
-                </div>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{t(lang,'calc','breakd')}</p>
+                <PieChart principal={amount} interest={Math.round(totalInterest)} lang={lang} />
               </div>
             </div>
           )}
@@ -443,12 +527,8 @@ export default function CalculatorPage() {
         <div className="lg:col-span-7 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <StatCard accent label={t(lang,'calc','monthly')}
-              value={isDiff
-                ? (SYM+Math.round(firstPayment).toLocaleString())
-                : (SYM+Math.round(monthlyPayment).toLocaleString())}
-              sub={isDiff
-                ? (t(lang,'calc','firstDown')+' '+SYM+Math.round(lastPayment).toLocaleString())
-                : (term+' '+t(lang,'calc','months'))}
+              value={isDiff ? (SYM+Math.round(firstPayment).toLocaleString()) : (SYM+Math.round(monthlyPayment).toLocaleString())}
+              sub={isDiff ? (t(lang,'calc','firstDown')+' '+SYM+Math.round(lastPayment).toLocaleString()) : (term+' '+t(lang,'calc','months'))}
             />
             <StatCard label={t(lang,'calc','totalInt')}
               value={SYM+Math.round(totalInterest).toLocaleString()}

@@ -9,6 +9,7 @@ import SchedulePage from './pages/SchedulePage.jsx'
 import EarlyPage from './pages/EarlyPage.jsx'
 import PrivacyPage from './pages/PrivacyPage.jsx'
 import TermsPage from './pages/TermsPage.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
 
 function getInitialTheme() {
   try { var s = localStorage.getItem('afc_theme'); if (s === 'dark' || s === 'light') return s } catch(e) {}
@@ -54,6 +55,7 @@ function AppInner() {
         <Route path="/early" element={<EarlyPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/terms" element={<TermsPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
       <Link

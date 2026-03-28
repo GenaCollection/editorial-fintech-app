@@ -7,6 +7,29 @@ import Sidebar from '../components/Sidebar.jsx'
 var SYM = '\u058f'
 var PER = 12
 
+// ── F: CSV export helper ──────────────────────────────────────────────────────────
+function exportCSV(schedule, loanState, lang) {
+  var hdr = ['#', t(lang,'sched','month'), t(lang,'sched','payment'), t(lang,'sched','principal'), t(lang,'sched','interest'), t(lang,'sched','balance'), 'Extra']
+  var rows = schedule.map(function(r) {
+    return [r.month, r.label, Math.round(r.payment), Math.round(r.principal), Math.round(r.interest), Math.round(r.balance), Math.round(r.extra || 0)]
+  })
+  var meta = [
+    ['ArmFinCredit — Amortization Schedule'],
+    ['Amount', loanState.amount, 'Rate', loanState.rate + '%', 'Term', loanState.term + ' mo.', 'Type', loanState.loanType],
+    []
+  ]
+  var csv = meta.map(function(r) { return r.join(',') }).join('\n')
+    + hdr.join(',') + '\n'
+    + rows.map(function(r) { return r.join(',') }).join('\n')
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  var url = URL.createObjectURL(blob)
+  var a = document.createElement('a')
+  a.href = url
+  a.download = 'amortization_schedule.csv'
+  document.body.appendChild(a); a.click()
+  document.body.removeChild(a); URL.revokeObjectURL(url)
+}
+
 export default function SchedulePage() {
   var ctx = useLoan()
   var schedule = ctx.schedule
@@ -17,14 +40,11 @@ export default function SchedulePage() {
   var lang = useLanguage().language
 
   var amtArr = useState('')
-  var extraAmount = amtArr[0]
-  var setExtraAmount = amtArr[1]
+  var extraAmount = amtArr[0]; var setExtraAmount = amtArr[1]
   var moArr = useState(1)
-  var extraMonth = moArr[0]
-  var setExtraMonth = moArr[1]
+  var extraMonth = moArr[0]; var setExtraMonth = moArr[1]
   var pgArr = useState(1)
-  var page = pgArr[0]
-  var setPage = pgArr[1]
+  var page = pgArr[0]; var setPage = pgArr[1]
 
   var base = useMemo(function() {
     return generateAmortization(loanState.amount, loanState.rate, loanState.term, []).schedule
@@ -57,9 +77,18 @@ export default function SchedulePage() {
     <div className="flex pt-16 min-h-screen">
       <Sidebar />
       <main className="flex-1 px-6 lg:px-10 py-10 max-w-5xl mx-auto overflow-x-hidden">
-        <div className="mb-8">
-          <h1 className="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-2">{t(lang,'sched','title')}</h1>
-          <p className="text-lg text-slate-500 dark:text-slate-400">{t(lang,'sched','desc')}</p>
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-2">{t(lang,'sched','title')}</h1>
+            <p className="text-lg text-slate-500 dark:text-slate-400">{t(lang,'sched','desc')}</p>
+          </div>
+          {/* F: CSV export button */}
+          <button
+            onClick={function() { exportCSV(schedule, loanState, lang) }}
+            className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:border-emerald-400 hover:text-emerald-700 transition-all">
+            <span className="material-symbols-outlined" style={{fontSize:'18px'}}>download</span>
+            {lang === 'RU' ? 'Скачать CSV' : lang === 'AM' ? 'Բեռնել CSV' : 'Export CSV'}
+          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
