@@ -60,15 +60,6 @@ function SaveModal(props) {
   var nameArr = useState('')
   var name = nameArr[0]; var setName = nameArr[1]
 
-  var lbl = {
-    title:       { AM: 'Պahvel Հաշvark', RU: 'Сохранить расчёт', EN: 'Save Calculation' },
-    nameLbl:     { AM: 'Անուն', RU: 'Название', EN: 'Name' },
-    placeholder: { AM: 'Օր. Բն. Վarк 2026', RU: 'Напр., Ипотека 2026', EN: 'e.g. Home Loan 2026' },
-    save:        { AM: 'Պahvel', RU: 'Сохранить', EN: 'Save' },
-    cancel:      { AM: 'Allel', RU: 'Отмена', EN: 'Cancel' }
-  }
-  function lb(key) { return (lbl[key] && (lbl[key][lang] || lbl[key]['EN'])) || key }
-
   function handleSubmit(e) {
     e.preventDefault()
     onSave(name.trim())
@@ -79,27 +70,27 @@ function SaveModal(props) {
       <div className="bg-white dark:bg-slate-900 rounded-2xl p-7 shadow-2xl max-w-sm w-full mx-4">
         <div className="flex items-center gap-3 mb-6">
           <span className="material-symbols-outlined text-blue-700 text-3xl">bookmark_add</span>
-          <p className="font-extrabold text-slate-900 dark:text-white text-xl">{lb('title')}</p>
+          <p className="font-extrabold text-slate-900 dark:text-white text-xl">{t(lang,'saveModal','title')}</p>
         </div>
         <form onSubmit={handleSubmit}>
-          <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{lb('nameLbl')}</label>
+          <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{t(lang,'saveModal','nameLbl')}</label>
           <input
             autoFocus
             type="text"
             value={name}
             onChange={function(e) { setName(e.target.value) }}
-            placeholder={lb('placeholder')}
+            placeholder={t(lang,'saveModal','placeholder')}
             maxLength={40}
             className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 font-bold text-slate-900 dark:text-white outline-none focus:border-blue-400 mb-5"
           />
           <div className="flex gap-3">
             <button type="button" onClick={onClose}
               className="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-200">
-              {lb('cancel')}
+              {t(lang,'saveModal','cancel')}
             </button>
             <button type="submit"
               className="flex-1 py-3 bg-blue-700 text-white rounded-xl font-bold hover:bg-blue-800">
-              {lb('save')}
+              {t(lang,'saveModal','save')}
             </button>
           </div>
         </form>
@@ -407,13 +398,6 @@ export default function CalculatorPage() {
   var lastPayment  = schedule.length > 0 ? schedule[schedule.length - 1].payment : monthlyPayment
   var tabs = [{ key: 'params', icon: 'tune' }, { key: 'early', icon: 'rocket_launch' }, { key: 'advanced', icon: 'settings' }]
 
-  var saveLbl = {
-    save:   { AM: 'Պahvel', RU: 'Сохранить', EN: 'Save' },
-    share:  { AM: 'Կիsarc', RU: 'Поделиться', EN: 'Share' },
-    copied: { AM: 'Պатlvah!', RU: 'Скопировано!', EN: 'Copied!' }
-  }
-  function sl(k) { return (saveLbl[k] && (saveLbl[k][lang] || saveLbl[k]['EN'])) || k }
-
   return (
     <main className="flex-1 px-4 md:px-10 pt-20 pb-16 max-w-7xl mx-auto w-full">
       {showSave && <SaveModal onSave={handleSave} onClose={function() { setShowSave(false) }} lang={lang} />}
@@ -427,7 +411,7 @@ export default function CalculatorPage() {
           <button onClick={function() { setShowSave(true) }}
             className="flex items-center gap-2 px-4 py-2.5 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-400 rounded-xl text-sm font-bold hover:bg-blue-100 transition-all">
             <span className="material-symbols-outlined" style={{fontSize:'18px'}}>bookmark_add</span>
-            {sl('save')}
+            {t(lang,'saveModal','btnSave')}
           </button>
           <button onClick={handleShare}
             className={'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ' +
@@ -435,7 +419,7 @@ export default function CalculatorPage() {
                 ? 'bg-emerald-50 border-emerald-300 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-700 dark:text-emerald-400'
                 : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-blue-400 hover:text-blue-700')}>
             <span className="material-symbols-outlined" style={{fontSize:'18px'}}>{copied ? 'check_circle' : 'share'}</span>
-            {copied ? sl('copied') : sl('share')}
+            {copied ? t(lang,'saveModal','btnCopied') : t(lang,'saveModal','btnShare')}
           </button>
         </div>
       </div>
