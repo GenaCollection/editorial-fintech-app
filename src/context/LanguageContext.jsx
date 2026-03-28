@@ -6,12 +6,18 @@ export function useLanguage() {
   return useContext(LanguageContext)
 }
 
+function getInitialLang() {
+  try { var s = localStorage.getItem('afc_lang'); if (s === 'AM' || s === 'RU' || s === 'EN') return s } catch(e) {}
+  return 'EN'
+}
+
 export function LanguageProvider(props) {
-  var arr = useState('EN')
+  var arr = useState(getInitialLang)
   var language = arr[0]
   var setLanguage = arr[1]
 
   var handleSetLanguage = useCallback(function(lang) {
+    try { localStorage.setItem('afc_lang', lang) } catch(e) {}
     setLanguage(lang)
   }, [])
 

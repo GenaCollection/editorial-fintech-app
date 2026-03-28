@@ -10,6 +10,12 @@ import EarlyPage from './pages/EarlyPage.jsx'
 import PrivacyPage from './pages/PrivacyPage.jsx'
 import TermsPage from './pages/TermsPage.jsx'
 
+function getInitialTheme() {
+  try { var s = localStorage.getItem('afc_theme'); if (s === 'dark' || s === 'light') return s } catch(e) {}
+  if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark'
+  return 'light'
+}
+
 export default function App() {
   return (
     <LanguageProvider>
@@ -23,14 +29,18 @@ export default function App() {
 }
 
 function AppInner() {
-  var themeArr = React.useState('light')
+  var themeArr = React.useState(getInitialTheme)
   var theme = themeArr[0]
   var setTheme = themeArr[1]
+
+  React.useEffect(function() {
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+  }, [theme])
 
   function toggleTheme() {
     setTheme(function(prev) {
       var next = prev === 'light' ? 'dark' : 'light'
-      document.documentElement.classList.toggle('dark', next === 'dark')
+      try { localStorage.setItem('afc_theme', next) } catch(e) {}
       return next
     })
   }
