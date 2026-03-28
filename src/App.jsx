@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { LoanProvider } from './context/LoanContext.jsx'
 import { LanguageProvider } from './context/LanguageContext.jsx'
+import { SavedProvider } from './context/SavedContext.jsx'
 import Navigation from './components/Navigation.jsx'
 import Footer from './components/Footer.jsx'
 import CalculatorPage from './pages/CalculatorPage.jsx'
@@ -10,6 +11,7 @@ import EarlyPage from './pages/EarlyPage.jsx'
 import PrivacyPage from './pages/PrivacyPage.jsx'
 import TermsPage from './pages/TermsPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import SavedPage from './pages/SavedPage.jsx'
 
 function getInitialTheme() {
   try { var s = localStorage.getItem('afc_theme'); if (s === 'dark' || s === 'light') return s } catch(e) {}
@@ -20,19 +22,20 @@ function getInitialTheme() {
 export default function App() {
   return (
     <LanguageProvider>
-      <LoanProvider>
-        <BrowserRouter>
-          <AppInner />
-        </BrowserRouter>
-      </LoanProvider>
+      <SavedProvider>
+        <LoanProvider>
+          <BrowserRouter>
+            <AppInner />
+          </BrowserRouter>
+        </LoanProvider>
+      </SavedProvider>
     </LanguageProvider>
   )
 }
 
 function AppInner() {
   var themeArr = React.useState(getInitialTheme)
-  var theme = themeArr[0]
-  var setTheme = themeArr[1]
+  var theme = themeArr[0]; var setTheme = themeArr[1]
 
   React.useEffect(function() {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -53,15 +56,14 @@ function AppInner() {
         <Route path="/" element={<CalculatorPage />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/early" element={<EarlyPage />} />
+        <Route path="/saved" element={<SavedPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/terms" element={<TermsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
-      <Link
-        to="/schedule"
-        className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center z-40"
-      >
+      <Link to="/schedule"
+        className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center z-40">
         <span className="material-symbols-outlined">calendar_month</span>
       </Link>
     </div>
