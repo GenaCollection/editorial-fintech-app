@@ -1,12 +1,11 @@
 import { useState } from 'react'
 
 /**
- * usePdfExport — generates a PDF from the #print-layout element
- * using html2pdf.js loaded via CDN in index.html.
+ * usePdfExport — generates a clean PDF from #print-layout
+ * using html2pdf.js loaded globally via CDN in index.html.
  *
- * Usage:
- *   var { exportPdf, exporting } = usePdfExport(lang)
- *   <button onClick={exportPdf} disabled={exporting}>PDF</button>
+ * Key fix: element is positioned off-screen (not display:none)
+ * so html2pdf can measure and render it correctly.
  */
 export function usePdfExport(lang) {
   var exportingArr = useState(false)
@@ -22,9 +21,8 @@ export function usePdfExport(lang) {
   }
 
   function exportPdf() {
-    // html2pdf is loaded globally via CDN script in index.html
     if (typeof window.html2pdf === 'undefined') {
-      console.error('html2pdf.js not loaded yet')
+      alert('html2pdf.js is not loaded yet — please wait a moment and try again.')
       return
     }
 
@@ -36,39 +34,43 @@ export function usePdfExport(lang) {
 
     setExporting(true)
 
-    // Temporarily show the element so html2pdf can render it
-    var prevDisplay = el.style.display
-    el.style.display = 'block'
+    // Temporarily move into viewport so html2pdf renders correctly
+    var prevLeft = el.style.left
+    el.style.left = '0px'
+    el.style.zIndex = '9999'
 
     var opt = {
-      margin:      [10, 10, 10, 10],       // mm: top, left, bottom, right
+      margin:      [8, 8, 8, 8],
       filename:    getFilename(),
-      image:       { type: 'jpeg', quality: 0.97 },
+      image:       { type: 'jpeg', quality: 0.98 },
       html2canvas: {
-        scale: 2,                            // retina quality
+        scale: 2,
         useCORS: true,
         scrollY: 0,
-        windowWidth: 900
+        windowWidth: 960,
+        logging: false
       },
       jsPDF: {
         unit: 'mm',
         format: 'a4',
         orientation: 'portrait'
       },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      pagebreak: { mode: ['css', 'legacy'] }
     }
 
     window.html2pdf()
       .set(opt)
       .from(el)
       .save()
-      .then(function() {
-        el.style.display = prevDisplay
+      .then(function () {
+        el.style.left = prevLeft
+        el.style.zIndex = '-1'
         setExporting(false)
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.error('PDF export failed:', err)
-        el.style.display = prevDisplay
+        el.style.left = prevLeft
+        el.style.zIndex = '-1'
         setExporting(false)
       })
   }
