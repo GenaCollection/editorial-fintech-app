@@ -12,6 +12,7 @@ import PrivacyPage from './pages/PrivacyPage.jsx'
 import TermsPage from './pages/TermsPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import SavedPage from './pages/SavedPage.jsx'
+import ComparePage from './pages/ComparePage.jsx'
 
 function getInitialTheme() {
   try { var s = localStorage.getItem('afc_theme'); if (s === 'dark' || s === 'light') return s } catch(e) {}
@@ -56,6 +57,7 @@ function AppInner() {
         <Route path="/" element={<CalculatorPage />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/early" element={<EarlyPage />} />
+        <Route path="/compare" element={<ComparePage />} />
         <Route path="/saved" element={<SavedPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/terms" element={<TermsPage />} />

@@ -24,7 +24,9 @@ export default function Navigation(props) {
       : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50')
   }
 
-  var savedLabel = { AM: '\u054a\u0561\u0570\u057e\u0561\u056e', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0435', EN: 'Saved' }
+  var navCompare = { AM: '\u0540ամեմատություն', RU: '\u0421равнение', EN: 'Compare' }
+  var savedLabel = { AM: '\u054aահված', RU: '\u0421охранённые', EN: 'Saved' }
+  var compareLbl = navCompare[language] || 'Compare'
   var savedLbl = savedLabel[language] || 'Saved'
 
   return (
@@ -32,10 +34,11 @@ export default function Navigation(props) {
       <nav className="fixed top-0 w-full z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg shadow-sm h-16 flex items-center justify-between px-4 md:px-8">
         <span className="text-lg font-black text-blue-900 dark:text-blue-100 uppercase tracking-tighter">ArmFinCredit</span>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           <Link className={lc('/')} to="/">{t(language,'nav','calc')}</Link>
           <Link className={lc('/schedule')} to="/schedule">{t(language,'nav','sched')}</Link>
           <Link className={lc('/early')} to="/early">{t(language,'nav','early')}</Link>
+          <Link className={lc('/compare')} to="/compare">{compareLbl}</Link>
           <Link className={lc('/saved')} to="/saved">
             <span className="relative">
               {savedLbl}
@@ -78,6 +81,7 @@ export default function Navigation(props) {
             <Link to="/" className={mc('/')} onClick={function() { setOpen(false) }}>{t(language,'nav','calc')}</Link>
             <Link to="/schedule" className={mc('/schedule')} onClick={function() { setOpen(false) }}>{t(language,'nav','sched')}</Link>
             <Link to="/early" className={mc('/early')} onClick={function() { setOpen(false) }}>{t(language,'nav','early')}</Link>
+            <Link to="/compare" className={mc('/compare')} onClick={function() { setOpen(false) }}>{compareLbl}</Link>
             <Link to="/saved" className={mc('/saved')} onClick={function() { setOpen(false) }}>
               {savedLbl}{saves.length > 0 ? ' ('+saves.length+')' : ''}
             </Link>
