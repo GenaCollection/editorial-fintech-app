@@ -139,9 +139,9 @@ export default function PrintLayout(props) {
       RU: '\u042d\u0442\u043e\u0442 \u0440\u0430\u0441\u0447\u0451\u0442 \u043d\u043e\u0441\u0438\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u043e\u043d\u043d\u044b\u0439 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440 \u0438 \u043d\u0435 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0444\u0438\u043d\u0430\u043d\u0441\u043e\u0432\u044b\u043c \u0441\u043e\u0432\u0435\u0442\u043e\u043c.',
       EN: 'This calculation is for informational purposes only and does not constitute financial advice.'
     },
-    loanParams:  { AM: '\u054e\u0561\u580f\u056f\u056b \u054a\u0561\u580f\u0561\u0574\u0587\u057f\u0580\u0576\u0587\u580', RU: '\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043a\u0440\u0565\u0434\u0438\u0442\u0430', EN: 'Loan Parameters' },
-    summary:     { AM: '\u0531\u680f\u0564\u0575\u0578\u0582\u576e\u0584\u576f\u0587\u580', RU: '\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b', EN: 'Summary' },
-    amortTable:  { AM: '\u0531\u0544\u0578\u580c\u057f\u056b\u566a\u561\u581b\u056b\u0531 \u0533\u580a\u0561\u0548\u056f', RU: '\u0413\u0440\u0430\u0444\u0438\u043a \u043f\u043b\u0430\u0442\u0565\u0436\u0435\u0439', EN: 'Amortization Schedule' },
+ loanParams:  { AM: 'Վարկի Պարամետրներ', RU: 'Параметры кредита', EN: 'Loan Parameters' },
+summary:     { AM: 'Արդյունքներ', RU: 'Результаты', EN: 'Summary' },
+amortTable:  { AM: 'Ամորտիզացիոն Գրաֆիկ', RU: 'График платежей', EN: 'Amortization Schedule' },
     earlyPay:    { AM: '\u054e\u0561\u572b\u561\u056f\u0565\u057f \u054e\u arge\u0561\u580c\u578f\u0576\u0587\u580', RU: '\u0414\u043e\u0441\u0440\u043e\u0447\u043d\u044b\u0435 \u043f\u043b\u0430\u0442\u0435\u0436\u0438', EN: 'Early Payments' },
     month:       { AM: '\u0531\u0574\u056b\u057d', RU: '\u041c\u0435\u0441.', EN: 'Mo.' },
     date:        { AM: '\u0531\u0574\u057d\u0561\u0569\u056b\u057e', RU: '\u0414\u0430\u0442\u0430', EN: 'Date' },
