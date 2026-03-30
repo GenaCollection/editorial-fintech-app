@@ -5,6 +5,7 @@ import { useSaved } from '../context/SavedContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import PrintLayout from '../components/PrintLayout.jsx'
+import { usePdfExport } from '../hooks/usePdfExport.js'
 import '../styles/print.css'
 
 var SYM = '\u058f'
@@ -342,6 +343,11 @@ export default function CalculatorPage() {
   var searchParams = searchParamsArr[0]
   var printRootRef = useRef(null)
 
+  // PDF export hook
+  var pdfHook = usePdfExport(lang)
+  var exportPdf = pdfHook.exportPdf
+  var exporting = pdfHook.exporting
+
   useEffect(function() {
     var a = Number(searchParams.get('amount')); var r = Number(searchParams.get('rate'))
     var m = Number(searchParams.get('term'));   var tp = searchParams.get('type')
@@ -397,7 +403,6 @@ export default function CalculatorPage() {
   }
 
   function handlePrint() {
-    // Reveal print layout, call print(), then hide it again
     var el = document.getElementById('print-layout')
     if (el) el.style.display = 'block'
     setPrinting(true)
@@ -420,7 +425,7 @@ export default function CalculatorPage() {
     <main className="flex-1 px-4 md:px-10 pt-20 pb-16 max-w-7xl mx-auto w-full">
       {showSave && <SaveModal onSave={handleSave} onClose={function() { setShowSave(false) }} lang={lang} />}
 
-      {/* Hidden print layout — revealed only during window.print() */}
+      {/* Hidden print layout — revealed only during print or PDF export */}
       <div id="print-root" ref={printRootRef}>
         <PrintLayout
           loanState={loanState}
@@ -570,18 +575,35 @@ export default function CalculatorPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Action buttons: View Full | Print | PDF */}
           <div className="flex gap-3">
             <button onClick={function() { navigate('/schedule') }}
               className="flex-1 bg-blue-700 text-white py-4 rounded-xl font-bold hover:bg-blue-800 active:scale-95 transition-all">
               {t(lang,'calc','viewFull')}
             </button>
+
+            {/* Print button — uses window.print() + @media print CSS */}
             <button
               onClick={handlePrint}
               disabled={printing}
-              className={'w-36 flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-blue-700 py-4 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all ' + (printing ? 'opacity-60 cursor-wait' : '')}
+              title={lang === 'AM' ? 'Տպել' : lang === 'RU' ? '\u041f\u0435\u0447\u0430\u0442\u044c' : 'Print'}
+              className={'w-14 flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 py-4 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all ' + (printing ? 'opacity-60 cursor-wait' : '')}
             >
-              <span className="material-symbols-outlined" style={{fontSize:'18px'}}>print</span>
-              {t(lang,'calc','print')}
+              <span className="material-symbols-outlined" style={{fontSize:'20px'}}>print</span>
+            </button>
+
+            {/* PDF button — uses html2pdf.js via CDN */}
+            <button
+              onClick={exportPdf}
+              disabled={exporting}
+              title={lang === 'AM' ? 'PDF \u0562\u0565\u057c\u0576\u0565\u056c' : lang === 'RU' ? '\u0421\u043a\u0430\u0447\u0430\u0442\u044c PDF' : 'Download PDF'}
+              className={'w-14 flex items-center justify-center bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 py-4 rounded-xl font-bold hover:bg-red-100 dark:hover:bg-red-900/30 transition-all ' + (exporting ? 'opacity-60 cursor-wait' : '')}
+            >
+              {exporting
+                ? <span className="material-symbols-outlined animate-spin" style={{fontSize:'20px'}}>progress_activity</span>
+                : <span className="text-xs font-extrabold tracking-tight">PDF</span>
+              }
             </button>
           </div>
         </div>
