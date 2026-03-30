@@ -1,7 +1,7 @@
 import React from 'react'
 import { t } from '../i18n/labels.js'
 
-var SYM = '\u058f'
+var SYM = '֏'
 function fmt(n) { return Math.round(n).toLocaleString() }
 function fmtR(n) { return Number(n).toFixed(2) }
 
@@ -133,23 +133,23 @@ export default function PrintLayout(props) {
   )
 
   var lbl = {
-    generatedOn: { AM: '\u054d\u057f\u0565\u056e\u056e\u057e\u0561\u056e:', RU: '\u0414\u0430\u0442\u0430:', EN: 'Generated:' },
+    generatedOn: { AM: 'Ստեղծված:',      RU: 'Дата:',           EN: 'Generated:' },
     disclaimer: {
-      AM: '\u0531\u0575\u057d \u570\u561\u577\u057e\u561\u580\u056f\u0568 \u056f\u580\u578\u582\u0574 \u565 \u057f\u565\u572\u0565\u056f\u561\u057f\u057e\u561\u056f\u561\u576 \u562\u576\u578\u582\u0575\u569 \u587 \u579\u056b \u570\u561\u576\u564\u056b\u057d\u561\u576\u578\u582\u0574 \u586\u056b\u576\u561\u576\u057d\u561\u056f\u561\u576 \u056d\u578\u580\u570\u580\u564\u561\u057f\u057e\u578\u582\u569\u575\u578\u582\u576:',
-      RU: '\u042d\u0442\u043e\u0442 \u0440\u0430\u0441\u0447\u0451\u0442 \u043d\u043e\u0441\u0438\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u043e\u043d\u043d\u044b\u0439 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440 \u0438 \u043d\u0435 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0444\u0438\u043d\u0430\u043d\u0441\u043e\u0432\u044b\u043c \u0441\u043e\u0432\u0435\u0442\u043e\u043c.',
+      AM: 'Այս հաշվարկը կրում է տեղեկատվական բնույթ և չի հանդիսանում ֆինանսական խորհրդատվություն:',
+      RU: 'Этот расчёт носит информационный характер и не является финансовым советом.',
       EN: 'This calculation is for informational purposes only and does not constitute financial advice.'
     },
-    loanParams:  { AM: '\u054e\u561\u580\u056f\u056b \u553\u561\u580\u561\u574\u565\u057f\u580\u576\u565\u580', RU: '\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043a\u0440\u0435\u0434\u0438\u0442\u0430', EN: 'Loan Parameters' },
-    summary:     { AM: '\u531\u580\u564\u575\u578\u582\u576\u584\u576\u565\u580', RU: '\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b', EN: 'Summary' },
-    amortTable:  { AM: '\u531\u574\u578\u580\u057f\u056b\u566\u561\u581\u056b\u578\u576 \u533\u580\u561\u586\u056b\u056f', RU: '\u0413\u0440\u0430\u0444\u0438\u043a \u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439', EN: 'Amortization Schedule' },
-    earlyPay:    { AM: '\u531\u580\u561\u563\u56b\u576 \u�\u531\u580\u563\u578\u572\u0578\u582\u569\u575\u578\u582\u576\u576\u565\u580', RU: '\u0414\u043e\u0441\u0440\u043e\u0447\u043d\u044b\u0435 \u043f\u043b\u0430\u0442\u0435\u0436\u0438', EN: 'Early Payments' },
-    month:       { AM: '\u531\u574\u056b\u057d', RU: '\u041c\u0435\u0441.', EN: 'Mo.' },
-    date:        { AM: '\u531\u574\u057d\u561\u569\u056b\u057e', RU: '\u0414\u0430\u0442\u0430', EN: 'Date' },
-    payment:     { AM: '\u�\u531\u580\u563', RU: '\u041f\u043b\u0430\u0442\u0451\u0436', EN: 'Payment' },
-    principal:   { AM: '\u531\u056c\u057f \u533\u578\u0582\u574\u561\u580', RU: '\u041e\u0441\u043d. \u0434\u043e\u043b\u0433', EN: 'Principal' },
-    interest:    { AM: '\u054f\u578\u056f\u578\u564', RU: '\u041f\u0440\u043e\u581\u0435\u043d\u0442\u044b', EN: 'Interest' },
-    extra:       { AM: '\u053c\u580\u561\u556.', RU: '\u0414\u043e\u043f.', EN: 'Extra' },
-    balance:     { AM: '\u544\u576\u561\u581\u578\u580\u564\u568', RU: '\u041e\u0441\u0442\u0430\u0442\u043e\u043a', EN: 'Balance' }
+    loanParams:  { AM: 'Վարկի Պարամետրները', RU: 'Параметры кредита',  EN: 'Loan Parameters' },
+    summary:     { AM: 'Արդյունքներ',         RU: 'Результаты',         EN: 'Summary' },
+    amortTable:  { AM: 'Ամորտիզացիոն Գրաֆիկ', RU: 'График платежей',    EN: 'Amortization Schedule' },
+    earlyPay:    { AM: 'Արտահերթ Վճարումներ', RU: 'Досрочные платежи',  EN: 'Early Payments' },
+    month:       { AM: 'Ամիս',               RU: 'Мес.',               EN: 'Mo.' },
+    date:        { AM: 'Ամսաթիվ',            RU: 'Дата',               EN: 'Date' },
+    payment:     { AM: 'Վճարում',            RU: 'Платёж',             EN: 'Payment' },
+    principal:   { AM: 'Մայր Գումար',        RU: 'Осн. долг',          EN: 'Principal' },
+    interest:    { AM: 'Տոկոս',              RU: 'Проценты',           EN: 'Interest' },
+    extra:       { AM: 'Լրաց.',              RU: 'Доп.',               EN: 'Extra' },
+    balance:     { AM: 'Մնացորդ',            RU: 'Остаток',            EN: 'Balance' }
   }
   function tr(k) { return (lbl[k] && lbl[k][lang]) || (lbl[k] && lbl[k]['EN']) || k }
 
@@ -295,7 +295,7 @@ export default function PrintLayout(props) {
                   <td style={even ? S.tdGreenEven : S.tdGreen}>{SYM}{fmt(row.interest)}</td>
                   {extraPayments.length > 0 && (
                     <td style={{ ...(even ? S.tdEvenR : S.tdR), color: '#7c3aed' }}>
-                      {row.extra > 0 ? (SYM + fmt(row.extra)) : '\u2014'}
+                      {row.extra > 0 ? (SYM + fmt(row.extra)) : '—'}
                     </td>
                   )}
                   <td style={{ ...(even ? S.tdEvenR : S.tdR), fontWeight: 600 }}>{SYM}{fmt(row.balance)}</td>
