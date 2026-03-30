@@ -1,9 +1,11 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useLoan, generateAmortization } from '../context/LoanContext.jsx'
 import { useSaved } from '../context/SavedContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
+import PrintLayout from '../components/PrintLayout.jsx'
+import '../styles/print.css'
 
 var SYM = '\u058f'
 
@@ -338,6 +340,7 @@ export default function CalculatorPage() {
   var lang = useLanguage().language
   var searchParamsArr = useSearchParams()
   var searchParams = searchParamsArr[0]
+  var printRootRef = useRef(null)
 
   useEffect(function() {
     var a = Number(searchParams.get('amount')); var r = Number(searchParams.get('rate'))
@@ -359,6 +362,7 @@ export default function CalculatorPage() {
   var tabArr = useState('params'); var activeTab = tabArr[0]; var setTab = tabArr[1]
   var copiedArr = useState(false); var copied = copiedArr[0]; var setCopied = copiedArr[1]
   var showSaveArr = useState(false); var showSave = showSaveArr[0]; var setShowSave = showSaveArr[1]
+  var printingArr = useState(false); var printing = printingArr[0]; var setPrinting = printingArr[1]
 
   var amount = loanState.amount; var rate = loanState.rate; var term = loanState.term
 
@@ -392,6 +396,20 @@ export default function CalculatorPage() {
     setShowSave(false)
   }
 
+  function handlePrint() {
+    // Reveal print layout, call print(), then hide it again
+    var el = document.getElementById('print-layout')
+    if (el) el.style.display = 'block'
+    setPrinting(true)
+    setTimeout(function() {
+      window.print()
+      setTimeout(function() {
+        if (el) el.style.display = 'none'
+        setPrinting(false)
+      }, 500)
+    }, 80)
+  }
+
   var totalPay = totalPayment || (monthlyPayment * term)
   var isDiff = loanState.loanType === 'differentiated'
   var firstPayment = schedule.length > 0 ? schedule[0].payment : monthlyPayment
@@ -401,6 +419,20 @@ export default function CalculatorPage() {
   return (
     <main className="flex-1 px-4 md:px-10 pt-20 pb-16 max-w-7xl mx-auto w-full">
       {showSave && <SaveModal onSave={handleSave} onClose={function() { setShowSave(false) }} lang={lang} />}
+
+      {/* Hidden print layout — revealed only during window.print() */}
+      <div id="print-root" ref={printRootRef}>
+        <PrintLayout
+          loanState={loanState}
+          schedule={schedule}
+          monthlyPayment={monthlyPayment}
+          totalInterest={totalInterest}
+          totalPayment={totalPay}
+          apr={apr}
+          extraPayments={extraPayments}
+          lang={lang}
+        />
+      </div>
 
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -543,8 +575,12 @@ export default function CalculatorPage() {
               className="flex-1 bg-blue-700 text-white py-4 rounded-xl font-bold hover:bg-blue-800 active:scale-95 transition-all">
               {t(lang,'calc','viewFull')}
             </button>
-            <button onClick={function() { window.print() }}
-              className="w-36 bg-slate-100 dark:bg-slate-800 text-blue-700 py-4 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700">
+            <button
+              onClick={handlePrint}
+              disabled={printing}
+              className={'w-36 flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-blue-700 py-4 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all ' + (printing ? 'opacity-60 cursor-wait' : '')}
+            >
+              <span className="material-symbols-outlined" style={{fontSize:'18px'}}>print</span>
               {t(lang,'calc','print')}
             </button>
           </div>

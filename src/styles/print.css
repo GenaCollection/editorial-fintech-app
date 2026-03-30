@@ -1,0 +1,207 @@
+/* ═══════════════════════════════════════════════════
+   ArmFinCredit — Print / PDF Stylesheet
+   @media print blocks all screen styles; this file
+   defines the clean A4 document layout.
+═══════════════════════════════════════════════════ */
+
+@media print {
+
+  /* ── Reset screen chrome ─────────────────────── */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  body > *:not(#print-root) { display: none !important; }
+  #print-root { display: block !important; }
+  #print-layout { display: block !important; }
+
+  /* ── Page setup ──────────────────────────────── */
+  @page {
+    size: A4 portrait;
+    margin: 18mm 16mm 16mm 16mm;
+  }
+
+  .print-page {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    font-size: 9pt;
+    line-height: 1.45;
+    color: #1e293b;
+    background: #fff;
+    width: 100%;
+  }
+
+  /* ── Header ──────────────────────────────────── */
+  .print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10pt;
+  }
+  .print-logo {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+  }
+  .print-brand {
+    font-size: 14pt;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #1d4ed8;
+  }
+  .print-meta {
+    text-align: right;
+    color: #64748b;
+    font-size: 8pt;
+  }
+  .print-meta-tag {
+    font-size: 7pt;
+    color: #94a3b8;
+    margin-top: 2pt;
+  }
+
+  /* ── Divider ─────────────────────────────────── */
+  .print-divider {
+    border: none;
+    border-top: 1.5pt solid #1d4ed8;
+    margin: 8pt 0 12pt;
+  }
+
+  /* ── Section titles ──────────────────────────── */
+  .print-section-title {
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #64748b;
+    margin: 12pt 0 6pt;
+    padding-bottom: 3pt;
+    border-bottom: 0.5pt solid #e2e8f0;
+  }
+
+  /* ── Params grid ─────────────────────────────── */
+  .print-params-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6pt;
+    margin-bottom: 2pt;
+  }
+  .print-param {
+    background: #f8fafc;
+    border: 0.5pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 6pt 8pt;
+  }
+  .print-param-label {
+    display: block;
+    font-size: 7pt;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2pt;
+  }
+  .print-param-value {
+    display: block;
+    font-size: 10pt;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  /* ── Summary grid ────────────────────────────── */
+  .print-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6pt;
+    margin-bottom: 4pt;
+  }
+  .print-summary-card {
+    border: 0.5pt solid #e2e8f0;
+    border-radius: 4pt;
+    padding: 7pt 8pt;
+    background: #f8fafc;
+  }
+  .print-summary-accent {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+  }
+  .print-summary-accent .print-summary-card-label,
+  .print-summary-accent .print-summary-card-value,
+  .print-summary-accent .print-summary-card-sub { color: #fff !important; }
+  .print-summary-card-label {
+    font-size: 7pt;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3pt;
+  }
+  .print-summary-card-value {
+    font-size: 12pt;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+  }
+  .print-summary-card-sub {
+    font-size: 7pt;
+    color: #94a3b8;
+    margin-top: 2pt;
+  }
+
+  /* ── Amortization table ──────────────────────── */
+  .print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-bottom: 4pt;
+  }
+  .print-table thead tr {
+    background: #1d4ed8;
+    color: #fff;
+  }
+  .print-table thead th {
+    padding: 5pt 6pt;
+    font-weight: 700;
+    text-align: left;
+    font-size: 7pt;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .print-table tbody td {
+    padding: 4pt 6pt;
+    border-bottom: 0.3pt solid #f1f5f9;
+    color: #334155;
+  }
+  .print-row-even td { background: #f8fafc; }
+  .print-month-num {
+    font-weight: 700;
+    color: #1d4ed8 !important;
+  }
+  .print-tfoot td {
+    padding: 5pt 6pt;
+    border-top: 1pt solid #cbd5e1;
+    background: #f1f5f9;
+    font-size: 8pt;
+  }
+
+  /* ── Footer ──────────────────────────────────── */
+  .print-footer {
+    margin-top: 14pt;
+    padding-top: 8pt;
+    border-top: 0.5pt solid #e2e8f0;
+    font-size: 7pt;
+    color: #94a3b8;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12pt;
+  }
+  .print-footer-brand {
+    font-weight: 700;
+    color: #64748b;
+    white-space: nowrap;
+  }
+
+  /* ── Page break rules ────────────────────────── */
+  .print-table thead { display: table-header-group; }
+  .print-table tbody tr { page-break-inside: avoid; }
+  .print-summary-grid { page-break-inside: avoid; }
+  .print-params-grid  { page-break-inside: avoid; }
+  .print-footer       { page-break-inside: avoid; }
+
+}
