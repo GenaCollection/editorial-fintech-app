@@ -128,7 +128,7 @@ export function usePdfExport(lang) {
       doc.setFontSize(7)
       doc.setFont('helvetica', 'normal')
       doc.setTextColor(100, 116, 139)
-      var dateLabel = lang === 'RU' ? 'Дата:' : lang === 'AM' ? 'Ստեղծված:' : 'Generated:'
+      var dateLabel = lang === 'RU' ? '\u0414\u0430\u0442\u0430:' : lang === 'AM' ? '\u054�\u057f\u0565\u0572\u056e\u057e\u0561\u056e:' : 'Generated:'
       doc.text(dateLabel + ' ' + today, pw - mr, y + 3, { align: 'right' })
       doc.setFontSize(6)
       doc.setTextColor(148, 163, 184)
@@ -141,18 +141,18 @@ export function usePdfExport(lang) {
       y += 6
 
       // ---- Loan Parameters ----
-      var paramLabel = lang === 'RU' ? 'Параметры кредита' : lang === 'AM' ? 'Վարկի Պարամետրներ' : 'Loan Parameters'
+      var paramLabel = lang === 'RU' ? '\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043a\u0440\u0435\u0434\u0438\u0442\u0430' : lang === 'AM' ? '\u054e\u0561\u0580\u056f\u056b \u0553\u0561\u0580\u0561\u0574\u0565\u057f\u0580\u0576\u0565\u0580' : 'Loan Parameters'
       sectionTitle(paramLabel)
 
       var cardW = (cw - 9) / 4
       var typeLabel = isDiff
-        ? (lang === 'RU' ? 'Дифференц.' : lang === 'AM' ? 'Ապկ.' : 'Diff.')
-        : (lang === 'RU' ? 'Аннуитет' : lang === 'AM' ? 'Աննուիտետ' : 'Annuity')
+        ? (lang === 'RU' ? '\u0414\u0438\u0444\u0444\u0435\u0440\u0435\u043d\u0446.' : lang === 'AM' ? '\u0531\u057a\u056f.' : 'Diff.')
+        : (lang === 'RU' ? '\u0410\u043d\u043d\u0443\u0438\u0442\u0435\u0442' : lang === 'AM' ? '\u0531\u576c\u576c\u578578\u056b\u057f\u0565\u057f' : 'Annuity')
 
-      var amountLbl  = lang === 'RU' ? 'Сумма' : lang === 'AM' ? 'Գումար' : 'Amount'
-      var rateLbl    = lang === 'RU' ? 'Ставка' : lang === 'AM' ? 'Տոկոս' : 'Rate'
-      var termLbl    = lang === 'RU' ? 'Срок' : lang === 'AM' ? 'լլ'լլ' : 'Term'
-      var typeLbl    = lang === 'RU' ? 'Тип' : lang === 'AM' ? 'Տեսակ' : 'Type'
+      var amountLbl  = lang === 'RU' ? '\u0421\u0443\u043c\u043c\u0430' : lang === 'AM' ? '\u0533\u578578\u0561\u0580' : 'Amount'
+      var rateLbl    = lang === 'RU' ? '\u0421\u0442\u0430\u0432\u043a\u0430' : lang === 'AM' ? '\u054f\u0578\u056f\u0578\u057d' : 'Rate'
+      var termLbl    = lang === 'RU' ? '\u0421\u0440\u043e\u043a' : lang === 'AM' ? '\u0531\u0574\u056b\u057d\u0576\u0561\u056f\u0576\u0565\u0580' : 'Term'
+      var typeLbl    = lang === 'RU' ? '\u0422\u0438\u043f' : lang === 'AM' ? '\u054f\u0565\u057d\u0561\u056f' : 'Type'
 
       var cx0 = ml
       paramCard(cx0,            y, cardW, amountLbl,  SYM + fmt(loanState.amount))
@@ -162,8 +162,8 @@ export function usePdfExport(lang) {
       y += 16
 
       if (loanState.fee > 0 || loanState.insurance > 0) {
-        var feeLbl = lang === 'RU' ? 'Комиссия' : 'Fee'
-        var insLbl = lang === 'RU' ? 'Страховка' : 'Insurance'
+        var feeLbl = lang === 'RU' ? '\u041a\u043e\u043c\u0438\u0441\u0441\u0438\u044f' : 'Fee'
+        var insLbl = lang === 'RU' ? '\u0421\u0442\u0440\u0430\u0445\u043e\u0432\u043a\u0430' : 'Insurance'
         var cw2 = (cw - 3) / 2
         if (loanState.fee > 0) paramCard(ml, y, cw2, feeLbl, SYM + fmt(loanState.fee))
         if (loanState.insurance > 0) paramCard(ml + cw2 + 3, y, cw2, insLbl, SYM + fmt(loanState.insurance))
@@ -171,13 +171,13 @@ export function usePdfExport(lang) {
       }
 
       // ---- Summary ----
-      var summaryLbl = lang === 'RU' ? 'Результаты' : lang === 'AM' ? 'Արդյունքներ' : 'Summary'
+      var summaryLbl = lang === 'RU' ? '\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b' : lang === 'AM' ? '\u0531\u0580\u564564\u0575\u578578\u0582\u576576\u576576\u0565\u0580' : 'Summary'
       sectionTitle(summaryLbl)
 
       var sc = (cw - 9) / 4
-      var monthlyLbl  = lang === 'RU' ? 'Ежмесячный' : lang === 'AM' ? 'Ամսկական' : 'Monthly'
-      var totalIntLbl = lang === 'RU' ? 'Проценты' : lang === 'AM' ? 'Տոկոս' : 'Interest'
-      var totalLbl    = lang === 'RU' ? 'Итого' : lang === 'AM' ? 'Ամբողջ' : 'Total'
+      var monthlyLbl  = lang === 'RU' ? '\u0415\u0436\u043c\u0435\u0441\u044f\u0447\u043d\u044b\u0439' : lang === 'AM' ? '\u0531\u0574\u057d\u056f\u0561\u056f\u0561\u576' : 'Monthly'
+      var totalIntLbl = lang === 'RU' ? '\u041f\u0440\u043e\u0446\u0435\u043d\u0442\u044b' : lang === 'AM' ? '\u054f\u0578\u056f\u0578\u057d' : 'Interest'
+      var totalLbl    = lang === 'RU' ? '\u0418\u0442\u043e\u0433\u043e' : lang === 'AM' ? '\u0531\u0574\u0562\u0578\u572b\u057b' : 'Total'
       var aprLbl      = 'APR'
       var monthlyVal  = SYM + fmt(isDiff ? firstPayment : monthlyPayment)
 
@@ -217,10 +217,10 @@ export function usePdfExport(lang) {
 
       // ---- Early Payments ----
       if (extraPayments.length > 0) {
-        var earlyLbl = lang === 'RU' ? 'Досрочные платежи' : lang === 'AM' ? 'Արտահերթ Վճարումներ' : 'Early Payments'
+        var earlyLbl = lang === 'RU' ? '\u0414\u043e\u0441\u0440\u043e\u0447\u043d\u044b\u0435 \u043f\u043b\u0430\u0442\u0435\u0436\u0438' : lang === 'AM' ? '\u0531\u0580\u057f\u0561\u0570\u0565\u0580\u0569 \u054e\u ՃՃ\u0561\u0580\u578578\u0582\u0574\u576576\u0565\u0580' : 'Early Payments'
         sectionTitle(earlyLbl)
-        var epMoLbl  = lang === 'RU' ? 'Мес.' : 'Mo.'
-        var epAmtLbl = lang === 'RU' ? 'Сумма' : 'Amount'
+        var epMoLbl  = lang === 'RU' ? '\u041c\u0435\u0441.' : 'Mo.'
+        var epAmtLbl = lang === 'RU' ? '\u0421\u0443\u043c\u043c\u0430' : 'Amount'
         var col0 = ml; var col1 = ml + 30
         var rowH = 6
         // header
@@ -247,27 +247,27 @@ export function usePdfExport(lang) {
       }
 
       // ---- Amortization Table ----
-      var amortLbl = lang === 'RU' ? 'График платежей' : lang === 'AM' ? 'Ամortizaciayi Grafik' : 'Amortization Schedule'
+      var amortLbl = lang === 'RU' ? '\u0413\u0440\u0430\u0444\u0438\u043a \u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439' : lang === 'AM' ? 'Amortization Schedule' : 'Amortization Schedule'
       sectionTitle(amortLbl)
 
       var hasExtra = extraPayments.length > 0
       var cols = hasExtra
         ? [
             { lbl: '#',        x: ml,       w: 10 },
-            { lbl: lang==='RU'?'Дата':lang==='AM'?'Ամսաթիվ':'Date',    x: ml+10,    w: 22 },
-            { lbl: lang==='RU'?'Платёж':lang==='AM'?'Վճարում':'Payment',  x: ml+32,    w: 30, r: true },
-            { lbl: lang==='RU'?'Осн.':lang==='AM'?'Մայր':'Princ.',   x: ml+62,    w: 28, r: true },
-            { lbl: lang==='RU'?'Проц.':'%',        x: ml+90,    w: 25, r: true },
-            { lbl: lang==='RU'?'Доп.':'Extra',     x: ml+115,   w: 25, r: true },
-            { lbl: lang==='RU'?'Ост.':'Balance',   x: ml+140,   w: cw-140, r: true }
+            { lbl: lang==='RU'?'\u0414\u0430\u0442\u0430':lang==='AM'?'Date':'Date',    x: ml+10,    w: 22 },
+            { lbl: lang==='RU'?'\u041f\u043b\u0430\u0442\u0451\u0436':lang==='AM'?'Payment':'Payment',  x: ml+32,    w: 30, r: true },
+            { lbl: lang==='RU'?'\u041e\u0441\u043d.':lang==='AM'?'Princ.':'Princ.',   x: ml+62,    w: 28, r: true },
+            { lbl: lang==='RU'?'\u041f\u0440\u043e\u0446.':'%',        x: ml+90,    w: 25, r: true },
+            { lbl: lang==='RU'?'\u0414\u043e\u043f.':'Extra',     x: ml+115,   w: 25, r: true },
+            { lbl: lang==='RU'?'\u041e\u0441\u0442.':'Balance',   x: ml+140,   w: cw-140, r: true }
           ]
         : [
             { lbl: '#',        x: ml,       w: 10 },
-            { lbl: lang==='RU'?'Дата':lang==='AM'?'Ամսաթիվ':'Date',    x: ml+10,    w: 25 },
-            { lbl: lang==='RU'?'Платёж':lang==='AM'?'Վճարում':'Payment',  x: ml+35,    w: 35, r: true },
-            { lbl: lang==='RU'?'Осн.':lang==='AM'?'Մայր':'Princ.',   x: ml+70,    w: 33, r: true },
-            { lbl: lang==='RU'?'Проц.':'%',        x: ml+103,   w: 30, r: true },
-            { lbl: lang==='RU'?'Ост.':'Balance',   x: ml+133,   w: cw-133, r: true }
+            { lbl: lang==='RU'?'\u0414\u0430\u0442\u0430':lang==='AM'?'Date':'Date',    x: ml+10,    w: 25 },
+            { lbl: lang==='RU'?'\u041f\u043b\u0430\u0442\u0451\u0436':lang==='AM'?'Payment':'Payment',  x: ml+35,    w: 35, r: true },
+            { lbl: lang==='RU'?'\u041e\u0441\u043d.':lang==='AM'?'Princ.':'Princ.',   x: ml+70,    w: 33, r: true },
+            { lbl: lang==='RU'?'\u041f\u0440\u043e\u0446.':'%',        x: ml+103,   w: 30, r: true },
+            { lbl: lang==='RU'?'\u041e\u0441\u0442.':'Balance',   x: ml+133,   w: cw-133, r: true }
           ]
 
       var tRowH = 5.5
@@ -322,7 +322,7 @@ export function usePdfExport(lang) {
 
         if (hasExtra) {
           doc.setTextColor(124, 58, 237)
-          doc.text(row.extra > 0 ? SYM + fmt(row.extra) : '—', cols[5].x + cols[5].w - 1, y + tRowH - 1.2, { align: 'right' })
+          doc.text(row.extra > 0 ? SYM + fmt(row.extra) : '-', cols[5].x + cols[5].w - 1, y + tRowH - 1.2, { align: 'right' })
         }
 
         // balance
@@ -353,7 +353,7 @@ export function usePdfExport(lang) {
       doc.line(ml, y, ml + cw, y)
       y += 4
       var disclaimer = lang === 'RU'
-        ? 'Этот расчёт носит информационный характер и не является финансовым советом.'
+        ? '\u042d\u0442\u043e\u0442 \u0440\u0430\u0441\u0447\u0451\u0442 \u043d\u043e\u0441\u0438\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u043e\u043d\u043d\u044b\u0439 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440 \u0438 \u043d\u0435 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0444\u0438\u043d\u0430\u043d\u0441\u043e\u0432\u044b\u043c \u0441\u043e\u0432\u0435\u0442\u043e\u043c.'
         : 'This calculation is for informational purposes only and does not constitute financial advice.'
       doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.setTextColor(148, 163, 184)
       doc.text(disclaimer, ml, y)
@@ -372,7 +372,7 @@ export function usePdfExport(lang) {
     } catch(err) {
       console.error('[usePdfExport] jsPDF error:', err)
       alert(
-        lang === 'RU' ? 'Ошибка генерации PDF: ' + err.message
+        lang === 'RU' ? '\u041e\u0448\u0438\u0431\u043a\u0430 \u0433\u0435\u043d\u0435\u0440\u0430\u0446\u0438\u0438 PDF: ' + err.message
         : 'PDF generation error: ' + err.message
       )
     } finally {
