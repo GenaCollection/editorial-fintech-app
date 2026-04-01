@@ -5,7 +5,8 @@ var SYM = '\u058f'
 function fmt(n) { return Math.round(n).toLocaleString() }
 function fmtR(n) { return Number(n).toFixed(2) }
 
-// All styles are INLINE so html2pdf.js can render without @media print
+// All styles INLINE — html2pdf clones this node and renders it off-screen.
+// Do NOT use CSS classes here; they won't be reliable in a detached clone.
 var S = {
   page: {
     fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
@@ -22,14 +23,10 @@ var S = {
     marginBottom: '10pt'
   },
   logo: { display: 'flex', alignItems: 'center', gap: '8pt' },
-  brand: {
-    fontSize: '16pt', fontWeight: 800, letterSpacing: '-0.03em', color: '#1d4ed8'
-  },
+  brand: { fontSize: '16pt', fontWeight: 800, letterSpacing: '-0.03em', color: '#1d4ed8' },
   meta: { textAlign: 'right', color: '#64748b', fontSize: '8pt' },
   metaTag: { fontSize: '7pt', color: '#94a3b8', marginTop: '2pt' },
-  divider: {
-    border: 'none', borderTop: '1.5pt solid #1d4ed8', margin: '8pt 0 14pt'
-  },
+  divider: { border: 'none', borderTop: '1.5pt solid #1d4ed8', margin: '8pt 0 14pt' },
   sectionTitle: {
     fontSize: '8pt', fontWeight: 700, textTransform: 'uppercase',
     letterSpacing: '0.08em', color: '#64748b',
@@ -48,9 +45,7 @@ var S = {
     display: 'block', fontSize: '7pt', color: '#94a3b8',
     textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '2pt'
   },
-  paramValue: {
-    display: 'block', fontSize: '10pt', fontWeight: 700, color: '#0f172a'
-  },
+  paramValue: { display: 'block', fontSize: '10pt', fontWeight: 700, color: '#0f172a' },
   summaryGrid: {
     display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
     gap: '6pt', marginBottom: '4pt'
@@ -71,37 +66,28 @@ var S = {
     fontSize: '7pt', color: 'rgba(255,255,255,0.75)', textTransform: 'uppercase',
     letterSpacing: '0.06em', marginBottom: '3pt'
   },
-  summaryValue: {
-    fontSize: '12pt', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em'
-  },
-  summaryValueW: {
-    fontSize: '12pt', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em'
-  },
+  summaryValue: { fontSize: '12pt', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' },
+  summaryValueW: { fontSize: '12pt', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' },
   summarySub: { fontSize: '7pt', color: '#94a3b8', marginTop: '2pt' },
   summarySubW: { fontSize: '7pt', color: 'rgba(255,255,255,0.6)', marginTop: '2pt' },
-  table: {
-    width: '100%', borderCollapse: 'collapse',
-    fontSize: '8pt', marginBottom: '4pt'
-  },
+  table: { width: '100%', borderCollapse: 'collapse', fontSize: '8pt', marginBottom: '4pt' },
   thead: { background: '#1d4ed8' },
   th: {
     padding: '5pt 6pt', fontWeight: 700, textAlign: 'left',
-    fontSize: '7pt', textTransform: 'uppercase',
-    letterSpacing: '0.05em', color: '#ffffff'
+    fontSize: '7pt', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#ffffff'
   },
   thR: {
     padding: '5pt 6pt', fontWeight: 700, textAlign: 'right',
-    fontSize: '7pt', textTransform: 'uppercase',
-    letterSpacing: '0.05em', color: '#ffffff'
+    fontSize: '7pt', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#ffffff'
   },
   tr: { pageBreakInside: 'avoid' },
-  td: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155' },
-  tdR: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155', textAlign: 'right' },
-  tdEven: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155', background: '#f8fafc' },
-  tdEvenR: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155', background: '#f8fafc', textAlign: 'right' },
-  tdNum: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', fontWeight: 700, color: '#1d4ed8' },
+  td:        { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155' },
+  tdR:       { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155', textAlign: 'right' },
+  tdEven:    { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155', background: '#f8fafc' },
+  tdEvenR:   { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155', background: '#f8fafc', textAlign: 'right' },
+  tdNum:     { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', fontWeight: 700, color: '#1d4ed8' },
   tdNumEven: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', fontWeight: 700, color: '#1d4ed8', background: '#f8fafc' },
-  tdGreen: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#059669', textAlign: 'right' },
+  tdGreen:     { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#059669', textAlign: 'right' },
   tdGreenEven: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#059669', textAlign: 'right', background: '#f8fafc' },
   tfootTd: {
     padding: '5pt 6pt', borderTop: '1pt solid #cbd5e1',
@@ -115,17 +101,31 @@ var S = {
   footerBrand: { fontWeight: 700, color: '#64748b', whiteSpace: 'nowrap' }
 }
 
+// wrapStyle: element lives in DOM (needed for cloneNode), but takes zero space.
+// The clone inserted into document.body by usePdfExport handles visibility.
+var wrapStyle = {
+  position: 'absolute',
+  left: '-9999px',
+  top: 0,
+  width: '900px',
+  height: '1px',
+  overflow: 'hidden',
+  pointerEvents: 'none',
+  userSelect: 'none',
+  zIndex: -1
+}
+
 export default function PrintLayout(props) {
-  var loanState = props.loanState
-  var schedule = props.schedule
+  var loanState     = props.loanState
+  var schedule      = props.schedule
   var monthlyPayment = props.monthlyPayment
   var totalInterest = props.totalInterest
-  var totalPayment = props.totalPayment
-  var apr = props.apr
+  var totalPayment  = props.totalPayment
+  var apr           = props.apr
   var extraPayments = props.extraPayments || []
-  var lang = props.lang || 'EN'
+  var lang          = props.lang || 'EN'
 
-  var isDiff = loanState.loanType === 'differentiated'
+  var isDiff       = loanState.loanType === 'differentiated'
   var firstPayment = schedule.length > 0 ? schedule[0].payment : monthlyPayment
   var lastPayment  = schedule.length > 0 ? schedule[schedule.length - 1].payment : monthlyPayment
   var today = new Date().toLocaleDateString(
@@ -140,29 +140,19 @@ export default function PrintLayout(props) {
       RU: '\u042d\u0442\u043e\u0442 \u0440\u0430\u0441\u0447\u0451\u0442 \u043d\u043e\u0441\u0438\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u043e\u043d\u043d\u044b\u0439 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440 \u0438 \u043d\u0435 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0444\u0438\u043d\u0430\u043d\u0441\u043e\u0432\u044b\u043c \u0441\u043e\u0432\u0435\u0442\u043e\u043c.',
       EN: 'This calculation is for informational purposes only and does not constitute financial advice.'
     },
-    loanParams:  { AM: '\u054e\u0561\u580c\u056f\u056b \u054a\u0561\u580c\u0561\u0574\u0587\u057f\u580c\u0576\u0587\u580c', RU: '\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043a\u0440\u0435\u0434\u0438\u0442\u0430', EN: 'Loan Parameters' },
-    summary:     { AM: '\u0531\u580c\u564a\u0578\u0582\u576f\u584d\u576f\u0576', RU: '\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b', EN: 'Summary' },
-    amortTable:  { AM: '\u0531\u0574\u0578\u580c\u057f\u056b\u566a\u0561\u581d\u056b\u0578\u576f \u0533\u580c\u0561\u0586\u056b\u056f', RU: '\u0413\u0440\u0430\u0444\u0438\u043a \u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439', EN: 'Amortization Schedule' },
-    earlyPay:    { AM: '\u0531\u580c\u057f\u0561\u0570\u0587\u580f \u054e\u573a\u0561\u580c\u578f\u0578\u582d\u576f\u0576', RU: '\u0414\u043e\u0441\u0440\u043e\u0447\u043d\u044b\u0435 \u043f\u043b\u0430\u0442\u0435\u0436\u0438', EN: 'Early Payments' },
-    month:       { AM: '\u0531\u0574\u056b\u057d', RU: '\u041c\u0435\u0441.', EN: 'Mo.' },
-    date:        { AM: '\u0531\u0574\u057d\u0561\u0569\u056b\u057e', RU: '\u0414\u0430\u0442\u0430', EN: 'Date' },
-    payment:     { AM: '\u054e\u573a\u0561\u580c\u578f\u0578\u582d', RU: '\u041f\u043b\u0430\u0442\u0451\u0436', EN: 'Payment' },
-    principal:   { AM: '\u0544\u0561\u575e\u580c \u0533\u578f\u0561\u580c', RU: '\u041e\u0441\u043d. \u0434\u043e\u043b\u0433', EN: 'Principal' },
-    interest:    { AM: '\u054f\u0578\u056f\u0578\u057d', RU: '\u041f\u0440\u043e\u0446\u0435\u043d\u0442\u044b', EN: 'Interest' },
-    extra:       { AM: '\u053c\u580c\u0561\u581a.', RU: '\u0414\u043e\u043f.', EN: 'Extra' },
-    balance:     { AM: '\u0544\u576f\u0561\u581d\u0578\u580c\u564f', RU: '\u041e\u0441\u0442\u0430\u0442\u043e\u043a', EN: 'Balance' }
+    loanParams: { AM: '\u054e\u0561\u580c\u056f\u056b \u054a\u0561\u580c\u0561\u0574\u0587\u057f\u580c\u0576\u0587\u580c', RU: '\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043a\u0440\u0435\u0434\u0438\u0442\u0430', EN: 'Loan Parameters' },
+    summary:    { AM: '\u0531\u580c\u564a\u0578\u0582\u576f\u584d\u576f\u0576', RU: '\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b', EN: 'Summary' },
+    amortTable: { AM: '\u0531\u0574\u0578\u580c\u057f\u056b\u566a\u0561\u581d\u056b\u0578\u576f \u0533\u580c\u0561\u0586\u056b\u056f', RU: '\u0413\u0440\u0430\u0444\u0438\u043a \u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439', EN: 'Amortization Schedule' },
+    earlyPay:   { AM: '\u0531\u580c\u057f\u0561\u0570\u0587\u580f \u054e\u573a\u0561\u580c\u578f\u0578\u582d\u576f\u0576', RU: '\u0414\u043e\u0441\u0440\u043e\u0447\u043d\u044b\u0435 \u043f\u043b\u0430\u0442\u0435\u0436\u0438', EN: 'Early Payments' },
+    month:      { AM: '\u0531\u0574\u056b\u057d', RU: '\u041c\u0435\u0441.', EN: 'Mo.' },
+    date:       { AM: '\u0531\u0574\u057d\u0561\u0569\u056b\u057e', RU: '\u0414\u0430\u0442\u0561', EN: 'Date' },
+    payment:    { AM: '\u054e\u573a\u0561\u580c\u578f\u0578\u582d', RU: '\u041f\u043b\u0430\u0442\u0451\u0436', EN: 'Payment' },
+    principal:  { AM: '\u0544\u0561\u575e\u580c \u0533\u578f\u0561\u580c', RU: '\u041e\u0441\u043d. \u0434\u043e\u043b\u0433', EN: 'Principal' },
+    interest:   { AM: '\u054f\u0578\u056f\u0578\u057d', RU: '\u041f\u0440\u043e\u0446\u0435\u043d\u0442\u044b', EN: 'Interest' },
+    extra:      { AM: '\u053c\u580c\u0561\u581a.', RU: '\u0414\u043e\u043f.', EN: 'Extra' },
+    balance:    { AM: '\u0544\u576f\u0561\u581d\u0578\u580c\u564f', RU: '\u041e\u0441\u0442\u0430\u0442\u043e\u043a', EN: 'Balance' }
   }
   function tr(k) { return (lbl[k] && lbl[k][lang]) || (lbl[k] && lbl[k]['EN']) || k }
-
-  var wrapStyle = {
-    position: 'absolute',
-    left: '-9999px',
-    top: 0,
-    width: '900px',
-    overflow: 'visible',
-    zIndex: -1,
-    pointerEvents: 'none'
-  }
 
   return (
     <div id="print-layout" style={wrapStyle}>
