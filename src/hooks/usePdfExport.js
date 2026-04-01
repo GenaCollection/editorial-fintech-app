@@ -1,10 +1,9 @@
 import { useState } from 'react'
+import { t } from '../i18n/labels.js'
 
 var SYM = '\u058f'
 function fmt(n) { return Math.round(n).toLocaleString() }
 function fmtR(n) { return Number(n).toFixed(2) }
-
-function L(lang, ru, en) { return lang === 'RU' ? ru : en }
 
 export function usePdfExport(lang) {
   var arr = useState(false)
@@ -23,7 +22,7 @@ export function usePdfExport(lang) {
 
     var jsPDFLib = window.jspdf && window.jspdf.jsPDF
     if (!jsPDFLib) {
-      alert(L(lang, 'jsPDF ещё загружается — подождите и повторите.', 'jsPDF is still loading — please try again.'))
+      alert(t(lang, 'calc', 'title') + ': jsPDF not loaded')
       return
     }
 
@@ -46,9 +45,12 @@ export function usePdfExport(lang) {
       var lastPayment    = schedule.length > 0 ? schedule[schedule.length - 1].payment : monthlyPayment
 
       var today = new Date().toLocaleDateString(
-        lang === 'RU' ? 'ru-RU' : 'en-US',
+        lang === 'AM' ? 'hy-AM' : lang === 'RU' ? 'ru-RU' : 'en-US',
         { year: 'numeric', month: 'long', day: 'numeric' }
       )
+
+      // Translate shorthand
+      var T = function(section, key) { return t(lang, section, key) }
 
       function checkPage(needed) {
         if (y + (needed || 10) > ph - 12) {
@@ -89,7 +91,8 @@ export function usePdfExport(lang) {
       doc.text('ArmFinCredit', ml + 2, y + 5.5)
 
       doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.setTextColor(100, 116, 139)
-      doc.text(L(lang, 'Дата:', 'Generated:') + ' ' + today, pw - mr, y + 3, { align: 'right' })
+      var genLabel = lang === 'RU' ? '\u0414\u0430\u0442\u0430:' : lang === 'AM' ? '\u054f\u0565\u0572\u0561\u056f\u0561\u056c\u057e\u0561\u056e:' : 'Generated:'
+      doc.text(genLabel + ' ' + today, pw - mr, y + 3, { align: 'right' })
       doc.setFontSize(6); doc.setTextColor(148, 163, 184)
       doc.text('armfincredit.am', pw - mr, y + 7.5, { align: 'right' })
 
@@ -99,28 +102,26 @@ export function usePdfExport(lang) {
       y += 6
 
       // ---- LOAN PARAMETERS ----
-      sectionTitle(L(lang, 'Параметры кредита', 'Loan Parameters'))
+      sectionTitle(T('calc', 'params'))
 
       var cardW = (cw - 9) / 4
-      var typeLabel = isDiff
-        ? L(lang, 'Дифференц.', 'Diff.')
-        : L(lang, 'Аннуитет', 'Annuity')
+      var typeLabel = isDiff ? T('calc', 'diff') : T('calc', 'annuity')
 
-      paramCard(ml,                   y, cardW, L(lang, 'Сумма',  'Amount'),   SYM + fmt(loanState.amount))
-      paramCard(ml + (cardW+3),       y, cardW, L(lang, 'Ставка', 'Rate'),     fmtR(loanState.rate) + '%')
-      paramCard(ml + (cardW+3)*2,     y, cardW, L(lang, 'Срок',   'Term'),     loanState.term + ' mo')
-      paramCard(ml + (cardW+3)*3,     y, cardW, L(lang, 'Тип',    'Type'),     typeLabel)
+      paramCard(ml,               y, cardW, T('calc', 'amount'),  SYM + fmt(loanState.amount))
+      paramCard(ml + (cardW+3),   y, cardW, T('calc', 'rate'),    fmtR(loanState.rate) + '%')
+      paramCard(ml + (cardW+3)*2, y, cardW, T('calc', 'term'),    loanState.term + ' ' + T('calc', 'months'))
+      paramCard(ml + (cardW+3)*3, y, cardW, T('calc', 'type'),    typeLabel)
       y += 16
 
       if (loanState.fee > 0 || loanState.insurance > 0) {
         var cw2 = (cw - 3) / 2
-        if (loanState.fee > 0)       paramCard(ml,        y, cw2, L(lang, 'Комиссия',  'Fee'),       SYM + fmt(loanState.fee))
-        if (loanState.insurance > 0) paramCard(ml+cw2+3,  y, cw2, L(lang, 'Страховка', 'Insurance'), SYM + fmt(loanState.insurance))
+        if (loanState.fee > 0)       paramCard(ml,       y, cw2, T('adv', 'fee'),       SYM + fmt(loanState.fee))
+        if (loanState.insurance > 0) paramCard(ml+cw2+3, y, cw2, T('adv', 'insurance'), SYM + fmt(loanState.insurance))
         y += 16
       }
 
       // ---- SUMMARY ----
-      sectionTitle(L(lang, 'Результаты', 'Summary'))
+      sectionTitle(T('calc', 'breakd'))
 
       var sc = (cw - 9) / 4
       var monthlyVal = SYM + fmt(isDiff ? firstPayment : monthlyPayment)
@@ -129,7 +130,7 @@ export function usePdfExport(lang) {
       doc.roundedRect(ml, y, sc, 16, 1.5, 1.5, 'F')
       doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.setTextColor(255,255,255)
       doc.setGState(new doc.GState({ opacity: 0.75 }))
-      doc.text(L(lang, 'Ежемесячный', 'Monthly').toUpperCase(), ml + 3, y + 5)
+      doc.text(T('calc', 'monthly').toUpperCase(), ml + 3, y + 5)
       doc.setGState(new doc.GState({ opacity: 1 }))
       doc.setFontSize(11); doc.setFont('helvetica', 'bold'); doc.setTextColor(255,255,255)
       doc.text(monthlyVal, ml + 3, y + 12)
@@ -141,9 +142,9 @@ export function usePdfExport(lang) {
       }
 
       var summaryCards = [
-        { lbl: L(lang, 'Проценты', 'Interest'), val: SYM + fmt(totalInterest) },
-        { lbl: L(lang, 'Итого',    'Total'),    val: SYM + fmt(totalPayment) },
-        { lbl: 'APR',                            val: fmtR(apr) + '%' }
+        { lbl: T('calc', 'totalInt'), val: SYM + fmt(totalInterest) },
+        { lbl: T('calc', 'total'),    val: SYM + fmt(totalPayment) },
+        { lbl: 'APR',                  val: fmtR(apr) + '%' }
       ]
       summaryCards.forEach(function(card, i) {
         var cx = ml + (sc + 3) * (i + 1)
@@ -158,13 +159,13 @@ export function usePdfExport(lang) {
 
       // ---- EARLY PAYMENTS ----
       if (extraPayments.length > 0) {
-        sectionTitle(L(lang, 'Досрочные платежи', 'Early Payments'))
+        sectionTitle(T('early', 'title'))
         var col0 = ml, col1 = ml + 30, rowH = 6
         doc.setFillColor(29, 78, 216)
         doc.rect(col0, y, cw, rowH, 'F')
         doc.setFontSize(6.5); doc.setFont('helvetica', 'bold'); doc.setTextColor(255,255,255)
-        doc.text(L(lang, 'Мес.', 'Mo.'),    col0 + 2, y + 4.2)
-        doc.text(L(lang, 'Сумма', 'Amount'), col1 + 2, y + 4.2)
+        doc.text(T('sched', 'mo'),     col0 + 2, y + 4.2)
+        doc.text(T('sched', 'amount'), col1 + 2, y + 4.2)
         y += rowH
         extraPayments.forEach(function(ep, i) {
           checkPage(rowH + 2)
@@ -182,24 +183,24 @@ export function usePdfExport(lang) {
       }
 
       // ---- AMORTIZATION TABLE ----
-      sectionTitle(L(lang, 'График платежей', 'Amortization Schedule'))
+      sectionTitle(T('sched', 'title'))
 
       var hasExtra = extraPayments.length > 0
       var cols = hasExtra ? [
-        { lbl: '#',                            x: ml,      w: 10 },
-        { lbl: L(lang, 'Дата',    'Date'),     x: ml+10,   w: 22 },
-        { lbl: L(lang, 'Платёж',  'Payment'),  x: ml+32,   w: 30, r: true },
-        { lbl: L(lang, 'Осн.',    'Princ.'),   x: ml+62,   w: 28, r: true },
-        { lbl: L(lang, 'Проц.',   '%'),         x: ml+90,   w: 25, r: true },
-        { lbl: L(lang, 'Доп.',    'Extra'),    x: ml+115,  w: 25, r: true },
-        { lbl: L(lang, 'Ост.',    'Balance'),  x: ml+140,  w: cw-140, r: true }
+        { lbl: '#',                    x: ml,     w: 10 },
+        { lbl: T('sched','month'),     x: ml+10,  w: 22 },
+        { lbl: T('sched','payment'),   x: ml+32,  w: 30, r: true },
+        { lbl: T('sched','principal'), x: ml+62,  w: 28, r: true },
+        { lbl: T('sched','interest'),  x: ml+90,  w: 25, r: true },
+        { lbl: T('early','extraCol'),  x: ml+115, w: 25, r: true },
+        { lbl: T('sched','balance'),   x: ml+140, w: cw-140, r: true }
       ] : [
-        { lbl: '#',                            x: ml,      w: 10 },
-        { lbl: L(lang, 'Дата',    'Date'),     x: ml+10,   w: 25 },
-        { lbl: L(lang, 'Платёж',  'Payment'),  x: ml+35,   w: 35, r: true },
-        { lbl: L(lang, 'Осн.',    'Princ.'),   x: ml+70,   w: 33, r: true },
-        { lbl: L(lang, 'Проц.',   '%'),         x: ml+103,  w: 30, r: true },
-        { lbl: L(lang, 'Ост.',    'Balance'),  x: ml+133,  w: cw-133, r: true }
+        { lbl: '#',                    x: ml,     w: 10 },
+        { lbl: T('sched','month'),     x: ml+10,  w: 25 },
+        { lbl: T('sched','payment'),   x: ml+35,  w: 35, r: true },
+        { lbl: T('sched','principal'), x: ml+70,  w: 33, r: true },
+        { lbl: T('sched','interest'),  x: ml+103, w: 30, r: true },
+        { lbl: T('sched','balance'),   x: ml+133, w: cw-133, r: true }
       ]
 
       var tRowH = 5.5
@@ -234,13 +235,13 @@ export function usePdfExport(lang) {
         doc.text(row.label || '', cols[1].x + 2, y + tRowH - 1.2)
 
         doc.setFont('helvetica', 'bold')
-        doc.text(SYM + fmt(row.payment),    cols[2].x + cols[2].w - 1, y + tRowH - 1.2, { align: 'right' })
+        doc.text(SYM + fmt(row.payment),   cols[2].x + cols[2].w - 1, y + tRowH - 1.2, { align: 'right' })
 
         doc.setFont('helvetica', 'normal')
-        doc.text(SYM + fmt(row.principal),  cols[3].x + cols[3].w - 1, y + tRowH - 1.2, { align: 'right' })
+        doc.text(SYM + fmt(row.principal), cols[3].x + cols[3].w - 1, y + tRowH - 1.2, { align: 'right' })
 
         doc.setTextColor(5, 150, 105)
-        doc.text(SYM + fmt(row.interest),   cols[4].x + cols[4].w - 1, y + tRowH - 1.2, { align: 'right' })
+        doc.text(SYM + fmt(row.interest),  cols[4].x + cols[4].w - 1, y + tRowH - 1.2, { align: 'right' })
 
         if (hasExtra) {
           doc.setTextColor(124, 58, 237)
@@ -272,12 +273,7 @@ export function usePdfExport(lang) {
       doc.line(ml, y, ml + cw, y)
       y += 4
       doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.setTextColor(148, 163, 184)
-      doc.text(
-        L(lang,
-          'Этот расчёт носит информационный характер и не является финансовым советом.',
-          'This calculation is for informational purposes only and does not constitute financial advice.'
-        ), ml, y
-      )
+      doc.text(t(lang, 'footer', 'disclaimer'), ml, y)
       doc.setFont('helvetica', 'bold'); doc.setTextColor(100, 116, 139)
       doc.text('ArmFinCredit — armfincredit.am', ml + cw, y, { align: 'right' })
 
@@ -292,7 +288,7 @@ export function usePdfExport(lang) {
       doc.save(getFilename())
     } catch(err) {
       console.error('[usePdfExport]', err)
-      alert(L(lang, 'Ошибка PDF: ' + err.message, 'PDF error: ' + err.message))
+      alert('PDF error: ' + err.message)
     } finally {
       setExporting(false)
     }
