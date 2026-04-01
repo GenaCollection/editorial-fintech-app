@@ -1,7 +1,7 @@
 import React from 'react'
 import { t } from '../i18n/labels.js'
 
-var SYM = '֏'
+var SYM = '\u058f'
 function fmt(n) { return Math.round(n).toLocaleString() }
 function fmtR(n) { return Number(n).toFixed(2) }
 
@@ -14,7 +14,7 @@ var S = {
     color: '#1e293b',
     background: '#ffffff',
     width: '900px',
-    padding: '32px 36px',
+    padding: '32px 20px',
     boxSizing: 'border-box'
   },
   header: {
@@ -94,6 +94,8 @@ var S = {
     fontSize: '7pt', textTransform: 'uppercase',
     letterSpacing: '0.05em', color: '#ffffff'
   },
+  // pageBreakInside: 'avoid' on every <tr> prevents mid-row page splits
+  tr: { pageBreakInside: 'avoid' },
   td: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155' },
   tdR: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155', textAlign: 'right' },
   tdEven: { padding: '3.5pt 6pt', borderBottom: '0.3pt solid #f1f5f9', color: '#334155', background: '#f8fafc' },
@@ -133,23 +135,23 @@ export default function PrintLayout(props) {
   )
 
   var lbl = {
-    generatedOn: { AM: 'Ստեղծված:',      RU: 'Дата:',           EN: 'Generated:' },
+    generatedOn: { AM: '\u054�\u057f\u0587\u056e\u057e\u0561\u056e:',      RU: '\u0414\u0430\u0442\u0430:',           EN: 'Generated:' },
     disclaimer: {
-      AM: 'Այս հաշվարկը կրում է տեղեկատվական բնույթ և չի հանդիսանում ֆինանսական խորհրդատվություն:',
-      RU: 'Этот расчёт носит информационный характер и не является финансовым советом.',
+      AM: '\u0531\u0575\u057d \u0570\u0561\u0577\u057e\u0561\u580f\u056b \u056f\u0580\u056b \u056f\u0580\u056b \u057f\u0565\u0572\u0565\u056f\u0561\u057f\u057e\u0561\u056f\u0561\u576f \u0562\u576b\u0578\u0582\u0569\u0575\u0578\u0582\u576f \u0565 \u0587 \u579b\u056b \u0570\u0561\u576f\u564a\u056b\u057d\u0561\u576f\u0578\u0582\u0569\u0575\u0578\u0582\u576f \u0586\u056b\u576c\u0561\u576f\u057d\u056f\u0561\u056f\u0561\u576f \u056d\u0578\u580c\u580a\u0561\u057f\u057e\u0578\u0582\u0569\u0575\u0578\u0582\u576f:',
+      RU: '\u042d\u0442\u043e\u0442 \u0440\u0430\u0441\u0447\u0451\u0442 \u043d\u043e\u0441\u0438\u0442 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u043e\u043d\u043d\u044b\u0439 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440 \u0438 \u043d\u0435 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u0444\u0438\u043d\u0430\u043d\u0441\u043e\u0432\u044b\u043c \u0441\u043e\u0432\u0435\u0442\u043e\u043c.',
       EN: 'This calculation is for informational purposes only and does not constitute financial advice.'
     },
-    loanParams:  { AM: 'Վարկի Պարամետրները', RU: 'Параметры кредита',  EN: 'Loan Parameters' },
-    summary:     { AM: 'Արդյունքներ',         RU: 'Результаты',         EN: 'Summary' },
-    amortTable:  { AM: 'Ամորտիզացիոն Գրաֆիկ', RU: 'График платежей',    EN: 'Amortization Schedule' },
-    earlyPay:    { AM: 'Արտահերթ Վճարումներ', RU: 'Досрочные платежи',  EN: 'Early Payments' },
-    month:       { AM: 'Ամիս',               RU: 'Мес.',               EN: 'Mo.' },
-    date:        { AM: 'Ամսաթիվ',            RU: 'Дата',               EN: 'Date' },
-    payment:     { AM: 'Վճարում',            RU: 'Платёж',             EN: 'Payment' },
-    principal:   { AM: 'Մայր Գումար',        RU: 'Осн. долг',          EN: 'Principal' },
-    interest:    { AM: 'Տոկոս',              RU: 'Проценты',           EN: 'Interest' },
-    extra:       { AM: 'Լրաց.',              RU: 'Доп.',               EN: 'Extra' },
-    balance:     { AM: 'Մնացորդ',            RU: 'Остаток',            EN: 'Balance' }
+    loanParams:  { AM: '\u054e\u0561\u580c\u056f\u056b \u054a\u0561\u580c\u0561\u0574\u0587\u057f\u0580\u576f\u0576\u0587\u580c\u0568', RU: '\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043a\u0440\u0435\u0434\u0438\u0442\u0430',  EN: 'Loan Parameters' },
+    summary:     { AM: '\u0531\u580c\u564a\u0578\u0582\u576f\u584d\u576f\u0576\u0587\u580c',         RU: '\u0420\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u044b',         EN: 'Summary' },
+    amortTable:  { AM: '\u0531\u0574\u0578\u580c\u057f\u056b\u566a\u0561\u581d\u056b\u0578\u576f \u0533\u580c\u0561\u0586\u056b\u056f', RU: '\u0413\u0440\u0430\u0444\u0438\u043a \u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439',    EN: 'Amortization Schedule' },
+    earlyPay:    { AM: '\u0531\u580c\u057f\u0561\u0570\u0587\u580f \u054e\u573a\u0561\u580c\u578f\u0578\u582d\u576f\u0576\u0587\u580c', RU: '\u0414\u043e\u0441\u0440\u043e\u0447\u043d\u044b\u0435 \u043f\u043b\u0561\u0442\u0435\u0436\u0438',  EN: 'Early Payments' },
+    month:       { AM: '\u0531\u0574\u056b\u057d',               RU: '\u041c\u0435\u0441.',               EN: 'Mo.' },
+    date:        { AM: '\u0531\u0574\u057d\u0561\u0569\u056b\u057e',            RU: '\u0414\u0430\u057f\u0561',               EN: 'Date' },
+    payment:     { AM: '\u054e\u573a\u0561\u580c\u578f\u0578\u582d',            RU: '\u041f\u043b\u0430\u057f\u0451\u0436',             EN: 'Payment' },
+    principal:   { AM: '\u0544\u0561\u575e\u580c \u0533\u578f\u0561\u580c',        RU: '\u041e\u057d\u576f. \u0564\u043e\u043b\u0563',          EN: 'Principal' },
+    interest:    { AM: '\u054f\u0578\u056f\u0578\u057d',              RU: '\u041f\u0580\u043e\u0446\u0565\u043d\u0442\u044b',           EN: 'Interest' },
+    extra:       { AM: '\u053c\u580c\u561\u46.',              RU: '\u0414\u043e\u043f.',               EN: 'Extra' },
+    balance:     { AM: '\u0544\u576f\u561\u581d\u0578\u580c\u564f',            RU: '\u041e\u057d\u057f\u0561\u0442\u043e\u056f',            EN: 'Balance' }
   }
   function tr(k) { return (lbl[k] && lbl[k][lang]) || (lbl[k] && lbl[k]['EN']) || k }
 
@@ -258,7 +260,7 @@ export default function PrintLayout(props) {
                 {extraPayments.map(function(ep, i) {
                   var even = i % 2 === 0
                   return (
-                    <tr key={ep.month}>
+                    <tr key={ep.month} style={S.tr}>
                       <td style={even ? S.tdEven : S.td}>{ep.month}</td>
                       <td style={{ ...(even ? S.tdEvenR : S.tdR), fontWeight: 700 }}>{SYM}{Number(ep.amount).toLocaleString()}</td>
                     </tr>
@@ -287,7 +289,7 @@ export default function PrintLayout(props) {
             {schedule.map(function(row, i) {
               var even = i % 2 === 0
               return (
-                <tr key={row.month}>
+                <tr key={row.month} style={S.tr}>
                   <td style={even ? S.tdNumEven : S.tdNum}>{row.month}</td>
                   <td style={even ? S.tdEven : S.td}>{row.label}</td>
                   <td style={{ ...(even ? S.tdEvenR : S.tdR), fontWeight: 700 }}>{SYM}{fmt(row.payment)}</td>
@@ -295,7 +297,7 @@ export default function PrintLayout(props) {
                   <td style={even ? S.tdGreenEven : S.tdGreen}>{SYM}{fmt(row.interest)}</td>
                   {extraPayments.length > 0 && (
                     <td style={{ ...(even ? S.tdEvenR : S.tdR), color: '#7c3aed' }}>
-                      {row.extra > 0 ? (SYM + fmt(row.extra)) : '—'}
+                      {row.extra > 0 ? (SYM + fmt(row.extra)) : '\u2014'}
                     </td>
                   )}
                   <td style={{ ...(even ? S.tdEvenR : S.tdR), fontWeight: 600 }}>{SYM}{fmt(row.balance)}</td>
@@ -304,7 +306,7 @@ export default function PrintLayout(props) {
             })}
           </tbody>
           <tfoot>
-            <tr>
+            <tr style={S.tr}>
               <td colSpan={extraPayments.length > 0 ? 4 : 3} style={S.tfootTd}></td>
               <td style={{ ...S.tfootTd, color: '#059669', textAlign: 'right' }}>{SYM}{fmt(totalInterest)}</td>
               {extraPayments.length > 0 && <td style={S.tfootTd}></td>}
