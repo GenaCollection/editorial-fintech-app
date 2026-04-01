@@ -4,8 +4,10 @@ import { useState } from 'react'
  * usePdfExport — generates a clean PDF from #print-layout
  * using html2pdf.js loaded globally via CDN in index.html.
  *
- * Key fix: element is positioned off-screen (not display:none)
- * so html2pdf can measure and render it correctly.
+ * Fixes:
+ * 1. finally block — element always restores position even on error
+ * 2. windowWidth: 940 matches PrintLayout width (900px + 2×20px padding)
+ * 3. pagebreak avoid on table rows for long schedules
  */
 export function usePdfExport(lang) {
   var exportingArr = useState(false)
@@ -22,7 +24,11 @@ export function usePdfExport(lang) {
 
   function exportPdf() {
     if (typeof window.html2pdf === 'undefined') {
-      alert('html2pdf.js is not loaded yet — please wait a moment and try again.')
+      alert(
+        lang === 'AM' ? 'html2pdf.js-ը դեռ բեռնված չէ, խնդրում ենք մի քիչ սպասեք:'
+        : lang === 'RU' ? 'html2pdf.js ещё загружается — подождите немного.'
+        : 'html2pdf.js is not loaded yet — please wait a moment and try again.'
+      )
       return
     }
 
@@ -36,7 +42,9 @@ export function usePdfExport(lang) {
 
     // Temporarily move into viewport so html2pdf renders correctly
     var prevLeft = el.style.left
+    var prevZIndex = el.style.zIndex
     el.style.left = '0px'
+    el.style.top = '0px'
     el.style.zIndex = '9999'
 
     var opt = {
@@ -47,15 +55,25 @@ export function usePdfExport(lang) {
         scale: 2,
         useCORS: true,
         scrollY: 0,
-        windowWidth: 960,
-        logging: false
+        // Match PrintLayout width (900px) + 2×20px safe padding
+        windowWidth: 940,
+        logging: false,
+        allowTaint: false
       },
       jsPDF: {
         unit: 'mm',
         format: 'a4',
         orientation: 'portrait'
       },
-      pagebreak: { mode: ['css', 'legacy'] }
+      // avoid: table rows prevent mid-row page breaks on long schedules
+      pagebreak: { mode: ['css', 'legacy'], avoid: ['tr', '.print-no-break'] }
+    }
+
+    function restoreEl() {
+      el.style.left = prevLeft
+      el.style.top = '0'
+      el.style.zIndex = prevZIndex
+      setExporting(false)
     }
 
     window.html2pdf()
@@ -63,15 +81,11 @@ export function usePdfExport(lang) {
       .from(el)
       .save()
       .then(function () {
-        el.style.left = prevLeft
-        el.style.zIndex = '-1'
-        setExporting(false)
+        restoreEl()
       })
       .catch(function (err) {
         console.error('PDF export failed:', err)
-        el.style.left = prevLeft
-        el.style.zIndex = '-1'
-        setExporting(false)
+        restoreEl()
       })
   }
 
