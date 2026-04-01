@@ -4,7 +4,6 @@ import { useLoan, generateAmortization } from '../context/LoanContext.jsx'
 import { useSaved } from '../context/SavedContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
-import PrintLayout from '../components/PrintLayout.jsx'
 import { usePdfExport } from '../hooks/usePdfExport.js'
 import '../styles/print.css'
 
@@ -341,9 +340,8 @@ export default function CalculatorPage() {
   var lang = useLanguage().language
   var searchParamsArr = useSearchParams()
   var searchParams = searchParamsArr[0]
-  var printRootRef = useRef(null)
 
-  // PDF export hook
+  // PDF export hook — new jsPDF-based approach
   var pdfHook = usePdfExport(lang)
   var exportPdf = pdfHook.exportPdf
   var exporting = pdfHook.exporting
@@ -403,16 +401,24 @@ export default function CalculatorPage() {
   }
 
   function handlePrint() {
-    var el = document.getElementById('print-layout')
-    if (el) el.style.display = 'block'
     setPrinting(true)
     setTimeout(function() {
       window.print()
-      setTimeout(function() {
-        if (el) el.style.display = 'none'
-        setPrinting(false)
-      }, 500)
+      setTimeout(function() { setPrinting(false) }, 500)
     }, 80)
+  }
+
+  // ── PDF handler: build data object and call exportPdf ──────────────────────
+  function handleExportPdf() {
+    exportPdf({
+      loanState:      loanState,
+      schedule:       schedule,
+      monthlyPayment: monthlyPayment,
+      totalInterest:  totalInterest,
+      totalPayment:   totalPayment || (monthlyPayment * term),
+      apr:            apr,
+      extraPayments:  extraPayments || []
+    })
   }
 
   var totalPay = totalPayment || (monthlyPayment * term)
@@ -424,20 +430,6 @@ export default function CalculatorPage() {
   return (
     <main className="flex-1 px-4 md:px-10 pt-20 pb-16 max-w-7xl mx-auto w-full">
       {showSave && <SaveModal onSave={handleSave} onClose={function() { setShowSave(false) }} lang={lang} />}
-
-      {/* Hidden print layout — revealed only during print or PDF export */}
-      <div id="print-root" ref={printRootRef}>
-        <PrintLayout
-          loanState={loanState}
-          schedule={schedule}
-          monthlyPayment={monthlyPayment}
-          totalInterest={totalInterest}
-          totalPayment={totalPay}
-          apr={apr}
-          extraPayments={extraPayments}
-          lang={lang}
-        />
-      </div>
 
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -576,14 +568,13 @@ export default function CalculatorPage() {
             </table>
           </div>
 
-          {/* Action buttons: View Full | Print | PDF */}
+          {/* Action buttons */}
           <div className="flex gap-3">
             <button onClick={function() { navigate('/schedule') }}
               className="flex-1 bg-blue-700 text-white py-4 rounded-xl font-bold hover:bg-blue-800 active:scale-95 transition-all">
               {t(lang,'calc','viewFull')}
             </button>
 
-            {/* Print button — uses window.print() + @media print CSS */}
             <button
               onClick={handlePrint}
               disabled={printing}
@@ -593,9 +584,9 @@ export default function CalculatorPage() {
               <span className="material-symbols-outlined" style={{fontSize:'20px'}}>print</span>
             </button>
 
-            {/* PDF button — uses html2pdf.js via CDN */}
+            {/* PDF button — uses jsPDF directly, no DOM capture */}
             <button
-              onClick={exportPdf}
+              onClick={handleExportPdf}
               disabled={exporting}
               title={lang === 'AM' ? 'PDF \u0562\u0565\u057c\u0576\u0565\u056c' : lang === 'RU' ? '\u0421\u043a\u0430\u0447\u0430\u0442\u044c PDF' : 'Download PDF'}
               className={'w-14 flex items-center justify-center bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 py-4 rounded-xl font-bold hover:bg-red-100 dark:hover:bg-red-900/30 transition-all ' + (exporting ? 'opacity-60 cursor-wait' : '')}
