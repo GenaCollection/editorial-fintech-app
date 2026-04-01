@@ -4,18 +4,15 @@ import { useState } from 'react'
  * usePdfExport — generates PDF from #print-layout via clone strategy.
  *
  * ROOT CAUSE of blank PDF:
- *   html2canvas cannot capture elements positioned at left:-9999px or
- *   inside overflow:hidden parents — it snapshots what the browser
- *   actually renders in the visible layout pipeline.
+ *   html2canvas cannot capture elements that are:
+ *   - positioned off-screen (left: -9999px) but inside overflow:hidden
+ *   - have height:0 or height:1px on any ancestor
+ *   The clone must be rendered with full natural dimensions.
  *
- * FIX — clone node approach:
- *   1. Clone #print-layout
- *   2. Append clone to document.body with position:fixed, visibility:hidden
- *      so it is part of the render tree but invisible to the user
- *   3. Run html2pdf on the clone
- *   4. Remove clone on success or error (finally)
- *
- * This guarantees html2canvas always gets a fully rendered DOM subtree.
+ * FIX — clone + position:fixed + visibility:hidden:
+ *   Clone is appended to document.body with fixed positioning and
+ *   visibility:hidden. It is in the render tree (html2canvas can capture it)
+ *   but invisible to the user. No overflow:hidden ancestor clips it.
  */
 export function usePdfExport(lang) {
   var exportingArr = useState(false)
@@ -54,9 +51,14 @@ export function usePdfExport(lang) {
 
     setExporting(true)
 
-    // Clone node and attach to body so html2canvas can render it
+    // Deep-clone the print layout node
     var clone = sourceEl.cloneNode(true)
     clone.removeAttribute('id')
+
+    // Position clone in the render tree but hidden:
+    // position:fixed keeps it out of normal flow,
+    // visibility:hidden makes it invisible but still rendered by browser & html2canvas.
+    // No overflow:hidden ancestor — full natural height is captured.
     clone.style.cssText = [
       'position:fixed',
       'left:0',
@@ -66,9 +68,9 @@ export function usePdfExport(lang) {
       'visibility:hidden',
       'pointer-events:none',
       'background:#ffffff',
-      'overflow:visible',
-      'display:block'
+      'overflow:visible'
     ].join(';')
+
     document.body.appendChild(clone)
 
     var opt = {
@@ -84,7 +86,11 @@ export function usePdfExport(lang) {
         width: 900,
         logging: false,
         allowTaint: false,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        // Tell html2canvas to ignore visibility:hidden so it captures the clone
+        ignoreElements: function(el) {
+          return false
+        }
       },
       jsPDF: {
         unit: 'mm',
@@ -106,8 +112,8 @@ export function usePdfExport(lang) {
       .set(opt)
       .from(clone)
       .save()
-      .then(function () { cleanup() })
-      .catch(function (err) {
+      .then(function() { cleanup() })
+      .catch(function(err) {
         console.error('[usePdfExport] export failed:', err)
         cleanup()
         alert(getErrorText())
