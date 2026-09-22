@@ -1,93 +1,128 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { useSaved } from '../context/SavedContext.jsx'
+import { usePro } from '../context/ProContext.jsx'
 import { t } from '../i18n/labels.js'
+
+var LINKS = [
+  { to: '/',         icon: 'calculate',      label: function(l) { return t(l,'nav','calc') } },
+  { to: '/schedule', icon: 'calendar_month', label: function(l) { return t(l,'nav','sched') } },
+  { to: '/early',    icon: 'rocket_launch',  label: function(l) { return t(l,'nav','early') } },
+  { to: '/compare',  icon: 'compare_arrows', label: function(l) { return t(l,'menu','compare') } },
+  { to: '/offers',   icon: 'local_offer',    label: function(l) { return t(l,'menu','offers') } },
+  { to: '/saved',    icon: 'bookmark',       label: function(l) { return t(l,'menu','saved') } }
+]
+
+function ProButton(props) {
+  var pro = props.pro; var lang = props.lang
+  if (pro.status === 'pro') {
+    return (
+      <Link to="/pro" className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-brand-gradient text-white text-xs font-black tracking-wider">
+        <span className="material-symbols-outlined" style={{fontSize:'15px'}}>workspace_premium</span> PRO
+      </Link>
+    )
+  }
+  return (
+    <Link to="/pro" onClick={props.onClick}
+      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-gradient text-white text-xs sm:text-sm font-extrabold shadow-md shadow-blue-700/25 hover:opacity-95 active:scale-95 transition-all">
+      <span className="material-symbols-outlined" style={{fontSize:'16px'}}>workspace_premium</span>
+      {pro.status === 'trial'
+        ? <span>{t(lang,'menu','trial')} · {pro.trialDaysLeft} {t(lang,'menu','daysLeft')}</span>
+        : <span>{t(lang,'menu','pro')}</span>}
+    </Link>
+  )
+}
 
 export default function Navigation(props) {
   var theme = props.theme; var toggleTheme = props.toggleTheme
   var loc = useLocation()
   var langCtx = useLanguage(); var language = langCtx.language; var setLanguage = langCtx.setLanguage
   var saves = useSaved().saves
+  var pro = usePro()
   var openArr = useState(false); var open = openArr[0]; var setOpen = openArr[1]
+  var scrolledArr = useState(false); var scrolled = scrolledArr[0]; var setScrolled = scrolledArr[1]
+
+  useEffect(function() {
+    function onScroll() { setScrolled(window.scrollY > 8) }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return function() { window.removeEventListener('scroll', onScroll) }
+  }, [])
+  useEffect(function() { setOpen(false) }, [loc.pathname])
 
   function lc(path) {
-    var b = 'text-sm font-bold transition-colors '
-    return b + (loc.pathname === path
-      ? 'text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 pb-1'
-      : 'text-slate-500 dark:text-slate-400 hover:text-blue-600')
+    var active = loc.pathname === path
+    return 'relative px-3 py-2 rounded-xl text-sm font-bold transition-colors ' +
+      (active ? 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30'
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/70')
   }
-  function mc(path) {
-    var b = 'block px-6 py-4 font-bold border-b border-slate-100 dark:border-slate-800 '
-    return b + (loc.pathname === path
-      ? 'text-blue-700 bg-blue-50 dark:bg-blue-900/20'
-      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50')
-  }
-
-  var navCompare = { AM: '\u0540ամեմատություն', RU: '\u0421равнение', EN: 'Compare' }
-  var savedLabel = { AM: '\u054aահված', RU: '\u0421охранённые', EN: 'Saved' }
-  var compareLbl = navCompare[language] || 'Compare'
-  var savedLbl = savedLabel[language] || 'Saved'
 
   return (
-    <div>
-      <nav className="fixed top-0 w-full z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg shadow-sm h-16 flex items-center justify-between px-4 md:px-8">
-        <span className="text-lg font-black text-blue-900 dark:text-blue-100 uppercase tracking-tighter">ArmFinCredit</span>
+    <div className="no-print">
+      <nav className={'fixed top-0 w-full z-50 h-16 flex items-center justify-between px-4 md:px-6 transition-all duration-300 ' +
+        (scrolled || open ? 'bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60' : 'bg-transparent border-b border-transparent')}>
+        <Link to="/" className="flex items-center gap-2.5 shrink-0">
+          <span className="w-9 h-9 rounded-xl bg-brand-gradient text-white flex items-center justify-center shadow-md shadow-blue-700/30">
+            <span className="material-symbols-outlined" style={{fontSize:'20px'}}>account_balance</span>
+          </span>
+          <span className="text-base font-black text-slate-900 dark:text-white tracking-tight hidden sm:inline">ArmFin<span className="text-gradient">Credit</span></span>
+        </Link>
 
-        <div className="hidden md:flex items-center gap-6">
-          <Link className={lc('/')} to="/">{t(language,'nav','calc')}</Link>
-          <Link className={lc('/schedule')} to="/schedule">{t(language,'nav','sched')}</Link>
-          <Link className={lc('/early')} to="/early">{t(language,'nav','early')}</Link>
-          <Link className={lc('/compare')} to="/compare">{compareLbl}</Link>
-          <Link className={lc('/saved')} to="/saved">
-            <span className="relative">
-              {savedLbl}
-              {saves.length > 0 && (
-                <span className="absolute -top-2 -right-4 bg-blue-700 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
-                  {saves.length > 9 ? '9+' : saves.length}
-                </span>
-              )}
-            </span>
-          </Link>
+        <div className="hidden lg:flex items-center gap-1">
+          {LINKS.map(function(l) {
+            return (
+              <Link key={l.to} className={lc(l.to)} to={l.to}>
+                {l.label(language)}
+                {l.to === '/saved' && saves.length > 0 && (
+                  <span className="ml-1.5 bg-blue-700 text-white text-[10px] font-black min-w-4 h-4 px-1 rounded-full inline-flex items-center justify-center align-middle">
+                    {saves.length > 9 ? '9+' : saves.length}
+                  </span>
+                )}
+              </Link>
+            )
+          })}
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg gap-0.5">
+          <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl gap-0.5">
             {['AM','RU','EN'].map(function(l) {
               return (
                 <button key={l} onClick={function() { setLanguage(l) }}
-                  className={'px-2 py-1 text-xs font-bold rounded transition-colors ' +
-                    (language === l ? 'bg-blue-700 text-white' : 'text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700')}
+                  className={'px-2 py-1 text-[11px] font-bold rounded-lg transition-colors ' +
+                    (language === l ? 'bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-300 shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200')}
                 >{l}</button>
               )
             })}
           </div>
-          <button onClick={toggleTheme}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-lg"
-          >{theme === 'light' ? '\uD83C\uDF19' : '\u2600\uFE0F'}</button>
-          <button className="hidden md:block bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-blue-800">
-            {t(language,'nav','apply')}
+          <button onClick={toggleTheme} aria-label="Toggle theme"
+            className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-500 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+            <span className="material-symbols-outlined" style={{fontSize:'20px'}}>{theme === 'light' ? 'dark_mode' : 'light_mode'}</span>
           </button>
-          <button onClick={function() { setOpen(function(v) { return !v }) }}
-            className="md:hidden w-8 h-8 flex items-center justify-center text-slate-600 dark:text-slate-300 text-xl"
-          >{open ? 'x' : '='}</button>
+          <ProButton pro={pro} lang={language} />
+          <button onClick={function() { setOpen(function(v) { return !v }) }} aria-label="Menu"
+            className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+            <span className="material-symbols-outlined">{open ? 'close' : 'menu'}</span>
+          </button>
         </div>
       </nav>
 
       {open && (
-        <div className="fixed inset-0 z-40 md:hidden">
-          <div className="absolute inset-0 bg-black/40" onClick={function() { setOpen(false) }} />
-          <div className="absolute top-16 left-0 right-0 bg-white dark:bg-slate-900 shadow-2xl">
-            <Link to="/" className={mc('/')} onClick={function() { setOpen(false) }}>{t(language,'nav','calc')}</Link>
-            <Link to="/schedule" className={mc('/schedule')} onClick={function() { setOpen(false) }}>{t(language,'nav','sched')}</Link>
-            <Link to="/early" className={mc('/early')} onClick={function() { setOpen(false) }}>{t(language,'nav','early')}</Link>
-            <Link to="/compare" className={mc('/compare')} onClick={function() { setOpen(false) }}>{compareLbl}</Link>
-            <Link to="/saved" className={mc('/saved')} onClick={function() { setOpen(false) }}>
-              {savedLbl}{saves.length > 0 ? ' ('+saves.length+')' : ''}
-            </Link>
-            <div className="px-6 py-4">
-              <button className="w-full bg-blue-700 text-white py-3 rounded-xl font-bold">{t(language,'nav','apply')}</button>
-            </div>
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm animate-fade-in" onClick={function() { setOpen(false) }} />
+          <div className="absolute top-16 left-3 right-3 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-2 animate-slide-down border border-slate-200/60 dark:border-slate-800">
+            {LINKS.map(function(l) {
+              var active = loc.pathname === l.to
+              return (
+                <Link key={l.to} to={l.to}
+                  className={'flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold ' +
+                    (active ? 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800')}>
+                  <span className="material-symbols-outlined" style={{fontSize:'20px'}}>{l.icon}</span>
+                  {l.label(language)}
+                  {l.to === '/saved' && saves.length > 0 ? <span className="ml-auto text-xs text-slate-400">{saves.length}</span> : null}
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}

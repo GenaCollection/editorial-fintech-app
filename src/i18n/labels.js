@@ -47,7 +47,7 @@ var L = {
 
   sched: {
     title:     { AM: 'Վճարի Գրաֆիկ',              RU: 'График платежей',           EN: 'Payment Schedule' },
-    desc:      { AM: 'Ամortizaciayi zh\u0561m\u0561n\u0561k\u0561cuys', RU: 'Амортизация', EN: 'Amortization timeline.' },
+    desc:      { AM: 'Մարման ժամանակացույց', RU: 'Амортизация', EN: 'Amortization timeline.' },
     addEarly:  { AM: 'Ավելացնել Վաղ. Մարում',      RU: 'Добавить досроч.',          EN: 'Add Early Payment' },
     month:     { AM: 'Ամիս',                       RU: 'Месяц',                     EN: 'Month' },
     amount:    { AM: 'Գումար',                     RU: 'Сумма',                     EN: 'Amount' },
@@ -129,6 +129,108 @@ var L = {
     back:     { AM: 'Հետ',              RU: 'Назад',                EN: 'Back' },
     home:     { AM: 'Գլխավոր',         RU: 'На главную',           EN: 'Back to home' },
     notFound: { AM: 'Էջը չի գտնվել',  RU: 'Страница не найдена',  EN: 'Page not found' }
+  },
+
+  // ── Monetization ────────────────────────────────────────────────────────────
+  menu: {
+    offers:  { AM: 'Առաջարկներ',  RU: 'Предложения', EN: 'Offers' },
+    compare: { AM: 'Համեմատել',   RU: 'Сравнение',   EN: 'Compare' },
+    saved:   { AM: 'Պահված',      RU: 'Сохранённые', EN: 'Saved' },
+    pro:     { AM: 'Pro',         RU: 'Pro',         EN: 'Pro' },
+    trial:   { AM: 'Փորձ',        RU: 'Пробный',     EN: 'Trial' },
+    daysLeft:{ AM: 'օր',          RU: 'дн.',         EN: 'd left' }
+  },
+
+  ads: {
+    label:   { AM: 'Գովազդ',                RU: 'Реклама',            EN: 'Advertisement' },
+    remove:  { AM: 'Հեռացնել գովազդը',      RU: 'Убрать рекламу',     EN: 'Remove ads' },
+    sponsored: { AM: 'Գովազդային',          RU: 'Спонсор',            EN: 'Sponsored' }
+  },
+
+  pro: {
+    badge:      { AM: 'PRO',                                     RU: 'PRO',                                   EN: 'PRO' },
+    title:      { AM: 'ArmFinCredit Pro',                        RU: 'ArmFinCredit Pro',                      EN: 'ArmFinCredit Pro' },
+    subtitle:   { AM: 'Ավելի խելացի որոշումներ վարկի վերաբերյալ՝ սուրճի գնով։', RU: 'Умные решения по кредиту — по цене чашки кофе.', EN: 'Smarter loan decisions for the price of a coffee.' },
+    free:       { AM: 'Անվճար',                                  RU: 'Бесплатно',                             EN: 'Free' },
+    freeDesc:   { AM: 'Հիմնական հաշվիչ՝ գովազդով',               RU: 'Базовый калькулятор с рекламой',        EN: 'Core calculator with ads' },
+    current:    { AM: 'Ընթացիկ',                                 RU: 'Текущий',                               EN: 'Current' },
+    bestValue:  { AM: 'Լավագույն ընտրություն',                   RU: 'Выгоднее всего',                        EN: 'Best value' },
+    buy:        { AM: 'Գնել',                                    RU: 'Купить',                                EN: 'Get Pro' },
+    soon:       { AM: 'Շուտով',                                  RU: 'Скоро',                                 EN: 'Coming soon' },
+    startTrial: { AM: 'Սկսել 7 օր անվճար',                      RU: 'Попробовать 7 дней бесплатно',          EN: 'Start 7-day free trial' },
+    trialNote:  { AM: 'Առանց քարտի։ Ավտոմատ չի գանձվում։',       RU: 'Без карты. Автосписаний нет.',          EN: 'No card required. No auto-charge.' },
+    trialOn:    { AM: 'Փորձաշրջանն ակտիվ է',                     RU: 'Пробный период активен',                EN: 'Trial active' },
+    trialEnded: { AM: 'Փորձաշրջանն ավարտվել է',                   RU: 'Пробный период закончился',             EN: 'Your trial has ended' },
+    active:     { AM: 'Pro-ն ակտիվ է',                           RU: 'Pro активен',                           EN: 'Pro is active' },
+    thanks:     { AM: 'Շնորհակալություն աջակցության համար։',     RU: 'Спасибо за поддержку!',                 EN: 'Thanks for supporting us!' },
+    haveKey:    { AM: 'Ունե՞ք լիցենզիայի բանալի',                RU: 'Уже есть лицензионный ключ?',           EN: 'Already have a license key?' },
+    keyPh:      { AM: 'XXXX-XXXX-XXXX-XXXX',                     RU: 'XXXX-XXXX-XXXX-XXXX',                   EN: 'XXXX-XXXX-XXXX-XXXX' },
+    activate:   { AM: 'Ակտիվացնել',                              RU: 'Активировать',                          EN: 'Activate' },
+    deactivate: { AM: 'Անջատել այս սարքում',                     RU: 'Отключить на этом устройстве',          EN: 'Remove from this device' },
+    badKey:     { AM: 'Բանալին վավեր չէ',                        RU: 'Ключ недействителен',                   EN: 'This key is not valid' },
+    netErr:     { AM: 'Սերվերը հասանելի չէ, փորձեք ավելի ուշ',   RU: 'Сервер недоступен, попробуйте позже',   EN: 'Server unavailable, try again later' },
+    maybeLater: { AM: 'Հետո',                                    RU: 'Позже',                                 EN: 'Maybe later' },
+    seePlans:   { AM: 'Տեսնել պլանները',                         RU: 'Смотреть тарифы',                       EN: 'See plans' },
+    faq:        { AM: 'Հաճախ տրվող հարցեր',                      RU: 'Частые вопросы',                        EN: 'FAQ' },
+    // feature list
+    fNoAds:     { AM: 'Առանց գովազդի',                           RU: 'Без рекламы',                           EN: 'No ads' },
+    fAi:        { AM: 'AI խորհրդատու՝ 100 հարց/օր',              RU: 'ИИ-советник: 100 вопросов/день',        EN: 'AI advisor: 100 questions/day' },
+    fAiFree:    { AM: 'AI խորհրդատու՝ 3 հարց/օր',                RU: 'ИИ-советник: 3 вопроса/день',           EN: 'AI advisor: 3 questions/day' },
+    fPdf:       { AM: 'PDF առանց ջրանիշի',                       RU: 'PDF без водяного знака',                EN: 'Clean PDF, no watermark' },
+    fPdfFree:   { AM: 'PDF ջրանիշով',                            RU: 'PDF с водяным знаком',                  EN: 'PDF with watermark' },
+    fCsv:       { AM: 'CSV / Excel արտահանում',                  RU: 'Экспорт CSV / Excel',                   EN: 'CSV / Excel export' },
+    fSaves:     { AM: 'Մինչև 50 պահված հաշվարկ',                 RU: 'До 50 сохранённых расчётов',            EN: 'Up to 50 saved calculations' },
+    fSavesFree: { AM: '3 պահված հաշվարկ',                        RU: '3 сохранённых расчёта',                 EN: '3 saved calculations' },
+    fCompare:   { AM: 'Համեմատել մինչև 4 վարկ',                  RU: 'Сравнение до 4 кредитов',               EN: 'Compare up to 4 loans' },
+    fCompareFree:{ AM: 'Համեմատել 2 վարկ',                       RU: 'Сравнение 2 кредитов',                  EN: 'Compare 2 loans' },
+    fCalc:      { AM: 'Հաշվիչ, գրաֆիկ, վաղաժամկետ մարում',       RU: 'Калькулятор, график, досрочка',         EN: 'Calculator, schedule, early repayment' },
+    // paywall reasons
+    rGeneric:   { AM: 'Բացեք բոլոր հնարավորությունները',         RU: 'Откройте все возможности',              EN: 'Unlock everything' },
+    rSaves:     { AM: 'Անվճար պլանում՝ առավելագույնը 3 պահպանում', RU: 'В бесплатном тарифе — максимум 3 сохранения', EN: 'The free plan keeps up to 3 calculations' },
+    rCsv:       { AM: 'CSV արտահանումը Pro հնարավորություն է',   RU: 'Экспорт CSV доступен в Pro',            EN: 'CSV export is a Pro feature' },
+    rAi:        { AM: 'Այսօրվա անվճար AI հարցերն ավարտվեցին',    RU: 'Бесплатные вопросы ИИ на сегодня закончились', EN: "You've used today's free AI questions" },
+    rCompare:   { AM: '3-րդ և 4-րդ վարկը հասանելի են Pro-ում',   RU: '3-й и 4-й кредит доступны в Pro',       EN: 'Loans C and D are a Pro feature' },
+    rPdf:       { AM: 'Pro-ում PDF-ը առանց ջրանիշի է',           RU: 'В Pro PDF без водяного знака',          EN: 'Pro exports PDFs without a watermark' },
+    q1:         { AM: 'Ինչպե՞ս է աշխատում փորձաշրջանը',          RU: 'Как работает пробный период?',          EN: 'How does the trial work?' },
+    a1:         { AM: '7 օր ամբողջական Pro՝ առանց քարտի։ Հետո դուք պարզապես վերադառնում եք անվճար պլանին։', RU: '7 дней полного Pro без привязки карты. Потом вы просто возвращаетесь на бесплатный тариф.', EN: '7 days of full Pro, no card needed. Afterwards you simply return to the free plan.' },
+    q2:         { AM: 'Ինչպե՞ս եմ ստանում Pro-ն վճարումից հետո',  RU: 'Как получить Pro после оплаты?',        EN: 'How do I get Pro after paying?' },
+    a2:         { AM: 'Վճարումից հետո էլ. փոստով կստանաք լիցենզիայի բանալի։ Մուտքագրեք այն այս էջում։', RU: 'После оплаты вы получите лицензионный ключ на e-mail. Введите его на этой странице.', EN: 'After checkout you get a license key by e-mail. Enter it on this page.' },
+    q3:         { AM: 'Կարո՞ղ եմ չեղարկել',                      RU: 'Можно ли отменить подписку?',           EN: 'Can I cancel?' },
+    a3:         { AM: 'Այո, ցանկացած պահի՝ վճարման էջի հղումով։', RU: 'Да, в любой момент — по ссылке из письма с чеком.', EN: 'Yes, any time, via the link in your receipt e-mail.' }
+  },
+
+  offers: {
+    title:     { AM: 'Վարկային առաջարկներ',                     RU: 'Кредитные предложения',                 EN: 'Loan offers' },
+    desc:      { AM: 'Առաջարկներ, որոնք համապատասխանում են ձեր հաշվարկին', RU: 'Предложения партнёров под ваш расчёт', EN: 'Partner offers that match your calculation' },
+    yourCalc:  { AM: 'Ձեր հաշվարկը',                            RU: 'Ваш расчёт',                            EN: 'Your calculation' },
+    rateFrom:  { AM: 'Տոկոս՝ սկսած',                            RU: 'Ставка от',                             EN: 'Rate from' },
+    upTo:      { AM: 'Մինչև',                                   RU: 'До',                                    EN: 'Up to' },
+    estPay:    { AM: 'Մոտ. ամսական վճար',                       RU: 'Прим. платёж/мес.',                     EN: 'Est. monthly' },
+    save:      { AM: 'Խնայողություն',                           RU: 'Экономия',                              EN: 'You save' },
+    apply:     { AM: 'Դիմել',                                   RU: 'Оформить',                              EN: 'Apply' },
+    example:   { AM: 'Օրինակ',                                  RU: 'Пример',                                EN: 'Example' },
+    fits:      { AM: 'Համապատասխանում է',                       RU: 'Подходит',                              EN: 'Matches' },
+    noFit:     { AM: 'Գումարը կամ ժամկետը գերազանցում է',       RU: 'Сумма или срок выше лимита',            EN: 'Amount or term above limit' },
+    disclosure:{ AM: 'Մենք կարող ենք միջնորդավճար ստանալ գործընկերներից, եթե դիմեք մեր հղումով։ Դա ձեզ համար գինը չի փոխում։', RU: 'Мы можем получать вознаграждение от партнёров, если вы оформите продукт по нашей ссылке. Для вас цена не меняется.', EN: 'We may earn a commission if you apply through our links. It never changes your price.' },
+    partnerT:  { AM: 'Բանկ կամ ՎԿ եք՞',                         RU: 'Вы банк или МФО?',                      EN: 'Are you a lender?' },
+    partnerD:  { AM: 'Տեղադրեք ձեր առաջարկը հազարավոր օգտատերերի առջև, ովքեր հենց հիմա վարկ են հաշվարկում։', RU: 'Разместите предложение перед тысячами людей, которые прямо сейчас считают кредит.', EN: 'Put your offer in front of people who are calculating a loan right now.' },
+    partnerB:  { AM: 'Դառնալ գործընկեր',                        RU: 'Стать партнёром',                       EN: 'Become a partner' }
+  },
+
+  ai: {
+    title:    { AM: 'AI Վարկային խորհրդատու',                   RU: 'ИИ кредитный советник',                 EN: 'AI loan advisor' },
+    hello:    { AM: 'Բարև։ Ես տեսնում եմ ձեր ընթացիկ հաշվարկը։ Հարցրեք ինչ ուզում եք, կամ ընտրեք հարց ներքևում։', RU: 'Привет! Я вижу ваш текущий расчёт. Спросите что угодно или выберите вопрос ниже.', EN: "Hi! I can see your current calculation. Ask anything or pick a question below." },
+    ph:       { AM: 'Հարցրեք ձեր վարկի մասին…',                 RU: 'Спросите о своём кредите…',             EN: 'Ask about your loan…' },
+    send:     { AM: 'Ուղարկել',                                 RU: 'Отправить',                             EN: 'Send' },
+    left:     { AM: 'մնաց այսօր',                               RU: 'осталось сегодня',                      EN: 'left today' },
+    thinking: { AM: 'Մտածում եմ…',                              RU: 'Думаю…',                                EN: 'Thinking…' },
+    offline:  { AM: 'Օֆլայն վերլուծություն',                    RU: 'Офлайн-анализ',                         EN: 'Offline analysis' },
+    disclaimer:{ AM: 'AI-ն կարող է սխալվել։ Սա ֆինանսական խորհուրդ չէ։', RU: 'ИИ может ошибаться. Это не финансовая консультация.', EN: 'AI can make mistakes. Not financial advice.' },
+    s1:       { AM: 'Բացատրիր իմ վարկը պարզ բառերով',           RU: 'Объясни мой кредит простыми словами',   EN: 'Explain my loan in plain words' },
+    s2:       { AM: 'Ինչպե՞ս խնայել տոկոսների վրա',              RU: 'Как сэкономить на процентах?',          EN: 'How can I save on interest?' },
+    s3:       { AM: 'Անուիտետ թե՞ դիֆերենցված',                 RU: 'Аннуитет или дифференцированный?',       EN: 'Annuity or differentiated?' },
+    s4:       { AM: 'Լավ տոկոսադրույք է՞',                     RU: 'Это хорошая ставка?',                   EN: 'Is this a good rate?' },
+    upgrade:  { AM: 'Ավելի շատ հարցեր Pro-ով',                  RU: 'Больше вопросов с Pro',                 EN: 'More questions with Pro' }
   }
 }
 

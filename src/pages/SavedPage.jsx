@@ -4,12 +4,14 @@ import { useSaved } from '../context/SavedContext.jsx'
 import { useLoan } from '../context/LoanContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
+import { usePro } from '../context/ProContext.jsx'
+import AdSlot from '../components/AdSlot.jsx'
 
 var SYM = '\u058f'
 
-function formatDate(iso) {
+function formatDate(iso, lang) {
   try {
-    return new Date(iso).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    return new Date(iso).toLocaleDateString(lang === 'AM' ? 'hy-AM' : lang === 'RU' ? 'ru-RU' : 'en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
   } catch(e) { return iso }
 }
 
@@ -22,6 +24,7 @@ export default function SavedPage() {
   var setLoanState = loan.setLoanState
   var lang = useLanguage().language
   var navigate = useNavigate()
+  var pro = usePro()
 
   var confirmArr = useState(null)
   var confirmId = confirmArr[0]; var setConfirmId = confirmArr[1]
@@ -41,23 +44,24 @@ export default function SavedPage() {
   }
 
   var lbl = {
-    title:     { AM: '\u054a\u0561\u0570\u057e\u0561\u056e \u0540\u0561\u0577\u057e\u0561\u0580\u056f\u0576\u0565\u0580', RU: '\u0421\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0435 \u0440\u0561\u0441\u0447\u0451\u0442\u044b', EN: 'Saved Calculations' },
-    desc:      { AM: '\u054a\u0561\u0570\u057e\u0561\u056e \u056f\u0578\u0576\u0586\u056b\u0563\u0578\u0582\u0580\u0561\u0581\u056b\u0561\u0576\u0565\u0580\u056b \u0562\u0561\u0579\u056f\u0578\u0582\u0569\u0575\u0578\u0582\u0576\u0568', RU: '\u0418\u0441\u0442\u043e\u0440\u0438\u044f \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0445 \u043a\u043e\u043d\u0444\u0438\u0433\u0443\u0440\u0430\u0446\u0438\u0439', EN: 'History of saved configurations' },
-    empty:     { AM: '\u054a\u0561\u0570\u057e\u0561\u056e\u0576\u0565\u0580 \u0579\u056f\u0561', RU: '\u041d\u0435\u0442 \u0441\u043e\u0445\u0440\u0430\u043d\u0451\u043d\u043d\u044b\u0445 \u0440\u0561\u0441\u0447\u0451\u0442\u043e\u0432', EN: 'No saved calculations yet' },
-    emptyHint: { AM: '\u054d\u0565\u053a\u0574\u0565\u0584 \u00ab\u054a\u0561\u0570\u057e\u0565\u056c\u00bb \u056f\u0578\u0579\u0561\u056f\u056b \u0587\u056c\u056b \u057e\u0580\u0561 ', RU: '\u041d\u0430\u0436\u043c\u0438\u0442\u0435 \u00ab\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c\u00bb \u043d\u0430 \u0433\u043b\u0430\u0432\u043d\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435', EN: 'Click \u201cSave\u201d on the calculator page' },
-    load:      { AM: '\u0532\u0565\u057c\u0576\u0565\u056c', RU: '\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c', EN: 'Load' },
-    del:       { AM: '\u0531\u056e\u0565\u056c', RU: '\u0423\u0434\u0430\u043b\u0438\u0442\u044c', EN: 'Delete' },
-    clearAll:  { AM: '\u0531\u056e\u0565\u056c \u0532\u0578\u056c\u0578\u0580\u056b\u0576', RU: '\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0432\u0441\u0451', EN: 'Clear All' },
-    cancel:    { AM: '\u0531\u056c\u056c\u0565\u056c', RU: '\u041e\u0442\u043c\u0435\u043d\u0430', EN: 'Cancel' },
-    confirm:   { AM: '\u0540\u0561\u057d\u057f\u0561\u057f\u0565\u056c?', RU: '\u0423\u0434\u0430\u043b\u0438\u0442\u044c?', EN: 'Delete this calculation?' },
-    monthly:   { AM: '\u0531\u0574\u057d\u0561\u056f\u0561\u0576', RU: '\u0415\u0436\u0435\u043c\u0435\u0441.', EN: 'Monthly' },
-    overpay:   { AM: '\u0531\u056c\u0561\u056c\u057e\u0561\u056e\u0578\u0582\u0569\u0575', RU: '\u041f\u0565\u0440\u0435\u043f\u043b\u0430\u0442\u0430', EN: 'Overpay' },
-    apr:       { AM: 'APR', RU: 'APR', EN: 'APR' }
+    title:     { AM: 'Պահված հաշվարկներ', RU: 'Сохранённые расчёты', EN: 'Saved Calculations' },
+    desc:      { AM: 'Պահված կոնֆիգուրացիաների պատմությունը', RU: 'История сохранённых конфигураций', EN: 'History of saved configurations' },
+    empty:     { AM: 'Պահված հաշվարկներ դեռ չկան', RU: 'Нет сохранённых расчётов', EN: 'No saved calculations yet' },
+    emptyHint: { AM: 'Սեղմեք «Պահպանել» հաշվիչի էջում', RU: 'Нажмите «Сохранить» на странице калькулятора', EN: 'Click \u201cSave\u201d on the calculator page' },
+    load:      { AM: 'Բեռնել', RU: 'Загрузить', EN: 'Load' },
+    del:       { AM: 'Ջնջել', RU: 'Удалить', EN: 'Delete' },
+    clearAll:  { AM: 'Ջնջել բոլորը', RU: 'Очистить всё', EN: 'Clear All' },
+    cancel:    { AM: 'Չեղարկել', RU: 'Отмена', EN: 'Cancel' },
+    confirm:   { AM: 'Ջնջե՞լ այս հաշվարկը', RU: 'Удалить этот расчёт?', EN: 'Delete this calculation?' },
+    monthly:   { AM: 'Ամսական', RU: 'Ежемес.', EN: 'Monthly' },
+    overpay:   { AM: 'Գերավճար', RU: 'Переплата', EN: 'Overpay' },
+    apr:       { AM: 'APR', RU: 'APR', EN: 'APR' },
+    used:      { AM: 'Օգտագործված', RU: 'Использовано', EN: 'Used' }
   }
   function lb(key) { return (lbl[key] && (lbl[key][lang] || lbl[key]['EN'])) || key }
 
   return (
-    <div className="flex pt-16 min-h-screen">
+    <div className="flex pt-16 min-h-screen animate-fade-up">
       <main className="flex-1 px-6 lg:px-10 py-10 max-w-5xl mx-auto">
 
         {/* Header */}
@@ -65,6 +69,11 @@ export default function SavedPage() {
           <div>
             <h1 className="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-2">{lb('title')}</h1>
             <p className="text-lg text-slate-500 dark:text-slate-400">{lb('desc')}</p>
+            {!pro.isPro && (
+              <button onClick={function() { pro.openUpgrade('saves') }} className="mt-2 text-xs font-bold text-slate-400 hover:text-blue-600">
+                {lb('used')}: {Math.min(saves.length, pro.limits.saves)} / {pro.limits.saves} · <span className="text-blue-600">PRO &rarr; 50</span>
+              </button>
+            )}
           </div>
           {saves.length > 0 && (
             <button onClick={clearAll}
@@ -102,7 +111,7 @@ export default function SavedPage() {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <p className="font-extrabold text-slate-900 dark:text-white text-lg leading-tight">{entry.name}</p>
-                      <p className="text-xs text-slate-400 mt-0.5">{formatDate(entry.savedAt)}</p>
+                      <p className="text-xs text-slate-400 mt-0.5">{formatDate(entry.savedAt, lang)}</p>
                     </div>
                     <span className={'text-xs font-bold px-2 py-1 rounded-full ' +
                       (isDiff
@@ -161,6 +170,8 @@ export default function SavedPage() {
             })}
           </div>
         )}
+
+        <AdSlot placement="saved" className="mt-10" />
 
         {/* Delete confirm modal */}
         {confirmId !== null && (

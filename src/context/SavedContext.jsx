@@ -35,7 +35,7 @@ export function SavedProvider(props) {
         totalInterest: meta.totalInterest,
         apr: meta.apr
       }
-      var next = [entry].concat(prev).slice(0, 20)
+      var next = [entry].concat(prev).slice(0, 50)
       writeLS(next)
       return next
     })

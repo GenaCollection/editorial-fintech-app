@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react'
 import { useLoan, generateAmortization } from '../context/LoanContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
-import Sidebar from '../components/Sidebar.jsx'
+import { usePro } from '../context/ProContext.jsx'
+import AdSlot from '../components/AdSlot.jsx'
 
 var SYM = '\u058f'
 var PER = 12
@@ -38,6 +39,7 @@ export default function SchedulePage() {
   var addExtraPayment = ctx.addExtraPayment
   var extraPayments = ctx.extraPayments
   var lang = useLanguage().language
+  var pro = usePro()
 
   var amtArr = useState('')
   var extraAmount = amtArr[0]; var setExtraAmount = amtArr[1]
@@ -74,9 +76,8 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="flex pt-16 min-h-screen">
-      <Sidebar />
-      <main className="flex-1 px-6 lg:px-10 py-10 max-w-5xl mx-auto overflow-x-hidden">
+    <div className="flex pt-16 min-h-screen animate-fade-up">
+      <main className="flex-1 min-w-0 px-4 md:px-6 lg:px-10 py-10 max-w-5xl mx-auto overflow-x-hidden">
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-2">{t(lang,'sched','title')}</h1>
@@ -84,10 +85,11 @@ export default function SchedulePage() {
           </div>
           {/* F: CSV export button */}
           <button
-            onClick={function() { exportCSV(schedule, loanState, lang) }}
+            onClick={function() { if (!pro.isPro) { pro.openUpgrade('csv'); return } exportCSV(schedule, loanState, lang) }}
             className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-300 hover:border-emerald-400 hover:text-emerald-700 transition-all">
             <span className="material-symbols-outlined" style={{fontSize:'18px'}}>download</span>
             {lang === 'RU' ? 'Скачать CSV' : lang === 'AM' ? 'Բեռնել CSV' : 'Export CSV'}
+            {!pro.isPro && <span className="text-[9px] font-black bg-brand-gradient text-white px-1.5 py-0.5 rounded">PRO</span>}
           </button>
         </div>
 
@@ -147,6 +149,8 @@ export default function SchedulePage() {
             </svg>
           </div>
         </div>
+
+        <AdSlot placement="schedule" className="mb-8" />
 
         <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800">
           <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">

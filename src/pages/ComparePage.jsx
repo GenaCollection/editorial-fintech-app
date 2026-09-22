@@ -1,9 +1,18 @@
 import React, { useState } from 'react'
 import { useLanguage } from '../context/LanguageContext.jsx'
-import { t } from '../i18n/labels.js'
+import { usePro } from '../context/ProContext.jsx'
 
-var DEFAULT_A = { amount: 5000000, rate: 12, term: 60, type: 'annuity', fee: 0, insurance: 0 }
-var DEFAULT_B = { amount: 5000000, rate: 10, term: 48, type: 'annuity', fee: 0, insurance: 0 }
+var DEFAULTS = [
+  { amount: 5000000, rate: 12, term: 60, type: 'annuity', fee: 0, insurance: 0 },
+  { amount: 5000000, rate: 10, term: 48, type: 'annuity', fee: 0, insurance: 0 }
+]
+var NAMES = ['A', 'B', 'C', 'D']
+var COLORS = [
+  { text: 'text-blue-600',    bar: 'bg-blue-500',    panel: 'border-blue-200 dark:border-blue-800 bg-blue-50/30 dark:bg-blue-950/20',       win: 'bg-blue-600' },
+  { text: 'text-violet-600',  bar: 'bg-violet-500',  panel: 'border-violet-200 dark:border-violet-800 bg-violet-50/30 dark:bg-violet-950/20', win: 'bg-violet-600' },
+  { text: 'text-emerald-600', bar: 'bg-emerald-500', panel: 'border-emerald-200 dark:border-emerald-800 bg-emerald-50/30 dark:bg-emerald-950/20', win: 'bg-emerald-600' },
+  { text: 'text-amber-600',   bar: 'bg-amber-500',   panel: 'border-amber-200 dark:border-amber-800 bg-amber-50/30 dark:bg-amber-950/20',   win: 'bg-amber-600' }
+]
 
 function calcLoan(p) {
   var P = Number(p.amount) || 0
@@ -54,21 +63,30 @@ function fmtR(n) { return n.toFixed(2) }
 export default function ComparePage() {
   var langCtx = useLanguage()
   var lang = langCtx.language
+  var pro = usePro()
 
-  var aArr = useState(DEFAULT_A); var a = aArr[0]; var setA = aArr[1]
-  var bArr = useState(DEFAULT_B); var b = bArr[0]; var setB = bArr[1]
+  var loansArr = useState(DEFAULTS); var loans = loansArr[0]; var setLoans = loansArr[1]
 
-  function updateA(k, v) { setA(function(prev) { var o = Object.assign({}, prev); o[k] = v; return o }) }
-  function updateB(k, v) { setB(function(prev) { var o = Object.assign({}, prev); o[k] = v; return o }) }
+  function update(i, k, v) {
+    setLoans(function(prev) {
+      return prev.map(function(p, j) { if (j !== i) return p; var o = Object.assign({}, p); o[k] = v; return o })
+    })
+  }
+  function addLoan() {
+    if (loans.length >= pro.limits.compareSlots) { pro.openUpgrade('compare'); return }
+    setLoans(function(prev) { return prev.concat([Object.assign({}, prev[prev.length - 1])]) })
+  }
+  function removeLoan(i) {
+    setLoans(function(prev) { return prev.filter(function(p, j) { return j !== i }) })
+  }
 
-  var rA = calcLoan(a)
-  var rB = calcLoan(b)
+  var results = loans.map(calcLoan)
 
   var lbl = {
     title:      { AM: 'Վարկերի Համեմատություն', RU: 'Сравнение кредитов', EN: 'Loan Comparison' },
-    desc:       { AM: 'Համեմատեք երկու վարկային առաջարկ կողք կողքի', RU: 'Сравните два кредитных предложения бок о бок', EN: 'Compare two loan offers side by side' },
-    loanA:      { AM: 'Վարկ A', RU: 'Кредит A', EN: 'Loan A' },
-    loanB:      { AM: 'Վարկ B', RU: 'Кредит B', EN: 'Loan B' },
+    desc:       { AM: 'Համեմատեք վարկային առաջարկները կողք կողքի', RU: 'Сравните кредитные предложения бок о бок', EN: 'Compare loan offers side by side' },
+    loan:       { AM: 'Վարկ', RU: 'Кредит', EN: 'Loan' },
+    add:        { AM: 'Ավելացնել վարկ', RU: 'Добавить кредит', EN: 'Add loan' },
     amount:     { AM: 'Գումար', RU: 'Сумма', EN: 'Amount' },
     rate:       { AM: 'Տոկոսադրույք', RU: 'Ставка', EN: 'Rate' },
     term:       { AM: 'Ժամկետ', RU: 'Срок', EN: 'Term' },
@@ -84,45 +102,47 @@ export default function ComparePage() {
     winner:     { AM: 'Ավելի ձեռնտու', RU: 'Выгоднее', EN: 'Better deal' },
     equal:      { AM: 'Հավասար', RU: 'Равнозначно', EN: 'Equal' },
     saving:     { AM: 'Խնայողություն', RU: 'Экономия', EN: 'Saving' },
-    params:     { AM: 'Պարամետրեր', RU: 'Параметры', EN: 'Parameters' },
     results:    { AM: 'Արդյունքներ', RU: 'Результаты', EN: 'Results' },
     months:     { AM: 'ամիս', RU: 'мес.', EN: 'mo.' }
   }
 
   function tr(k) { return (lbl[k] && lbl[k][lang]) || lbl[k]['EN'] }
-  function currency() { return lang === 'EN' ? '֏' : '֏' }
+  var CUR = '\u058f'
+  function name(i) { return tr('loan') + ' ' + NAMES[i] }
 
-  var winMonthly = rA.monthly < rB.monthly ? 'A' : rB.monthly < rA.monthly ? 'B' : '='
-  var winTotal   = rA.total   < rB.total   ? 'A' : rB.total   < rA.total   ? 'B' : '='
-  var winInt     = rA.totalInt< rB.totalInt ? 'A' : rB.totalInt< rA.totalInt? 'B' : '='
-  var winEff     = rA.effRate < rB.effRate  ? 'A' : rB.effRate < rA.effRate  ? 'B' : '='
-
-  function badge(w, side) {
-    if (w === '=') return null
-    if (w === side) return (
-      <span className="ml-2 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 text-[10px] font-black px-1.5 py-0.5 rounded-full">
-        ✓ {tr('winner')}
-      </span>
-    )
-    return null
+  // Index of the lowest value, or -1 when every loan ties.
+  function best(vals) {
+    var min = Math.min.apply(null, vals)
+    var idx = vals.indexOf(min)
+    return vals.every(function(v) { return Math.abs(v - min) < 0.005 }) ? -1 : idx
   }
 
-  function diffBadge(vA, vB) {
-    var d = Math.abs(vA - vB)
-    if (d < 0.01) return null
-    return (
-      <div className="text-center">
-        <span className="text-xs text-slate-500 dark:text-slate-400">Δ {fmt(d)} {currency()}</span>
-      </div>
-    )
-  }
+  var rows = [
+    { key: 'monthly',  vals: results.map(function(r) { return r.monthly }),  fmt: function(v) { return fmt(v) + ' ' + CUR } },
+    { key: 'totalInt', vals: results.map(function(r) { return r.totalInt }), fmt: function(v) { return fmt(v) + ' ' + CUR } },
+    { key: 'total',    vals: results.map(function(r) { return r.total }),    fmt: function(v) { return fmt(v) + ' ' + CUR } },
+    { key: 'effRate',  vals: results.map(function(r) { return r.effRate }),  fmt: function(v) { return fmtR(v) + '%' } }
+  ].map(function(r) { return Object.assign(r, { win: best(r.vals) }) })
 
-  function InputPanel(props) {
-    var vals = props.vals; var upd = props.upd; var label = props.label; var color = props.color
+  // Overall winner = cheapest total payout.
+  var overallWin = rows[2].win
+  var totals = rows[2].vals
+  var saving = overallWin === -1 ? 0 : Math.max.apply(null, totals) - totals[overallWin]
+
+  // Plain render function (not a component) so inputs keep focus while typing.
+  function renderPanel(vals, i) {
+    function upd(k, v) { update(i, k, v) }
     return (
-      <div className={"rounded-2xl border-2 p-4 flex flex-col gap-3 " + color}>
-        <div className="text-base font-black text-slate-800 dark:text-slate-100 mb-1">{label}</div>
-        <NumInput label={tr('amount')} value={vals.amount} onChange={function(v) { upd('amount', v) }} suffix={currency()} />
+      <div key={i} className={'rounded-2xl border-2 p-4 flex flex-col gap-3 ' + COLORS[i].panel}>
+        <div className="flex items-center justify-between mb-1">
+          <div className="text-base font-black text-slate-800 dark:text-slate-100">{name(i)}</div>
+          {loans.length > 2 && (
+            <button onClick={function() { removeLoan(i) }} aria-label="Remove" className="text-slate-400 hover:text-red-500">
+              <span className="material-symbols-outlined" style={{fontSize:'18px'}}>close</span>
+            </button>
+          )}
+        </div>
+        <NumInput label={tr('amount')} value={vals.amount} onChange={function(v) { upd('amount', v) }} suffix={CUR} />
         <NumInput label={tr('rate')} value={vals.rate} onChange={function(v) { upd('rate', v) }} suffix="%" />
         <NumInput label={tr('term')} value={vals.term} onChange={function(v) { upd('term', v) }} suffix={tr('months')} />
         <div className="flex flex-col gap-1">
@@ -141,135 +161,104 @@ export default function ComparePage() {
             })}
           </div>
         </div>
-        <NumInput label={tr('fee')} value={vals.fee} onChange={function(v) { upd('fee', v) }} suffix={currency()} />
-        <NumInput label={tr('insurance')} value={vals.insurance} onChange={function(v) { upd('insurance', v) }} suffix={currency()} />
+        <NumInput label={tr('fee')} value={vals.fee} onChange={function(v) { upd('fee', v) }} suffix={CUR} />
+        <NumInput label={tr('insurance')} value={vals.insurance} onChange={function(v) { upd('insurance', v) }} suffix={CUR} />
       </div>
     )
   }
 
-  var rows = [
-    { key: 'monthly', vA: rA.monthly, vB: rB.monthly, win: winMonthly, fmt: function(v) { return fmt(v) + ' ' + currency() } },
-    { key: 'totalInt', vA: rA.totalInt, vB: rB.totalInt, win: winInt, fmt: function(v) { return fmt(v) + ' ' + currency() } },
-    { key: 'total', vA: rA.total, vB: rB.total, win: winTotal, fmt: function(v) { return fmt(v) + ' ' + currency() } },
-    { key: 'effRate', vA: rA.effRate, vB: rB.effRate, win: winEff, fmt: function(v) { return fmtR(v) + '%' } }
-  ]
-
-  var overallWin = (function() {
-    var scores = { A: 0, B: 0 }
-    ;[winMonthly, winInt, winTotal, winEff].forEach(function(w) { if (w !== '=') scores[w]++ })
-    if (scores.A > scores.B) return 'A'
-    if (scores.B > scores.A) return 'B'
-    return '='
-  })()
-
-  var saving = Math.abs(rA.total - rB.total)
+  var gridCols = loans.length === 2 ? 'md:grid-cols-2' : loans.length === 3 ? 'md:grid-cols-3' : 'md:grid-cols-2 xl:grid-cols-4'
 
   return (
-    <main className="pt-20 pb-16 min-h-screen bg-slate-50 dark:bg-slate-950">
-      <div className="max-w-5xl mx-auto px-4">
+    <main className="pt-24 pb-16 min-h-screen animate-fade-up">
+      <div className="max-w-6xl mx-auto px-4">
 
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
-            <span className="material-symbols-outlined align-middle mr-2 text-blue-600">compare_arrows</span>
-            {tr('title')}
-          </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{tr('desc')}</p>
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
+              <span className="material-symbols-outlined align-middle mr-2 text-blue-600">compare_arrows</span>
+              {tr('title')}
+            </h1>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{tr('desc')}</p>
+          </div>
+          {loans.length < 4 && (
+            <button onClick={addLoan}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-700 dark:text-slate-200 hover:border-blue-400">
+              <span className="material-symbols-outlined" style={{fontSize:'18px'}}>add</span>
+              {tr('add')}
+              {loans.length >= pro.limits.compareSlots && <span className="text-[9px] font-black bg-brand-gradient text-white px-1.5 py-0.5 rounded">PRO</span>}
+            </button>
+          )}
         </div>
 
-        {/* Input panels */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <InputPanel vals={a} upd={updateA} label={tr('loanA')}
-            color="border-blue-200 dark:border-blue-800 bg-blue-50/30 dark:bg-blue-950/20" />
-          <InputPanel vals={b} upd={updateB} label={tr('loanB')}
-            color="border-violet-200 dark:border-violet-800 bg-violet-50/30 dark:bg-violet-950/20" />
+        <div className={'grid grid-cols-1 gap-4 mb-8 ' + gridCols}>
+          {loans.map(renderPanel)}
         </div>
 
-        {/* Winner banner */}
-        {overallWin !== '=' && (
-          <div className={'mb-6 rounded-2xl p-4 flex items-center gap-4 ' +
-            (overallWin === 'A'
-              ? 'bg-blue-600 text-white'
-              : 'bg-violet-600 text-white')}>
+        {overallWin !== -1 ? (
+          <div className={'mb-6 rounded-2xl p-4 flex items-center gap-4 text-white ' + COLORS[overallWin].win}>
             <span className="material-symbols-outlined text-4xl">emoji_events</span>
             <div>
-              <div className="font-black text-lg">
-                {tr('winner')}: {tr('loan' + overallWin)}
-              </div>
-              {saving > 0 && (
-                <div className="text-sm opacity-90">
-                  {tr('saving')}: {fmt(saving)} {currency()}
-                </div>
-              )}
+              <div className="font-black text-lg">{tr('winner')}: {name(overallWin)}</div>
+              {saving > 0 && <div className="text-sm opacity-90">{tr('saving')}: {fmt(saving)} {CUR}</div>}
             </div>
           </div>
-        )}
-        {overallWin === '=' && (
+        ) : (
           <div className="mb-6 rounded-2xl p-4 flex items-center gap-4 bg-slate-200 dark:bg-slate-800">
             <span className="material-symbols-outlined text-4xl text-slate-500">balance</span>
             <div className="font-black text-lg text-slate-700 dark:text-slate-200">{tr('equal')}</div>
           </div>
         )}
 
-        {/* Results table */}
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-white dark:bg-slate-900">
-          <div className="grid grid-cols-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700">
-            <div className="px-4 py-3 text-xs font-black uppercase text-slate-400 tracking-widest">{tr('results')}</div>
-            <div className="px-4 py-3 text-xs font-black uppercase text-blue-600 tracking-widest text-center">{tr('loanA')}</div>
-            <div className="px-4 py-3 text-xs font-black uppercase text-violet-600 tracking-widest text-center">{tr('loanB')}</div>
-          </div>
-          {rows.map(function(row) {
-            return (
-              <div key={row.key} className="grid grid-cols-3 border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                <div className="px-4 py-4 text-sm font-semibold text-slate-600 dark:text-slate-400 flex items-center">
-                  {tr(row.key)}
-                </div>
-                <div className="px-4 py-4 text-center">
-                  <div className={'text-sm font-black ' + (row.win === 'A' ? 'text-green-600 dark:text-green-400' : 'text-slate-800 dark:text-slate-100')}>
-                    {row.fmt(row.vA)}
-                    {badge(row.win, 'A')}
-                  </div>
-                </div>
-                <div className="px-4 py-4 text-center">
-                  <div className={'text-sm font-black ' + (row.win === 'B' ? 'text-green-600 dark:text-green-400' : 'text-slate-800 dark:text-slate-100')}>
-                    {row.fmt(row.vB)}
-                    {badge(row.win, 'B')}
-                  </div>
-                  {diffBadge(row.vA, row.vB)}
-                </div>
-              </div>
-            )
-          })}
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto bg-white dark:bg-slate-900">
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 dark:bg-slate-800/60">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-black uppercase text-slate-400 tracking-widest">{tr('results')}</th>
+                {loans.map(function(l, i) {
+                  return <th key={i} className={'px-4 py-3 text-center text-xs font-black uppercase tracking-widest ' + COLORS[i].text}>{name(i)}</th>
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(function(row) {
+                return (
+                  <tr key={row.key} className="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td className="px-4 py-4 font-semibold text-slate-600 dark:text-slate-400">{tr(row.key)}</td>
+                    {row.vals.map(function(v, i) {
+                      return (
+                        <td key={i} className={'px-4 py-4 text-center font-black whitespace-nowrap ' + (row.win === i ? 'text-green-600 dark:text-green-400' : 'text-slate-800 dark:text-slate-100')}>
+                          {row.fmt(v)}{row.win === i ? ' \u2713' : ''}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
 
-        {/* Visual bar comparison */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           {rows.map(function(row) {
-            var maxV = Math.max(row.vA, row.vB) || 1
-            var pA = (row.vA / maxV * 100).toFixed(1)
-            var pB = (row.vB / maxV * 100).toFixed(1)
+            var maxV = Math.max.apply(null, row.vals) || 1
             return (
               <div key={row.key + '_bar'} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
                 <div className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-3">{tr(row.key)}</div>
                 <div className="flex flex-col gap-2">
-                  <div>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="font-bold text-blue-600">{tr('loanA')}</span>
-                      <span className="text-slate-600 dark:text-slate-300 font-semibold">{row.fmt(row.vA)}</span>
-                    </div>
-                    <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800">
-                      <div className="h-2.5 rounded-full bg-blue-500 transition-all duration-500" style={{ width: pA + '%' }} />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="font-bold text-violet-600">{tr('loanB')}</span>
-                      <span className="text-slate-600 dark:text-slate-300 font-semibold">{row.fmt(row.vB)}</span>
-                    </div>
-                    <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800">
-                      <div className="h-2.5 rounded-full bg-violet-500 transition-all duration-500" style={{ width: pB + '%' }} />
-                    </div>
-                  </div>
+                  {row.vals.map(function(v, i) {
+                    return (
+                      <div key={i}>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className={'font-bold ' + COLORS[i].text}>{name(i)}</span>
+                          <span className="text-slate-600 dark:text-slate-300 font-semibold">{row.fmt(v)}</span>
+                        </div>
+                        <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800">
+                          <div className={'h-2.5 rounded-full transition-all duration-500 ' + COLORS[i].bar} style={{ width: (v / maxV * 100).toFixed(1) + '%' }} />
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )

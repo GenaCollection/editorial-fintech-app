@@ -5,6 +5,8 @@ import { useSaved } from '../context/SavedContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { usePdfExport } from '../hooks/usePdfExport.js'
+import { usePro } from '../context/ProContext.jsx'
+import AdSlot from '../components/AdSlot.jsx'
 import '../styles/print.css'
 
 var SYM = '\u058f'
@@ -135,7 +137,7 @@ function DualInput(props) {
       </div>
       <input type="range" min={min} max={max} step={step} value={value}
         onChange={function(e) { onChange(Number(e.target.value)) }}
-        className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-blue-700" />
+        className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-blue-700 bg-slate-200 dark:bg-slate-700" />
       <div className="flex justify-between text-xs text-slate-400 mt-1">
         <span>{props.minLabel || min}</span><span>{props.maxLabel || max}</span>
       </div>
@@ -167,9 +169,9 @@ function LoanTypeToggle(props) {
 // ── Mini stat card ────────────────────────────────────────────────────────────
 function StatCard(props) {
   return (
-    <div className={'rounded-2xl p-5 ' + (props.accent ? 'bg-blue-700 text-white' : 'bg-slate-100 dark:bg-slate-800')}>
+    <div className={'rounded-3xl p-5 md:p-6 ' + (props.accent ? 'bg-brand-gradient text-white shadow-xl shadow-blue-700/25' : 'bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800')}>
       <div className={'text-xs font-bold uppercase tracking-widest mb-1 ' + (props.accent ? 'opacity-70' : 'text-slate-400')}>{props.label}</div>
-      <div className={'text-2xl font-extrabold ' + (props.accent ? '' : 'text-slate-900 dark:text-white')}>{props.value}</div>
+      <div className={'text-2xl md:text-3xl font-extrabold tabular-nums tracking-tight ' + (props.accent ? '' : 'text-slate-900 dark:text-white')}>{props.value}</div>
       {props.sub && <div className={'text-xs mt-1 ' + (props.accent ? 'opacity-60' : 'text-slate-400')}>{props.sub}</div>}
     </div>
   )
@@ -336,6 +338,7 @@ export default function CalculatorPage() {
   var savedCtx = useSaved()
   var saveCalc = savedCtx.saveCalc
   var saves = savedCtx.saves
+  var pro = usePro()
   var navigate = useNavigate()
   var lang = useLanguage().language
   var searchParamsArr = useSearchParams()
@@ -390,6 +393,11 @@ export default function CalculatorPage() {
     }
   }
 
+  function openSave() {
+    if (saves.length >= pro.limits.saves) { pro.openUpgrade('saves'); return }
+    setShowSave(true)
+  }
+
   function handleSave(name) {
     saveCalc(loanState, extraPayments, {
       name: name || ('Calc #' + (saves.length + 1)),
@@ -417,7 +425,8 @@ export default function CalculatorPage() {
       totalInterest:  totalInterest,
       totalPayment:   totalPayment || (monthlyPayment * term),
       apr:            apr,
-      extraPayments:  extraPayments || []
+      extraPayments:  extraPayments || [],
+      watermark:      !pro.isPro
     })
   }
 
@@ -428,16 +437,16 @@ export default function CalculatorPage() {
   var tabs = [{ key: 'params', icon: 'tune' }, { key: 'early', icon: 'rocket_launch' }, { key: 'advanced', icon: 'settings' }]
 
   return (
-    <main className="flex-1 px-4 md:px-10 pt-20 pb-16 max-w-7xl mx-auto w-full">
+    <main className="flex-1 px-4 md:px-10 pt-24 pb-24 max-w-7xl mx-auto w-full animate-fade-up">
       {showSave && <SaveModal onSave={handleSave} onClose={function() { setShowSave(false) }} lang={lang} />}
 
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-2">{t(lang,'calc','title')}</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight mb-2"><span className="text-gradient">{t(lang,'calc','title')}</span></h1>
           <p className="text-lg text-slate-500 dark:text-slate-400">{t(lang,'calc','desc')}</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={function() { setShowSave(true) }}
+          <button onClick={openSave}
             className="flex items-center gap-2 px-4 py-2.5 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-400 rounded-xl text-sm font-bold hover:bg-blue-100 transition-all">
             <span className="material-symbols-outlined" style={{fontSize:'18px'}}>bookmark_add</span>
             {t(lang,'saveModal','btnSave')}
@@ -537,7 +546,7 @@ export default function CalculatorPage() {
               <div className="text-xs text-slate-400 mt-1">{t(lang,'calc','schema')}</div>
             </div>
           </div>
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-x-auto">
             <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
               <span className="font-bold text-slate-900 dark:text-slate-100">{t(lang,'calc','preview')}</span>
               <span className="text-xs text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">{schedule.length} {t(lang,'calc','months')}</span>
@@ -597,6 +606,21 @@ export default function CalculatorPage() {
               }
             </button>
           </div>
+
+          {/* Affiliate funnel: compare the current calculation with partner offers */}
+          <button onClick={function() { navigate('/offers') }}
+            className="w-full group flex items-center gap-4 text-left rounded-3xl border border-emerald-200 dark:border-emerald-900 bg-emerald-50/70 dark:bg-emerald-950/30 px-5 py-4 hover:border-emerald-400 transition-all">
+            <span className="w-11 h-11 shrink-0 rounded-2xl bg-emerald-500 text-white flex items-center justify-center">
+              <span className="material-symbols-outlined">savings</span>
+            </span>
+            <span className="flex-1">
+              <span className="block font-extrabold text-slate-900 dark:text-white">{t(lang,'offers','title')}</span>
+              <span className="block text-sm text-slate-500 dark:text-slate-400">{t(lang,'offers','desc')}</span>
+            </span>
+            <span className="material-symbols-outlined text-emerald-600 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </button>
+
+          <AdSlot placement="calculator" />
         </div>
       </div>
     </main>

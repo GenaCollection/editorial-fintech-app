@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo, useCallback } from 'react'
+import React, { createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react'
 
 var LanguageContext = createContext({ language: 'EN', setLanguage: function(){} })
 
@@ -15,6 +15,10 @@ export function LanguageProvider(props) {
   var arr = useState(getInitialLang)
   var language = arr[0]
   var setLanguage = arr[1]
+
+  useEffect(function() {
+    document.documentElement.lang = language === 'AM' ? 'hy' : language.toLowerCase()
+  }, [language])
 
   var handleSetLanguage = useCallback(function(lang) {
     try { localStorage.setItem('afc_lang', lang) } catch(e) {}

@@ -283,6 +283,16 @@ export function usePdfExport(lang) {
         doc.setPage(p)
         doc.setFontSize(6); doc.setFont('helvetica', 'normal'); doc.setTextColor(148, 163, 184)
         doc.text(p + ' / ' + total, pw / 2, ph - 6, { align: 'center' })
+        // Free plan: light diagonal watermark (removed with Pro)
+        if (data.watermark) {
+          doc.saveGraphicsState && doc.saveGraphicsState()
+          if (doc.GState) doc.setGState(new doc.GState({ opacity: 0.08 }))
+          doc.setFontSize(46); doc.setFont('helvetica', 'bold'); doc.setTextColor(29, 78, 216)
+          doc.text('ArmFinCredit Free', pw / 2, ph / 2, { align: 'center', angle: 35 })
+          doc.restoreGraphicsState && doc.restoreGraphicsState()
+          doc.setFontSize(6); doc.setFont('helvetica', 'bold'); doc.setTextColor(37, 99, 235)
+          doc.text('Remove watermark: armfincredit-app.vercel.app/pro', ml, ph - 6)
+        }
       }
 
       doc.save(getFilename())
