@@ -257,7 +257,17 @@ var L = {
 
   banks: {
     title:     { AM: 'Հայաստանի բանկերի առաջարկներ',    RU: 'Предложения банков Армении',     EN: 'Armenian bank offers' },
-    desc:      { AM: 'Ավանդների և հիփոթեքի դրույքները՝ աղբյուրներով', RU: 'Ставки по вкладам и ипотеке — с источниками', EN: 'Deposit and mortgage rates, with sources' },
+    desc:      { AM: 'Ավանդներ, հիփոթեք և վարկեր՝ դրույքներով, պայմաններով և աղբյուրներով', RU: 'Вклады, ипотека и кредиты — ставки, условия и источники', EN: 'Deposits, mortgages and loans — rates, terms and sources' },
+    loans:     { AM: 'Վարկեր',                          RU: 'Кредиты',                        EN: 'Loans' },
+    from:      { AM: 'սկսած',                           RU: 'от',                             EN: 'from' },
+    min:       { AM: 'նվազ.',                           RU: 'мин.',                           EN: 'min.' },
+    until:     { AM: 'Գործում է մինչև',                 RU: 'Действует до',                   EN: 'Valid until' },
+    all:       { AM: 'Բոլորը',                          RU: 'Все',                            EN: 'All' },
+    offersFrom:{ AM: 'առաջարկ',                         RU: 'предложений от',                 EN: 'offers from' },
+    banksN:    { AM: 'բանկից',                          RU: 'банков',                         EN: 'banks' },
+    empty:     { AM: 'Այս արժույթով առաջարկներ չկան',   RU: 'Нет предложений в этой валюте',  EN: 'No offers in this currency' },
+    noData:    { AM: 'Այլ բանկեր',                      RU: 'Другие банки',                   EN: 'Other banks' },
+    noDataDesc:{ AM: 'Այս բանկերի ստուգված հրապարակային դրույք չենք գտել․ տեսեք նրանց կայքում։', RU: 'Для этих банков мы не нашли проверенную публичную ставку — смотрите на их сайте.', EN: 'We could not find a verified public rate for these banks — see their websites.' },
     deposits:  { AM: 'Ավանդներ',                        RU: 'Вклады',                         EN: 'Deposits' },
     mortgage:  { AM: 'Հիփոթեք',                         RU: 'Ипотека',                        EN: 'Mortgage' },
     upTo:      { AM: 'մինչև',                           RU: 'до',                             EN: 'up to' },
