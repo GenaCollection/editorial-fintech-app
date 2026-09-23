@@ -1,18 +1,26 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import React, { Suspense, lazy } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { LoanProvider } from './context/LoanContext.jsx'
 import { LanguageProvider } from './context/LanguageContext.jsx'
 import { SavedProvider } from './context/SavedContext.jsx'
+import { ProProvider } from './context/ProContext.jsx'
 import Navigation from './components/Navigation.jsx'
 import Footer from './components/Footer.jsx'
+import AiAdvisor from './components/AiAdvisor.jsx'
+import UpgradeModal from './components/UpgradeModal.jsx'
+import { AdsLoader } from './components/AdSlot.jsx'
 import CalculatorPage from './pages/CalculatorPage.jsx'
-import SchedulePage from './pages/SchedulePage.jsx'
-import EarlyPage from './pages/EarlyPage.jsx'
-import PrivacyPage from './pages/PrivacyPage.jsx'
-import TermsPage from './pages/TermsPage.jsx'
-import NotFoundPage from './pages/NotFoundPage.jsx'
-import SavedPage from './pages/SavedPage.jsx'
-import ComparePage from './pages/ComparePage.jsx'
+
+// Secondary routes are code-split so the calculator loads first.
+var SchedulePage = lazy(function() { return import('./pages/SchedulePage.jsx') })
+var EarlyPage    = lazy(function() { return import('./pages/EarlyPage.jsx') })
+var ComparePage  = lazy(function() { return import('./pages/ComparePage.jsx') })
+var SavedPage    = lazy(function() { return import('./pages/SavedPage.jsx') })
+var OffersPage   = lazy(function() { return import('./pages/OffersPage.jsx') })
+var PricingPage  = lazy(function() { return import('./pages/PricingPage.jsx') })
+var PrivacyPage  = lazy(function() { return import('./pages/PrivacyPage.jsx') })
+var TermsPage    = lazy(function() { return import('./pages/TermsPage.jsx') })
+var NotFoundPage = lazy(function() { return import('./pages/NotFoundPage.jsx') })
 
 function getInitialTheme() {
   try { var s = localStorage.getItem('afc_theme'); if (s === 'dark' || s === 'light') return s } catch(e) {}
@@ -23,14 +31,30 @@ function getInitialTheme() {
 export default function App() {
   return (
     <LanguageProvider>
-      <SavedProvider>
-        <LoanProvider>
-          <BrowserRouter>
-            <AppInner />
-          </BrowserRouter>
-        </LoanProvider>
-      </SavedProvider>
+      <ProProvider>
+        <SavedProvider>
+          <LoanProvider>
+            <BrowserRouter>
+              <AppInner />
+            </BrowserRouter>
+          </LoanProvider>
+        </SavedProvider>
+      </ProProvider>
     </LanguageProvider>
+  )
+}
+
+function ScrollToTop() {
+  var path = useLocation().pathname
+  React.useEffect(function() { window.scrollTo(0, 0) }, [path])
+  return null
+}
+
+function PageFallback() {
+  return (
+    <main className="flex-1 pt-24 flex justify-center">
+      <span className="material-symbols-outlined animate-spin text-blue-600">progress_activity</span>
+    </main>
   )
 }
 
@@ -51,23 +75,27 @@ function AppInner() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
+    <div className="flex flex-col min-h-screen bg-app transition-colors duration-300">
+      <ScrollToTop />
+      <AdsLoader />
       <Navigation theme={theme} toggleTheme={toggleTheme} />
-      <Routes>
-        <Route path="/" element={<CalculatorPage />} />
-        <Route path="/schedule" element={<SchedulePage />} />
-        <Route path="/early" element={<EarlyPage />} />
-        <Route path="/compare" element={<ComparePage />} />
-        <Route path="/saved" element={<SavedPage />} />
-        <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/terms" element={<TermsPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <Suspense fallback={<PageFallback />}>
+        <Routes>
+          <Route path="/" element={<CalculatorPage />} />
+          <Route path="/schedule" element={<SchedulePage />} />
+          <Route path="/early" element={<EarlyPage />} />
+          <Route path="/compare" element={<ComparePage />} />
+          <Route path="/saved" element={<SavedPage />} />
+          <Route path="/offers" element={<OffersPage />} />
+          <Route path="/pro" element={<PricingPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
       <Footer />
-      <Link to="/schedule"
-        className="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-blue-700 text-white rounded-full shadow-2xl flex items-center justify-center z-40">
-        <span className="material-symbols-outlined">calendar_month</span>
-      </Link>
+      <AiAdvisor />
+      <UpgradeModal />
     </div>
   )
 }

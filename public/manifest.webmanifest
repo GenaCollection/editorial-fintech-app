@@ -1,0 +1,13 @@
+{
+  "name": "ArmFinCredit — Loan Calculator",
+  "short_name": "ArmFinCredit",
+  "description": "Loan calculator for Armenia with amortization schedule, early repayment and AI advisor.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

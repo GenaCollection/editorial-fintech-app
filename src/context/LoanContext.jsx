@@ -29,6 +29,7 @@ export function generateAnnuity(amount, rate, term, extraPayments, startDate) {
     var d = new Date(sd); d.setMonth(sd.getMonth() + i)
     schedule.push({
       month: i, label: d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+      year: d.getFullYear(), monthIndex: d.getMonth(),
       payment: mp + extra, principal: principal, interest: interest, extra: extra, balance: balance
     })
     if (balance <= 0.01) break
@@ -57,6 +58,7 @@ export function generateDifferentiated(amount, rate, term, extraPayments, startD
     var d = new Date(sd); d.setMonth(sd.getMonth() + i)
     schedule.push({
       month: i, label: d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+      year: d.getFullYear(), monthIndex: d.getMonth(),
       payment: principal + interest + extra, principal: principal, interest: interest, extra: extra, balance: balance
     })
     if (balance <= 0.01) break

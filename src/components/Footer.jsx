@@ -8,7 +8,7 @@ export default function Footer() {
   var lang = langCtx.language
 
   return (
-    <footer className="w-full pt-10 pb-6 px-8 bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto">
+    <footer className="no-print w-full pt-10 pb-24 md:pb-8 px-8 bg-white/60 dark:bg-slate-900/60 backdrop-blur border-t border-slate-200 dark:border-slate-800 mt-auto">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 
@@ -27,6 +27,9 @@ export default function Footer() {
               <Link to="/" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'nav', 'calc')}</Link>
               <Link to="/schedule" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'nav', 'sched')}</Link>
               <Link to="/early" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'nav', 'early')}</Link>
+              <Link to="/compare" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'compare')}</Link>
+              <Link to="/offers" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'offers')}</Link>
+              <Link to="/pro" className="block text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">ArmFinCredit Pro</Link>
             </div>
           </div>
 
