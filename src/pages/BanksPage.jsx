@@ -6,6 +6,8 @@ import { activeOffers, BANKS_NO_DATA, OFFERS_AS_OF, CBA_RATE, MORE_SOURCES } fro
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
 import AdSlot from '../components/AdSlot.jsx'
+import { Link } from 'react-router-dom'
+import { RATE_PAGES, ratePagePath } from '../seo/rates.js'
 
 // Pro catalog of public Armenian bank rates (src/config/bankOffers.js).
 // Free users see the first offer of each tab; the rest is blurred.
@@ -144,6 +146,12 @@ export default function BanksPage() {
             )
           })}
         </ul>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-6">
+        {RATE_PAGES.map(function(p) {
+          return <Link key={p.key} to={ratePagePath(p, lang)} className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 hover:border-blue-400">{p.short[lang]}</Link>
+        })}
       </div>
 
       <div className="text-sm text-slate-500 dark:text-slate-400">

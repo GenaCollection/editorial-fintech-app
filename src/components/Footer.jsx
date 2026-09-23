@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { LANDINGS, LANDING_UI, landingPath } from '../seo/landings.js'
+import { RATE_PAGES, ratePagePath } from '../seo/rates.js'
 
 export default function Footer() {
   var langCtx = useLanguage()
@@ -44,6 +45,9 @@ export default function Footer() {
             <div className="space-y-2">
               {LANDINGS.map(function(l) {
                 return <Link key={l.key} to={landingPath(l, lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{l.short[lang]}</Link>
+              })}
+              {RATE_PAGES.map(function(p) {
+                return <Link key={p.key} to={ratePagePath(p, lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{p.short[lang]}</Link>
               })}
               <Link to="/widget" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'widget', 'badge')}</Link>
             </div>

@@ -12,6 +12,7 @@ import { AdsLoader, AdRails } from './components/AdSlot.jsx'
 import CalculatorPage from './pages/CalculatorPage.jsx'
 import { URL_TO_LANG } from './config/site.js'
 import { findLanding } from './seo/landings.js'
+import { findRatePage } from './seo/rates.js'
 
 // Code-split pages that can be preloaded before the first render, so a
 // prerendered page is replaced by the same page instead of a spinner.
@@ -55,7 +56,7 @@ export function preloadRoute(pathname) {
   var path = (pathname || '/').replace(/\/+$/, '') || '/'
   if (path === '/' || isLangHome(path)) return Promise.resolve()
   if (PAGES[path]) return PAGES[path].preload()
-  if (findLanding(path)) return LandingPage.preload()
+  if (findLanding(path) || findRatePage(path)) return LandingPage.preload()
   return NotFoundPage.preload()
 }
 

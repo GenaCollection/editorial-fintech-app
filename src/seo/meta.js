@@ -1,5 +1,6 @@
 import { LANGS, LANG_TO_URL } from '../config/site.js'
 import { LANDINGS, landingPath } from './landings.js'
+import { RATE_PAGES, ratePagePath, ratePageSeo } from './rates.js'
 
 // Titles and descriptions for the app's own pages (per language).
 var PAGES = {
@@ -58,14 +59,14 @@ var PAGES = {
   offers: {
     path: '/offers',
     title: {
-      EN: 'Loan Offers Matched to Your Calculation | ArmFinCredit',
-      RU: 'Кредитные предложения под ваш расчёт | ArmFinCredit',
-      AM: 'Վարկային առաջարկներ ձեր հաշվարկի համար | ArmFinCredit'
+      EN: 'Compare Armenian Bank Loans on Your Amount | ArmFinCredit',
+      RU: 'Сравнение кредитов банков Армении на вашу сумму | ArmFinCredit',
+      AM: 'Համեմատեք Հայաստանի բանկերի վարկերը ձեր գումարով | ArmFinCredit'
     },
     description: {
-      EN: 'Partner loan offers compared with your own calculation: estimated payment and how much you could save.',
-      RU: 'Предложения партнёров в сравнении с вашим расчётом: примерный платёж и возможная экономия.',
-      AM: 'Գործընկերների առաջարկները՝ համեմատած ձեր հաշվարկի հետ․ մոտավոր վճար և հնարավոր խնայողություն։'
+      EN: 'Loans and mortgages of Armenian banks applied to your amount and term: monthly payment, overpayment and how much you could save.',
+      RU: 'Кредиты и ипотека банков Армении на вашу сумму и срок: ежемесячный платёж, переплата и возможная экономия.',
+      AM: 'Հայաստանի բանկերի վարկերն ու հիփոթեքը՝ ձեր գումարով և ժամկետով․ ամսական վճար, գերավճար և հնարավոր խնայողություն։'
     }
   },
   pro: {
@@ -97,14 +98,14 @@ var PAGES = {
   banks: {
     path: '/banks',
     title: {
-      EN: 'Armenian Bank Deposit & Mortgage Rates | ArmFinCredit',
-      RU: 'Ставки банков Армении по вкладам и ипотеке | ArmFinCredit',
-      AM: 'Հայաստանի բանկերի ավանդների և հիփոթեքի դրույքներ | ArmFinCredit'
+      EN: 'Armenian Bank Rates: Deposits, Mortgages, Loans | ArmFinCredit',
+      RU: 'Ставки банков Армении: вклады, ипотека, кредиты | ArmFinCredit',
+      AM: 'Հայաստանի բանկերի դրույքներ՝ ավանդ, հիփոթեք, վարկ | ArmFinCredit'
     },
     description: {
-      EN: 'Indicative deposit and mortgage rates of Armenian banks with sources and dates.',
-      RU: 'Ориентировочные ставки банков Армении по вкладам и ипотеке — с источниками и датами.',
-      AM: 'Հայաստանի բանկերի ավանդների և հիփոթեքի ցուցադրական դրույքները՝ աղբյուրներով և ամսաթվերով։'
+      EN: 'Deposit, mortgage and loan rates of Armenian banks with terms, limits, sources and dates.',
+      RU: 'Ставки банков Армении по вкладам, ипотеке и кредитам — с условиями, лимитами, источниками и датами.',
+      AM: 'Հայաստանի բանկերի ավանդների, հիփոթեքի և վարկերի դրույքները՝ պայմաններով, սահմաններով և աղբյուրներով։'
     }
   },
   widget: {
@@ -217,6 +218,11 @@ export function prerenderRoutes() {
   LANDINGS.forEach(function(landing) {
     LANGS.forEach(function(l) {
       routes.push({ path: landingPath(landing, l), lang: l, priority: '0.9', alternates: landingSeo(landing, l).alternates })
+    })
+  })
+  RATE_PAGES.forEach(function(page) {
+    LANGS.forEach(function(l) {
+      routes.push({ path: ratePagePath(page, l), lang: l, priority: '0.9', alternates: ratePageSeo(page, l).alternates })
     })
   })
   routes[0].alternates = LANG_HOMES

@@ -109,8 +109,9 @@ export default function BankLoanCompare(props) {
           hi: { monthly: hi.monthlyPayment, interest: interestOf(hi) }
         })
       })
-      // Offers that fit first, then by the upper rate (the realistic worst case).
-      .sort(function(a, b) { return ((b.fit !== false) - (a.fit !== false)) || (a.cmp[1] - b.cmp[1]) || (a.cmp[0] - b.cmp[0]) })
+      // Offers that fit first, state programmes after regular ones, then by the
+      // upper rate (the realistic worst case).
+      .sort(function(a, b) { return ((b.fit !== false) - (a.fit !== false)) || (!!a.program - !!b.program) || (a.cmp[1] - b.cmp[1]) || (a.cmp[0] - b.cmp[0]) })
   }, [kind, ls.amount, ls.term, ls.loanType])
 
   function applyOffer(o) {

@@ -25,6 +25,8 @@ var Y1         = L('1 տարի', '1 год', '1 year')
 // validUntil: 'YYYY-MM-DD' for promotions (hidden automatically after that date)
 // limits: { amount: [min, max] AMD, term: [min, max] months } — known product
 //         limits, used to check a user's calculation against the offer
+// program: true for state-supported programmes with eligibility criteria
+//          (ranked after regular offers in comparisons)
 // compare: [min, max] rates used for the loan comparison when `rate` is not
 //          representative for a cash loan (defaults to `rate`)
 export var BANK_OFFERS = [
@@ -184,7 +186,7 @@ export var BANK_OFFERS = [
 
   // ── Mortgage ──────────────────────────────────────────────────────────────
   {
-    bank: 'Evocabank', product: L('Հիփոթեք ԱՀԸ ծրագրով', 'Ипотека по программе НИК', 'National Mortgage Company program'), kind: 'mortgage', currency: 'AMD', rate: [8, 8],
+    bank: 'Evocabank', product: L('Հիփոթեք ԱՀԸ ծրագրով', 'Ипотека по программе НИК', 'National Mortgage Company program'), kind: 'mortgage', currency: 'AMD', rate: [8, 8], program: true,
     term: L('Պետական աջակցությամբ', 'С господдержкой', 'State-supported'),
     conditions: [L('Միայն ծրագրի մասնակիցների համար (պայմանները՝ բանկում)', 'Только для участников госпрограммы (критерии — в банке)', 'Only for eligible programme participants (criteria at the bank)'), L('Սուբսիդավորում՝ 2% Երևանում, 4% մարզերում', 'Субсидия: 2% в Ереване, 4% в регионах', 'Subsidy: 2% in Yerevan, 4% in the regions')],
     url: 'https://www.evoca.am/en/news/products/new-mortgage-loan-offer', source: 'evoca.am', asOf: '2026'
@@ -231,12 +233,85 @@ export var BANK_OFFERS = [
     term: L('24–120 ամիս', '24–120 мес.', '24–120 months'),
     conditions: [L('Գումար՝ մինչև 100 000 000 ֏', 'Сумма до 100 000 000 ֏', 'Amount up to AMD 100,000,000')],
     url: 'https://www.evoca.am/en/loans', source: 'evoca.am, afm.am', asOf: '2026'
+  },
+  {
+    bank: 'Ardshinbank', product: L('Անգրավ սպառողական վարկ', 'Потребкредит без залога', 'Unsecured consumer loan'), kind: 'loan', currency: 'AMD', rate: [12.9, 12.9], from: true,
+    limits: { amount: [150000, 50000000], term: [36, 120] },
+    term: L('36–120 ամիս', '36–120 мес.', '36–120 months'),
+    conditions: [L('Գումար՝ 150 000 – 50 000 000 ֏', 'Сумма: 150 000 – 50 000 000 ֏', 'Amount: AMD 150,000 – 50,000,000'), L('12.9%-ից՝ Արդշինբանկի քարտով աշխատավարձ/թոշակ ստացողների համար', 'От 12,9% — для получающих зарплату/пенсию на карту Ардшинбанка', 'From 12.9% for salary/pension card holders at Ardshinbank')],
+    url: 'https://arka.am/en/news/business/ardshinbank-lowers-interest-rates-on-unsecured-consumer-loans/', source: 'arka.am', asOf: '2026'
+  },
+  {
+    bank: 'AMIO Bank', product: L('Սպառողական վարկ', 'Потребительский кредит', 'Consumer loan'), kind: 'loan', currency: 'AMD', rate: [13.5, 13.5], from: true,
+    limits: { amount: [0, 100000000], term: [1, 120] },
+    term: L('մինչև 10 տարի', 'до 10 лет', 'up to 10 years'),
+    conditions: [L('Գումար՝ մինչև 100 000 000 ֏', 'Сумма до 100 000 000 ֏', 'Amount up to AMD 100,000,000'), L('Տրամադրում՝ 1 օրում', 'Выдача за 1 день', 'Disbursed within 1 day'), L('Վաղաժամ մարումը՝ առանց տույժի', 'Досрочное погашение без штрафов', 'No early repayment penalty')],
+    url: 'https://www.amiobank.am/en/loans/consumer-loans', source: 'amiobank.am', asOf: '2026'
+  },
+  {
+    bank: 'Unibank', product: L('Սպառողական վարկ', 'Потребительский кредит', 'Consumer loan'), kind: 'loan', currency: 'AMD', rate: [15, 15], from: true,
+    limits: { amount: [0, 50000000], term: [1, 120] },
+    term: L('մինչև 120 ամիս', 'до 120 мес.', 'up to 120 months'),
+    conditions: [L('Գումար՝ մինչև 50 000 000 ֏', 'Сумма до 50 000 000 ֏', 'Amount up to AMD 50,000,000'), L('Ցանկացած նպատակով', 'На любые цели', 'For any purpose')],
+    url: 'https://www.unibank.am/en/service/consumer', source: 'unibank.am', asOf: '2026'
+  },
+  {
+    bank: 'VTB Bank (Armenia)', product: L('Անշարժ գույքով ապահովված վարկ', 'Кредит под залог недвижимости', 'Real-estate-secured loan'), kind: 'loan', currency: 'AMD', rate: [17.5, 21],
+    limits: { amount: [0, 30000000] },
+    term: L('ըստ պայմանների', 'по условиям банка', 'per bank terms'),
+    conditions: [L('Արդյունավետ՝ 18.9–23.8%', 'Эффективная ставка 18,9–23,8%', 'Effective rate 18.9–23.8%'), L('Մինչև 30 մլն ֏ և գույքի արժեքի 60%', 'До 30 млн ֏ и до 60% стоимости залога', 'Up to AMD 30M and 60% of the property value'), L('Մինչև 10 մլն ֏՝ առանց եկամտի հաստատման', 'До 10 млн ֏ — без подтверждения дохода', 'Up to AMD 10M without income proof')],
+    url: 'https://armbanks.am/en/2026/05/20/273287/', source: 'armbanks.am, arka.am', asOf: '2026-05'
+  },
+
+  // ── Mortgage (more banks) ─────────────────────────────────────────────────
+  {
+    bank: 'Fast Bank', product: L('Հիփոթեք', 'Ипотека', 'Mortgage'), kind: 'mortgage', currency: 'AMD', rate: [13.5, 13.5],
+    limits: { amount: [0, 200000000], term: [1, 240] },
+    term: L('մինչև 240 ամիս', 'до 240 мес.', 'up to 240 months'),
+    conditions: [L('Մինչև 200 մլն ֏', 'До 200 млн ֏', 'Up to AMD 200M'), L('Կանխավճար՝ 10%-ից', 'Первый взнос от 10%', 'Down payment from 10%')],
+    url: 'https://www.fastbank.am/en/individual/loans/mortgage/mortgage-loans', source: 'fastbank.am', asOf: '2026'
+  },
+  {
+    bank: 'Fast Bank', product: L('Ազգային հիփոթեք', 'Национальная ипотека', 'National mortgage'), kind: 'mortgage', currency: 'AMD', rate: [13, 13],
+    limits: { amount: [0, 60000000], term: [1, 240] },
+    term: L('մինչև 240 ամիս', 'до 240 мес.', 'up to 240 months'),
+    conditions: [L('Մինչև 60 մլն ֏', 'До 60 млн ֏', 'Up to AMD 60M'), L('Կանխավճար՝ 10%-ից', 'Первый взнос от 10%', 'Down payment from 10%'), L('Ձեռքբերում, կառուցում, վերանորոգում', 'Покупка, строительство, ремонт', 'Purchase, construction, renovation')],
+    url: 'https://www.fastbank.am/en/individual/loans/mortgage', source: 'fastbank.am', asOf: '2026'
+  },
+  {
+    bank: 'Fast Bank', product: L('Երիտասարդ ընտանիքներին', 'Молодым семьям', 'Young families'), kind: 'mortgage', currency: 'AMD', rate: [7.3, 7.5], program: true,
+    limits: { amount: [0, 27750000], term: [1, 240] },
+    term: L('մինչև 240 ամիս', 'до 240 мес.', 'up to 240 months'),
+    conditions: [L('Պետական ծրագիր՝ միայն համապատասխան ընտանիքների համար', 'Госпрограмма — только для подходящих семей', 'State programme — eligible families only'), L('Մինչև 27 750 000 ֏, կանխավճար՝ 10%-ից', 'До 27 750 000 ֏, взнос от 10%', 'Up to AMD 27,750,000, 10% down payment')],
+    url: 'https://www.fastbank.am/en/individual/loans/mortgage', source: 'fastbank.am', asOf: '2026'
+  },
+  {
+    bank: 'AMIO Bank', product: L('Հիփոթեք', 'Ипотека', 'Mortgage'), kind: 'mortgage', currency: 'AMD', rate: [13.4, 13.4], from: true,
+    limits: { amount: [0, 150000000], term: [1, 360] },
+    term: L('մինչև 30 տարի', 'до 30 лет', 'up to 30 years'),
+    conditions: [L('Մինչև 150 մլն ֏', 'До 150 млн ֏', 'Up to AMD 150M'), L('Վաղաժամ մարումը՝ առանց տույժի', 'Досрочное погашение без штрафов', 'No early repayment penalty')],
+    url: 'https://www.amiobank.am/en/loans/mortgage-loans', source: 'amiobank.am', asOf: '2026'
+  },
+  {
+    bank: 'Araratbank', product: L('Հիփոթեքի վերաֆինանսավորում', 'Рефинансирование ипотеки', 'Mortgage refinancing'), kind: 'mortgage', currency: 'AMD', rate: [12.25, 12.25], from: true,
+    limits: { amount: [5000000, 150000000], term: [60, 300] },
+    term: L('5–25 տարի', '5–25 лет', '5–25 years'),
+    conditions: [L('Այլ բանկից փոխանցում', 'Перевод ипотеки из другого банка', 'Transfer from another bank'), L('Արդյունավետ՝ 12.40–13.53%', 'Эффективная ставка 12,40–13,53%', 'Effective rate 12.40–13.53%'), L('−0.5%՝ Արարատբանկի քարտով աշխատավարձի դեպքում (3+ ամիս)', '−0,5% при зарплате на карту Араратбанка (от 3 мес.)', '−0.5% with salary on an Araratbank card (3+ months)')],
+    url: 'https://www.araratbank.am/en/mortgage-loans/36/', source: 'araratbank.am, banks.am', asOf: '2026'
+  },
+  {
+    bank: 'Ameriabank', product: L('Հիփոթեք', 'Ипотека', 'Mortgage'), kind: 'mortgage', currency: 'AMD', rate: [15.7, 15.7],
+    term: L('Ֆիքսված կամ լողացող', 'Фиксированная или плавающая', 'Fixed or floating'),
+    conditions: [L('Բանկի օրինակ՝ 25 մլն ֏ վարկի համար', 'Пример банка для кредита 25 млн ֏', 'Bank example for an AMD 25M loan'), L('ACRA ≥750՝ −0.5%, ≤550՝ +0.5%', 'Скоринг ACRA ≥750: −0,5%, ≤550: +0,5%', 'ACRA score ≥750: −0.5%, ≤550: +0.5%'), L('Պետական ծրագրերով՝ 6%-ից', 'По госпрограммам — от 6%', 'State programmes from 6%')],
+    url: 'https://ameriabank.am/en/personal/loans/mortgage/secondary-market', source: 'afm.am, ameriabank.am', asOf: '2026'
   }
 ]
 
 // Banks without a verified public rate in our sources — linked, not guessed.
 export var BANKS_NO_DATA = [
   { bank: 'Ameriabank', note: L('Ավանդ՝ 50 000 ֏-ից', 'Вклад от 50 000 ֏', 'Deposit from AMD 50,000'), url: 'https://ameriabank.am/en/personal/saving/deposits/ameria-deposit' },
+  { bank: 'Inecobank 1 CLICK', note: L('Առցանց վարկ՝ 100 000 – 15 մլն ֏, մինչև 60 ամիս', 'Онлайн-кредит: 100 000 – 15 млн ֏, до 60 мес.', 'Online loan: AMD 100,000 – 15M, up to 60 months'), url: 'https://www.inecobank.am/en/Individual/consumer-loans/1-click' },
+  { bank: 'IDBank Rocket Line', note: L('Ապառիկ՝ մինչև 10 մլն ֏, 0% գործընկերների մոտ', 'Рассрочка до 10 млн ֏, 0% у партнёров', 'Installments up to AMD 10M, 0% at partners'), url: 'https://idbank.am/en/credits/collateral-loans/consumer-loan/' },
   { bank: 'Converse Bank', note: L('Karas/Progress՝ +0.25% առցանց (>1 տարի)', 'Karas/Progress: +0,25% онлайн (>1 года)', 'Karas/Progress: +0.25% online (>1 year)'), url: 'https://www.conversebank.am/en/deposits/' },
   { bank: 'Armeconombank', note: L('Classic+, Flexible, Child', 'Classic+, Flexible, «Детский»', 'Classic+, Flexible, Child'), url: 'https://www.aeb.am/en/individual/deposit/classic-deposit' },
   { bank: 'Armswissbank', note: L('33 օրից, $20 000 / 10 մլն ֏-ից', 'от 33 дней, от $20 000 / 10 млн ֏', 'from 33 days, from $20,000 / AMD 10M'), url: 'https://www.armswissbank.am/en/individuals/fiz-deposits/' },
