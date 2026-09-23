@@ -23,6 +23,10 @@ var Y1         = L('1 տարի', '1 год', '1 year')
 // term, minAmount: free text per language (or plain string)
 // conditions: list of per-language strings
 // validUntil: 'YYYY-MM-DD' for promotions (hidden automatically after that date)
+// limits: { amount: [min, max] AMD, term: [min, max] months } — known product
+//         limits, used to check a user's calculation against the offer
+// compare: [min, max] rates used for the loan comparison when `rate` is not
+//          representative for a cash loan (defaults to `rate`)
 export var BANK_OFFERS = [
   // ── Deposits: AMD ──────────────────────────────────────────────────────────
   {
@@ -182,11 +186,12 @@ export var BANK_OFFERS = [
   {
     bank: 'Evocabank', product: L('Հիփոթեք ԱՀԸ ծրագրով', 'Ипотека по программе НИК', 'National Mortgage Company program'), kind: 'mortgage', currency: 'AMD', rate: [8, 8],
     term: L('Պետական աջակցությամբ', 'С господдержкой', 'State-supported'),
-    conditions: [L('Սուբսիդավորում՝ 2% Երևանում, 4% մարզերում', 'Субсидия: 2% в Ереване, 4% в регионах', 'Subsidy: 2% in Yerevan, 4% in the regions')],
+    conditions: [L('Միայն ծրագրի մասնակիցների համար (պայմանները՝ բանկում)', 'Только для участников госпрограммы (критерии — в банке)', 'Only for eligible programme participants (criteria at the bank)'), L('Սուբսիդավորում՝ 2% Երևանում, 4% մարզերում', 'Субсидия: 2% в Ереване, 4% в регионах', 'Subsidy: 2% in Yerevan, 4% in the regions')],
     url: 'https://www.evoca.am/en/news/products/new-mortgage-loan-offer', source: 'evoca.am', asOf: '2026'
   },
   {
     bank: 'Evocabank', product: L('Հիփոթեք՝ երկրորդային շուկա', 'Ипотека: вторичный рынок', 'Mortgage: secondary market'), kind: 'mortgage', currency: 'AMD', rate: [12.5, 12.5],
+    limits: { term: [1, 240] },
     term: L('մինչև 20 տարի', 'до 20 лет', 'up to 20 years'),
     conditions: [L('Կանխավճար՝ 10%-ից', 'Первый взнос от 10%', 'Down payment from 10%'), L('Ակցիա՝ ստուգեք ժամկետը', 'Акция — уточняйте срок действия', 'Promotion — check validity')],
     url: 'https://www.evoca.am/en/news/products/evoca-mortgage-loan-special-offer', source: 'evoca.am', asOf: '2026'
@@ -213,12 +218,16 @@ export var BANK_OFFERS = [
   // ── Consumer loans ────────────────────────────────────────────────────────
   {
     bank: 'Ameriabank', product: L('Անգրավ սպառողական վարկ', 'Потребкредит без залога', 'Unsecured consumer loan'), kind: 'loan', currency: 'AMD', rate: [0, 21.5],
+    limits: { amount: [50000, 5000000], term: [6, 60] },
+    // 0% applies only to merchant installments, so cash loans are compared at the published maximum.
+    compare: [21.5, 21.5],
     term: L('6–60 ամիս', '6–60 мес.', '6–60 months'),
     conditions: [L('Գումար՝ 50 000 – 5 000 000 ֏', 'Сумма: 50 000 – 5 000 000 ֏', 'Amount: AMD 50,000 – 5,000,000'), L('Ամբողջովին առցանց', 'Полностью онлайн', 'Fully online'), L('0%՝ գործընկեր խանութներում', '0% — у партнёров-продавцов', '0% at partner merchants')],
     url: 'https://ameriabank.am/Portals/0/files/Personal/Loans/Consumer_loan_unsecured_eng.pdf', source: 'ameriabank.am, afm.am', asOf: '2026'
   },
   {
     bank: 'Evocabank', product: L('Անշարժ գույքով ապահովված վարկ', 'Кредит под залог недвижимости', 'Property-secured loan'), kind: 'loan', currency: 'AMD', rate: [15, 15], from: true,
+    limits: { amount: [0, 100000000], term: [24, 120] },
     term: L('24–120 ամիս', '24–120 мес.', '24–120 months'),
     conditions: [L('Գումար՝ մինչև 100 000 000 ֏', 'Сумма до 100 000 000 ֏', 'Amount up to AMD 100,000,000')],
     url: 'https://www.evoca.am/en/loans', source: 'evoca.am, afm.am', asOf: '2026'

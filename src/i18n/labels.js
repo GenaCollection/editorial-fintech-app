@@ -211,7 +211,17 @@ var L = {
 
   offers: {
     title:     { AM: 'Վարկային առաջարկներ',                     RU: 'Кредитные предложения',                 EN: 'Loan offers' },
-    desc:      { AM: 'Առաջարկներ, որոնք համապատասխանում են ձեր հաշվարկին', RU: 'Предложения партнёров под ваш расчёт', EN: 'Partner offers that match your calculation' },
+    desc:      { AM: 'Հայաստանի բանկերի իրական դրույքները՝ ձեր գումարի և ժամկետի համար', RU: 'Реальные ставки банков Армении на вашу сумму и срок', EN: 'Real Armenian bank rates applied to your amount and term' },
+    bankT:     { AM: 'Բանկերը՝ ձեր գումարով',              RU: 'Банки на вашу сумму',                   EN: 'Banks for your amount' },
+    bankD:     { AM: 'Վճարը և գերավճարը՝ ըստ բանկերի հրապարակային դրույքների', RU: 'Платёж и переплата по публичным ставкам банков', EN: 'Payment and overpayment at the banks\' public rates' },
+    overpay:   { AM: 'Գերավճար',                                RU: 'Переплата',                             EN: 'Overpayment' },
+    vsYou:     { AM: 'Ձեր հաշվարկի համեմատ',                    RU: 'К вашему расчёту',                      EN: 'vs your calc' },
+    outLimit:  { AM: 'Դուրս է բանկի սահմաններից',                RU: 'Вне лимитов банка',                     EN: 'Outside bank limits' },
+    limitsUnknown: { AM: 'Գումարի/ժամկետի սահմանները ճշտեք բանկում', RU: 'Лимиты суммы/срока уточняйте в банке', EN: 'Check amount/term limits with the bank' },
+    useRate:   { AM: 'Հաշվել',                                  RU: 'Посчитать под',                         EN: 'Calculate at' },
+    compareAll:{ AM: 'Համեմատել բոլոր բանկերը՝ Pro',             RU: 'Сравнить все банки — Pro',              EN: 'Compare all banks — Pro' },
+    bankNote:  { AM: 'Հաշվարկը ցուցադրական է՝ առանց միջնորդավճարների և ապահովագրության։ Վերջնական դրույքը կախված է ձեր եկամտից և վարկային պատմությունից։', RU: 'Расчёт ориентировочный, без комиссий и страховок. Итоговая ставка зависит от дохода и кредитной истории.', EN: 'Indicative, excluding fees and insurance. The final rate depends on your income and credit history.' },
+    partnersT: { AM: 'Գործընկերներ',                            RU: 'Партнёрские предложения',               EN: 'Partner offers' },
     yourCalc:  { AM: 'Ձեր հաշվարկը',                            RU: 'Ваш расчёт',                            EN: 'Your calculation' },
     rateFrom:  { AM: 'Տոկոս՝ սկսած',                            RU: 'Ставка от',                             EN: 'Rate from' },
     upTo:      { AM: 'Մինչև',                                   RU: 'До',                                    EN: 'Up to' },

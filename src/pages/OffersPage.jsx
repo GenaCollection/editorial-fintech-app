@@ -4,6 +4,7 @@ import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { PARTNER_OFFERS, PARTNER_CONTACT_EMAIL, withUtm } from '../config/monetization.js'
 import AdSlot from '../components/AdSlot.jsx'
+import BankLoanCompare from '../components/BankLoanCompare.jsx'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
 
@@ -41,6 +42,11 @@ export default function OffersPage() {
         <span className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 font-bold text-blue-700 dark:text-blue-300">{money(loan.monthlyPayment)}/{t(lang,'calc','months')}</span>
       </div>
 
+      <BankLoanCompare lang={lang} />
+
+      <AdSlot placement="offers" className="mb-10" />
+
+      <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-4">{t(lang,'offers','partnersT')}</h2>
       <div className="space-y-4 mb-8">
         {offers.map(function(o) {
           var href = o.demo ? '' : withUtm(o.url, o.id)
@@ -103,8 +109,6 @@ export default function OffersPage() {
       </div>
 
       <p className="text-xs text-slate-400 mb-10 leading-relaxed">{t(lang,'offers','disclosure')}</p>
-
-      <AdSlot placement="offers" className="mb-10" />
 
       <div className="rounded-3xl border-2 border-dashed border-blue-200 dark:border-blue-900 p-7 md:p-9 flex flex-col md:flex-row md:items-center gap-5 justify-between">
         <div>
