@@ -3,6 +3,8 @@ import { usePro } from '../context/ProContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { PLANS } from '../config/monetization.js'
+import { pageSeo } from '../seo/meta.js'
+import { useSeo } from '../seo/Seo.jsx'
 
 var ROWS = [
   ['calculate', 'fCalc', 'fCalc'],
@@ -23,6 +25,7 @@ function Check(props) {
 export default function PricingPage() {
   var pro = usePro()
   var lang = useLanguage().language
+  useSeo(pageSeo('pro', lang))
   var keyArr = useState(''); var key = keyArr[0]; var setKey = keyArr[1]
   var msgArr = useState(null); var msg = msgArr[0]; var setMsg = msgArr[1]
   var busyArr = useState(false); var busy = busyArr[0]; var setBusy = busyArr[1]

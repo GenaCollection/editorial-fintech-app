@@ -1,5 +1,5 @@
 // Minimal offline support: network-first for pages, cache-first for built assets.
-var CACHE = 'afc-v1'
+var CACHE = 'afc-v2'
 
 self.addEventListener('install', function(e) { self.skipWaiting() })
 self.addEventListener('activate', function(e) {
@@ -15,10 +15,14 @@ self.addEventListener('fetch', function(e) {
 
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then(function(res) {
-      var copy = res.clone()
-      caches.open(CACHE).then(function(c) { c.put('/', copy) })
+      if (res.ok) {
+        var copy = res.clone()
+        caches.open(CACHE).then(function(c) { c.put(url.pathname, copy) })
+      }
       return res
-    }).catch(function() { return caches.match('/') }))
+    }).catch(function() {
+      return caches.match(url.pathname).then(function(hit) { return hit || caches.match('/') })
+    }))
     return
   }
   if (url.pathname.indexOf('/assets/') === 0) {

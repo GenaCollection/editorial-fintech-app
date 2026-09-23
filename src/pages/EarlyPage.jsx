@@ -5,6 +5,8 @@ import { t } from '../i18n/labels.js'
 import { Link } from 'react-router-dom'
 import { usePro } from '../context/ProContext.jsx'
 import AdSlot from '../components/AdSlot.jsx'
+import { pageSeo } from '../seo/meta.js'
+import { useSeo } from '../seo/Seo.jsx'
 
 var SYM = '\u058f'
 
@@ -15,6 +17,7 @@ export default function EarlyPage() {
   var totalInterest = ctx.totalInterest
   var schedule = ctx.schedule
   var lang = useLanguage().language
+  useSeo(pageSeo('early', lang))
   var pro = usePro()
 
   var scenarios = useMemo(function() {

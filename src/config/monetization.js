@@ -15,7 +15,8 @@ export var AD_SLOTS = {
   schedule:   env.VITE_AD_SLOT_SCHEDULE   || '',
   offers:     env.VITE_AD_SLOT_OFFERS     || '',
   saved:      env.VITE_AD_SLOT_SAVED      || '',
-  early:      env.VITE_AD_SLOT_EARLY      || ''
+  early:      env.VITE_AD_SLOT_EARLY      || '',
+  landing:    env.VITE_AD_SLOT_LANDING    || ''
 }
 
 // ── Pro plan ──────────────────────────────────────────────────────────────────

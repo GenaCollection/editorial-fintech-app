@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
+import { pageSeo } from '../seo/meta.js'
+import { useSeo } from '../seo/Seo.jsx'
 
 var SECTIONS = {
   EN: [
@@ -42,6 +44,7 @@ var UPDATED = { EN: 'Last updated: March 28, 2026', RU: 'Последнее об
 export default function TermsPage() {
   var langCtx = useLanguage()
   var lang = langCtx.language
+  useSeo(pageSeo('terms', lang))
   var sections = SECTIONS[lang] || SECTIONS.EN
   return (
     <main className="flex-1 pt-24 pb-16 px-6 md:px-12 max-w-3xl mx-auto w-full">

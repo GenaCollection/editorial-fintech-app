@@ -2,9 +2,12 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
+import { pageSeo } from '../seo/meta.js'
+import { useSeo } from '../seo/Seo.jsx'
 
 export default function NotFoundPage() {
   var lang = useLanguage().language
+  useSeo(pageSeo('notFound', lang))
   return (
     <main className="flex-1 flex flex-col items-center justify-center min-h-[70vh] px-6 text-center">
       <div className="text-8xl font-black text-blue-700 mb-4 select-none">404</div>

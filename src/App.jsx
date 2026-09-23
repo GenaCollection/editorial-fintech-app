@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { LoanProvider } from './context/LoanContext.jsx'
-import { LanguageProvider } from './context/LanguageContext.jsx'
+import { LanguageProvider, useLanguage } from './context/LanguageContext.jsx'
 import { SavedProvider } from './context/SavedContext.jsx'
 import { ProProvider } from './context/ProContext.jsx'
 import Navigation from './components/Navigation.jsx'
@@ -10,17 +10,57 @@ import AiAdvisor from './components/AiAdvisor.jsx'
 import UpgradeModal from './components/UpgradeModal.jsx'
 import { AdsLoader } from './components/AdSlot.jsx'
 import CalculatorPage from './pages/CalculatorPage.jsx'
+import { URL_TO_LANG } from './config/site.js'
+import { findLanding } from './seo/landings.js'
 
-// Secondary routes are code-split so the calculator loads first.
-var SchedulePage = lazy(function() { return import('./pages/SchedulePage.jsx') })
-var EarlyPage    = lazy(function() { return import('./pages/EarlyPage.jsx') })
-var ComparePage  = lazy(function() { return import('./pages/ComparePage.jsx') })
-var SavedPage    = lazy(function() { return import('./pages/SavedPage.jsx') })
-var OffersPage   = lazy(function() { return import('./pages/OffersPage.jsx') })
-var PricingPage  = lazy(function() { return import('./pages/PricingPage.jsx') })
-var PrivacyPage  = lazy(function() { return import('./pages/PrivacyPage.jsx') })
-var TermsPage    = lazy(function() { return import('./pages/TermsPage.jsx') })
-var NotFoundPage = lazy(function() { return import('./pages/NotFoundPage.jsx') })
+// Code-split pages that can be preloaded before the first render, so a
+// prerendered page is replaced by the same page instead of a spinner.
+function lazyPage(factory) {
+  var Loaded = null
+  function load() { return factory().then(function(m) { Loaded = m.default; return m }) }
+  var Lazy = lazy(load)
+  function Page(props) { return Loaded ? React.createElement(Loaded, props) : React.createElement(Lazy, props) }
+  Page.preload = load
+  return Page
+}
+
+var SchedulePage = lazyPage(function() { return import('./pages/SchedulePage.jsx') })
+var EarlyPage    = lazyPage(function() { return import('./pages/EarlyPage.jsx') })
+var ComparePage  = lazyPage(function() { return import('./pages/ComparePage.jsx') })
+var SavedPage    = lazyPage(function() { return import('./pages/SavedPage.jsx') })
+var OffersPage   = lazyPage(function() { return import('./pages/OffersPage.jsx') })
+var PricingPage  = lazyPage(function() { return import('./pages/PricingPage.jsx') })
+var WidgetPage   = lazyPage(function() { return import('./pages/WidgetPage.jsx') })
+var EmbedPage    = lazyPage(function() { return import('./pages/EmbedPage.jsx') })
+var LandingPage  = lazyPage(function() { return import('./pages/LandingPage.jsx') })
+var PrivacyPage  = lazyPage(function() { return import('./pages/PrivacyPage.jsx') })
+var TermsPage    = lazyPage(function() { return import('./pages/TermsPage.jsx') })
+var NotFoundPage = lazyPage(function() { return import('./pages/NotFoundPage.jsx') })
+
+var PAGES = {
+  '/schedule': SchedulePage, '/early': EarlyPage, '/compare': ComparePage,
+  '/saved': SavedPage, '/offers': OffersPage, '/pro': PricingPage,
+  '/widget': WidgetPage, '/embed': EmbedPage, '/privacy': PrivacyPage, '/terms': TermsPage
+}
+
+function isLangHome(pathname) {
+  var parts = pathname.split('/').filter(Boolean)
+  return parts.length === 1 && !!URL_TO_LANG[parts[0]]
+}
+
+// Loads the code for the page at `pathname` (used before the first render).
+export function preloadRoute(pathname) {
+  var path = (pathname || '/').replace(/\/+$/, '') || '/'
+  if (path === '/' || isLangHome(path)) return Promise.resolve()
+  if (PAGES[path]) return PAGES[path].preload()
+  if (findLanding(path)) return LandingPage.preload()
+  return NotFoundPage.preload()
+}
+
+export function preloadAll() {
+  return Promise.all(Object.keys(PAGES).map(function(k) { return PAGES[k].preload() })
+    .concat([LandingPage.preload(), NotFoundPage.preload()]))
+}
 
 function getInitialTheme() {
   try { var s = localStorage.getItem('afc_theme'); if (s === 'dark' || s === 'light') return s } catch(e) {}
@@ -28,15 +68,13 @@ function getInitialTheme() {
   return 'light'
 }
 
-export default function App() {
+export function AppProviders(props) {
   return (
-    <LanguageProvider>
+    <LanguageProvider initialLanguage={props.initialLanguage}>
       <ProProvider>
         <SavedProvider>
           <LoanProvider>
-            <BrowserRouter>
-              <AppInner />
-            </BrowserRouter>
+            {props.children}
           </LoanProvider>
         </SavedProvider>
       </ProProvider>
@@ -44,10 +82,42 @@ export default function App() {
   )
 }
 
+export default function App() {
+  return (
+    <AppProviders>
+      <BrowserRouter>
+        <RootSwitch />
+      </BrowserRouter>
+    </AppProviders>
+  )
+}
+
+// /embed renders the bare widget; everything else gets the full site chrome.
+export function RootSwitch() {
+  var path = useLocation().pathname
+  if (path === '/embed' || path === '/embed/') {
+    return <Suspense fallback={null}><EmbedPage /></Suspense>
+  }
+  return <AppInner />
+}
+
 function ScrollToTop() {
   var path = useLocation().pathname
   React.useEffect(function() { window.scrollTo(0, 0) }, [path])
   return null
+}
+
+// /hy, /ru, /en: the calculator in that language (own URL for search engines).
+function LangHome() {
+  var path = useLocation().pathname
+  var lang = URL_TO_LANG[path.split('/').filter(Boolean)[0]]
+  var langCtx = useLanguage()
+  React.useEffect(function() {
+    if (lang && langCtx.language !== lang) langCtx.setLanguage(lang)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang])
+  if (!lang) return <NotFoundPage />
+  return <CalculatorPage />
 }
 
 function PageFallback() {
@@ -88,8 +158,11 @@ function AppInner() {
           <Route path="/saved" element={<SavedPage />} />
           <Route path="/offers" element={<OffersPage />} />
           <Route path="/pro" element={<PricingPage />} />
+          <Route path="/widget" element={<WidgetPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/:lng" element={<LangHome />} />
+          <Route path="/:lng/:slug" element={<LandingPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>

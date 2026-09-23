@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { useSaved } from '../context/SavedContext.jsx'
 import { usePro } from '../context/ProContext.jsx'
 import { t } from '../i18n/labels.js'
+import { alternatePath } from '../seo/landings.js'
 
 var LINKS = [
   { to: '/',         icon: 'calculate',      label: function(l) { return t(l,'nav','calc') } },
@@ -37,6 +38,7 @@ function ProButton(props) {
 export default function Navigation(props) {
   var theme = props.theme; var toggleTheme = props.toggleTheme
   var loc = useLocation()
+  var navigate = useNavigate()
   var langCtx = useLanguage(); var language = langCtx.language; var setLanguage = langCtx.setLanguage
   var saves = useSaved().saves
   var pro = usePro()
@@ -88,7 +90,11 @@ export default function Navigation(props) {
           <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl gap-0.5">
             {['AM','RU','EN'].map(function(l) {
               return (
-                <button key={l} onClick={function() { setLanguage(l) }}
+                <button key={l} onClick={function() {
+                    setLanguage(l)
+                    var alt = alternatePath(loc.pathname, l)
+                    if (alt && alt !== loc.pathname) navigate(alt)
+                  }}
                   className={'px-2 py-1 text-[11px] font-bold rounded-lg transition-colors ' +
                     (language === l ? 'bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-300 shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200')}
                 >{l}</button>

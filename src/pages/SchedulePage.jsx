@@ -4,6 +4,8 @@ import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { usePro } from '../context/ProContext.jsx'
 import AdSlot from '../components/AdSlot.jsx'
+import { pageSeo } from '../seo/meta.js'
+import { useSeo } from '../seo/Seo.jsx'
 
 var SYM = '\u058f'
 var PER = 12
@@ -39,6 +41,7 @@ export default function SchedulePage() {
   var addExtraPayment = ctx.addExtraPayment
   var extraPayments = ctx.extraPayments
   var lang = useLanguage().language
+  useSeo(pageSeo('schedule', lang))
   var pro = usePro()
 
   var amtArr = useState('')
