@@ -3,7 +3,7 @@
  *
  *   <div data-armfincredit data-lang="ru" data-amount="5000000" data-rate="12"
  *        data-term="60" data-theme="light" data-accent="1d4ed8"></div>
- *   <script src="https://armfincredit-app.vercel.app/embed.js" async></script>
+ *   <script src="https://www.armfincredit.site/embed.js" async></script>
  *
  * Every element with a data-armfincredit attribute becomes a responsive
  * iframe that resizes itself to its content.
@@ -11,7 +11,7 @@
 (function () {
   'use strict'
   var script = document.currentScript
-  var ORIGIN = 'https://armfincredit-app.vercel.app'
+  var ORIGIN = 'https://www.armfincredit.site'
   try { if (script && script.src) ORIGIN = new URL(script.src).origin } catch (e) {}
 
   var KEYS = ['lang', 'amount', 'rate', 'term', 'type', 'theme', 'accent', 'ref']

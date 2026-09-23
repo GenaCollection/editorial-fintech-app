@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { t } from '../i18n/labels.js'
 
 var SYM = '\u058f'
-var SITE = 'armfincredit-app.vercel.app'
+var SITE = 'www.armfincredit.site'
 function fmt(n) { return Math.round(n).toLocaleString('en-US') }
 function fmtR(n) { return Number(n).toFixed(2) }
 

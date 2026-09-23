@@ -7,7 +7,7 @@ import { useSeo } from '../seo/Seo.jsx'
 
 var SECTIONS = {
   EN: [
-    ['1. Introduction', 'ArmFinCredit ("we", "our", "us") operates the website armfincredit-app.vercel.app (the "Service"). This page explains how we collect, use, and disclose information when you use our Service.'],
+    ['1. Introduction', 'ArmFinCredit ("we", "our", "us") operates the website www.armfincredit.site (the "Service"). This page explains how we collect, use, and disclose information when you use our Service.'],
     ['2. Information We Collect', 'We do not require registration or account creation. The Service runs in your browser. We do not collect or store the financial values you enter into the calculator; they are only sent to an AI provider when you use the AI advisor (see section 9). We may collect anonymous usage analytics through third-party services.'],
     ['3. Google AdSense and Cookies', 'We use Google AdSense to display advertisements. Google and its partners may use cookies to serve ads based on your visits to this and other websites. You can opt out of personalized advertising at google.com/settings/ads.'],
     ['4. Third-Party Services', 'Our Service may contain links to third-party sites. We are not responsible for the content, privacy policies, or practices of third-party websites or services.'],
@@ -18,7 +18,7 @@ var SECTIONS = {
     ['9. AI Advisor, Pro and Partner Offers', 'When you ask the AI advisor a question, your question and the current calculation (amount, rate, term, payments) are sent through our server to a third-party AI provider (e.g. Google Gemini) to generate the answer. Do not enter personal data in the chat. Pro purchases are processed by our payment provider; we only receive the license key status. Partner offer links contain referral tags, and we may receive a commission if you apply.']
   ],
   RU: [
-    ['1. Введение', 'ArmFinCredit («мы», «наш», «нам») управляет сайтом armfincredit-app.vercel.app (далее — «Сервис»). Настоящая страница объясняет, как мы собираем, используем и раскрываем информацию при использовании Сервиса.'],
+    ['1. Введение', 'ArmFinCredit («мы», «наш», «нам») управляет сайтом www.armfincredit.site (далее — «Сервис»). Настоящая страница объясняет, как мы собираем, используем и раскрываем информацию при использовании Сервиса.'],
     ['2. Какие данные мы собираем', 'Мы не требуем регистрации или создания аккаунта. Сервис работает прямо в браузере. Мы не собираем и не храним введённые вами в калькулятор финансовые значения; они передаются ИИ-провайдеру только когда вы пользуетесь ИИ-советником (см. раздел 9). Анонимная статистика посещаемости может собираться через сторонние сервисы.'],
     ['3. Google AdSense и cookie', 'Мы используем Google AdSense для показа рекламы. Google и его партнёры могут использовать cookie-файлы для показа объявлений на основе ваших посещений этого и других сайтов. Вы можете отключить персонализированную рекламу на google.com/settings/ads.'],
     ['4. Сторонние сервисы', 'Сервис может содержать ссылки на сторонние сайты. Мы не отвечаем за содержание, политики конфиденциальности или практики сторонних веб-ресурсов и сервисов.'],
@@ -29,7 +29,7 @@ var SECTIONS = {
     ['9. ИИ-советник, Pro и предложения партнёров', 'Когда вы задаёте вопрос ИИ-советнику, текст вопроса и текущий расчёт (сумма, ставка, срок, платежи) передаются через наш сервер стороннему ИИ-провайдеру (например, Google Gemini) для генерации ответа. Не вводите персональные данные в чат. Оплата Pro обрабатывается платёжным провайдером; мы получаем только статус лицензионного ключа. Ссылки на предложения партнёров содержат реферальные метки, и мы можем получать вознаграждение, если вы оформите продукт.']
   ],
   AM: [
-    ['1. Ներածություն', 'ArmFinCredit-ը («մենք», «մեր», «մեզ») կառավարում է armfincredit-app.vercel.app կայքը (այսուհետ՝ «Ծառայություն»): Այս էջը նկարագրում է, թե ինչպես ենք մենք հավաքում, օգտագործում և բացահայտում տեղեկատվությունը Ծառայությունից օգտվելիս։'],
+    ['1. Ներածություն', 'ArmFinCredit-ը («մենք», «մեր», «մեզ») կառավարում է www.armfincredit.site կայքը (այսուհետ՝ «Ծառայություն»): Այս էջը նկարագրում է, թե ինչպես ենք մենք հավաքում, օգտագործում և բացահայտում տեղեկատվությունը Ծառայությունից օգտվելիս։'],
     ['2. Ինչ տվյալներ ենք հավաքում', 'Մենք չենք պահանջում գրանցում կամ հաշվի ստեղծում։ Ծառայությունը աշխատում է անմիջապես ձեր բրաուզերում։ Մենք չենք հավաքում և չենք պահպանում հաշվիչում մուտքագրված ֆինանսական տվյալները․ դրանք փոխանցվում են AI մատակարարին միայն AI խորհրդատուից օգտվելիս (տե՛ս բաժին 9)։ Անանուն օգտագործման վիճակագրությունը կարող է հավաքվել երրորդ կողմի ծառայությունների միջոցով։'],
     ['3. Google AdSense և քուքիներ', 'Մենք օգտագործում ենք Google AdSense՝ գովազդ ցուցադրելու համար։ Google-ը և նրա գործընկերները կարող են օգտագործել քուքիներ՝ ձեր կայք այցելությունների հիման վրա գովազդ ցուցադրելու համար։ Դուք կարող եք անջատել անհատականացված գովազդը google.com/settings/ads հասցեով։'],
     ['4. Երրորդ կողմի ծառայություններ', 'Ծառայությունը կարող է պարունակել հղումներ երրորդ կողմի կայքերին։ Մենք պատասխանատվություն չենք կրում երրորդ կողմի կայքերի կամ ծառայությունների բովանդակության կամ գաղտնիության քաղաքականության համար։'],

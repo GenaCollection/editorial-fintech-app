@@ -77,7 +77,7 @@ UTM-метки (`utm_source=armfincredit`) добавляются автомат
 
 ИИ видит текущий расчёт пользователя (сумму, ставку, срок, платёж, APR) и отвечает на его языке (AM/RU/EN).
 
-**Проверка:** откройте в браузере `https://armfincredit-app.vercel.app/api/ai`. Страница покажет, задан ли ключ (`configured`), какая модель ответила (`model`) и, если что-то не так, точную ошибку провайдера (`detail`), например «API key not valid». Если `configured: false` — ключ не попал в этот деплой: проверьте имя переменной и окружение Production, затем сделайте Redeploy.
+**Проверка:** откройте в браузере `https://www.armfincredit.site/api/ai`. Страница покажет, задан ли ключ (`configured`), какая модель ответила (`model`) и, если что-то не так, точную ошибку провайдера (`detail`), например «API key not valid». Если `configured: false` — ключ не попал в этот деплой: проверьте имя переменной и окружение Production, затем сделайте Redeploy.
 
 Если ответ пришёл с пометкой «Офлайн-анализ», наведите на неё курсор — появится причина. Та же причина пишется в консоль браузера (F12).
 
@@ -103,7 +103,7 @@ UTM-метки (`utm_source=armfincredit`) добавляются автомат
 - Тексты страниц лежат в `src/seo/landings.js`, заголовки остальных страниц — в `src/seo/meta.js`. Новая тема = новый объект в `LANDINGS`: страница, ссылки и sitemap появятся сами.
 
 **Что сделать:**
-1. Добавьте сайт в **Google Search Console** (https://search.google.com/search-console) и отправьте `https://armfincredit-app.vercel.app/sitemap.xml`.
+1. Добавьте сайт в **Google Search Console** (https://search.google.com/search-console) и отправьте `https://www.armfincredit.site/sitemap.xml`.
 2. Добавьте сайт в **Яндекс Вебмастер** (https://webmaster.yandex.ru) и отправьте туда тот же sitemap — там русскоязычная аудитория.
 3. Когда появится свой домен, укажите его в переменной `VITE_SITE_URL` и сделайте Redeploy.
 
@@ -113,7 +113,7 @@ UTM-метки (`utm_source=armfincredit`) добавляются автомат
 
 ```html
 <div data-armfincredit data-lang="ru" data-amount="8000000" data-rate="13" data-term="60" data-accent="e11d48" data-ref="dealer-1"></div>
-<script src="https://armfincredit-app.vercel.app/embed.js" async></script>
+<script src="https://www.armfincredit.site/embed.js" async></script>
 ```
 
 На странице `/widget` владелец сайта выбирает язык, тему, цвет и параметры и копирует готовый код.

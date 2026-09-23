@@ -62,7 +62,7 @@ export default function Footer() {
         </div>
         <div className="border-t border-slate-200 dark:border-slate-800 pt-5 flex flex-col md:flex-row justify-between items-center gap-2">
           <p className="text-xs text-slate-400">{t(lang, 'footer', 'rights')}</p>
-          <p className="text-xs text-slate-400">armfincredit-app.vercel.app</p>
+          <p className="text-xs text-slate-400">www.armfincredit.site</p>
         </div>
       </div>
     </footer>

@@ -7,7 +7,7 @@ import { useSeo } from '../seo/Seo.jsx'
 
 var SECTIONS = {
   EN: [
-    ['1. Acceptance of Terms', 'By accessing and using ArmFinCredit at armfincredit-app.vercel.app, you agree to be bound by these Terms of Use. If you do not agree, please do not use the Service.'],
+    ['1. Acceptance of Terms', 'By accessing and using ArmFinCredit at www.armfincredit.site, you agree to be bound by these Terms of Use. If you do not agree, please do not use the Service.'],
     ['2. Description of Service', 'ArmFinCredit is a free online loan calculator for informational purposes only. It provides amortization schedules, early repayment analysis, and APR calculations. It does not constitute financial advice.'],
     ['3. No Warranties', 'The Service is provided on an AS IS and AS AVAILABLE basis without warranties of any kind. Calculation results are illustrative and may differ from actual loan offers from financial institutions.'],
     ['4. Limitation of Liability', 'ArmFinCredit is not liable for any direct, indirect, incidental, special, or consequential damages arising from your use of the Service or reliance on its content.'],
@@ -17,7 +17,7 @@ var SECTIONS = {
     ['8. Changes to Terms', 'We may update these Terms of Use from time to time. Continued use of the Service after changes means you accept the updated Terms.']
   ],
   RU: [
-    ['1. Принятие условий', 'Используя ArmFinCredit на armfincredit-app.vercel.app, вы соглашаетесь с настоящими Условиями использования. Если вы не согласны, пожалуйста, не используйте Сервис.'],
+    ['1. Принятие условий', 'Используя ArmFinCredit на www.armfincredit.site, вы соглашаетесь с настоящими Условиями использования. Если вы не согласны, пожалуйста, не используйте Сервис.'],
     ['2. Описание сервиса', 'ArmFinCredit — это бесплатный онлайн-калькулятор кредитов, предназначенный только для информационных целей. Он предоставляет графики платежей, анализ досрочного погашения и расчёт APR. Это не является финансовой консультацией.'],
     ['3. Отсутствие гарантий', 'Сервис предоставляется на условиях «как есть» и «по мере доступности» без каких-либо гарантий. Результаты расчётов носят иллюстративный характер и могут отличаться от реальных предложений финансовых учреждений.'],
     ['4. Ограничение ответственности', 'ArmFinCredit не несёт ответственности за прямые, косвенные, случайные, специальные или последующие убытки, возникшие в результате использования Сервиса или доверия к его содержанию.'],
@@ -27,7 +27,7 @@ var SECTIONS = {
     ['8. Изменения условий', 'Мы можем периодически обновлять настоящие Условия использования. Продолжение использования Сервиса после изменений означает ваше согласие с обновлёнными условиями.']
   ],
   AM: [
-    ['1. Պայմանների ընդունում', 'ArmFinCredit-ը armfincredit-app.vercel.app հասցեով օգտագործելով՝ դուք համաձայնվում եք այս Օգտագործման պայմաններին։ Եթե համաձայն չեք, խնդրում ենք չօգտվել Ծառայությունից։'],
+    ['1. Պայմանների ընդունում', 'ArmFinCredit-ը www.armfincredit.site հասցեով օգտագործելով՝ դուք համաձայնվում եք այս Օգտագործման պայմաններին։ Եթե համաձայն չեք, խնդրում ենք չօգտվել Ծառայությունից։'],
     ['2. Ծառայության նկարագրություն', 'ArmFinCredit-ը անվճար առցանց վարկային հաշվիչ է՝ միայն տեղեկատվական նպատակներով։ Այն տրամադրում է վճարումների գրաֆիկներ, վաղաժամկետ մարումների վերլուծություն և APR-ի հաշվարկ։ Սա ֆինանսական խորհրդատվություն չէ։'],
     ['3. Երաշխիքների բացակայություն', 'Ծառայությունը տրամադրվում է «ինչպես կա» և «ըստ հասանելիության» սկզբունքով՝ առանց որևէ երաշխիքի։ Հաշվարկների արդյունքները ցուցադրական են և կարող են տարբերվել ֆինանսական հաստատությունների իրական առաջարկներից։'],
     ['4. Պատասխանատվության սահմանափակում', 'ArmFinCredit-ը պատասխանատվություն չի կրում որևէ ուղղակի, անուղղակի, պատահական, հատուկ կամ հետևանքային վնասների համար, որոնք առաջանում են Ծառայությունից օգտվելուց կամ դրա բովանդակությանը վստահելուց։'],
