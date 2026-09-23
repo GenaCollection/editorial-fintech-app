@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import prerender from './scripts/prerender.js'
 
 // Serves the Vercel functions in /api during `npm run dev`, so the AI advisor
 // and license checks work locally without the Vercel CLI.
@@ -29,9 +30,9 @@ export default defineConfig(function(ctx) {
   // Expose non-VITE_ vars (AI_API_KEY, …) to the dev API handlers only.
   Object.assign(process.env, loadEnv(ctx.mode, process.cwd(), ''))
   return {
-    plugins: [react(), vercelApiDev()],
+    plugins: [react(), vercelApiDev(), prerender()],
     base: '/',
-    build: {
+    build: ctx.isSsrBuild ? {} : {
       rollupOptions: {
         output: {
           manualChunks: { react: ['react', 'react-dom', 'react-router-dom'] }

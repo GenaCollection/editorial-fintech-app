@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { usePro } from '../context/ProContext.jsx'
+import { pageSeo } from '../seo/meta.js'
+import { useSeo } from '../seo/Seo.jsx'
 
 var DEFAULTS = [
   { amount: 5000000, rate: 12, term: 60, type: 'annuity', fee: 0, insurance: 0 },
@@ -63,6 +65,7 @@ function fmtR(n) { return n.toFixed(2) }
 export default function ComparePage() {
   var langCtx = useLanguage()
   var lang = langCtx.language
+  useSeo(pageSeo('compare', lang))
   var pro = usePro()
 
   var loansArr = useState(DEFAULTS); var loans = loansArr[0]; var setLoans = loansArr[1]

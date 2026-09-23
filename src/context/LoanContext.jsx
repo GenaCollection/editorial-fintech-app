@@ -1,8 +1,32 @@
-import React, { createContext, useContext, useState, useMemo } from 'react'
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 var LoanContext = createContext(null)
 
 export function useLoan() { return useContext(LoanContext) }
+
+// Applies ?amount=&rate=&term=&type= (share links, widget, landing pages) to
+// the shared loan state once, when the page mounts.
+export function useLoanParamsFromUrl() {
+  var setLoanState = useContext(LoanContext).setLoanState
+  var searchParams = useSearchParams()[0]
+  useEffect(function() {
+    var a = Number(searchParams.get('amount')); var r = Number(searchParams.get('rate'))
+    var m = Number(searchParams.get('term'));   var tp = searchParams.get('type')
+    if (a > 0 || r > 0 || m > 0) {
+      setLoanState(function(prev) {
+        return {
+          amount:    a > 0 ? Math.min(100000000, Math.max(100000, a)) : prev.amount,
+          rate:      r > 0 ? Math.min(50, Math.max(0.1, r))           : prev.rate,
+          term:      m > 0 ? Math.min(360, Math.max(1, Math.round(m))) : prev.term,
+          loanType:  tp === 'differentiated' ? 'differentiated'       : prev.loanType,
+          fee: prev.fee, insurance: prev.insurance, startDate: prev.startDate
+        }
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+}
 
 // ── Annuity schedule ──────────────────────────────────────────────────────────
 export function generateAnnuity(amount, rate, term, extraPayments, startDate) {

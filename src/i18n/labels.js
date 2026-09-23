@@ -217,6 +217,41 @@ var L = {
     partnerB:  { AM: 'Դառնալ գործընկեր',                        RU: 'Стать партнёром',                       EN: 'Become a partner' }
   },
 
+  widget: {
+    full:       { AM: 'Ամբողջական գրաֆիկ և PDF',       RU: 'Полный график и PDF',             EN: 'Full schedule & PDF' },
+    lower:      { AM: 'Գտնել ավելի ցածր տոկոս',        RU: 'Найти ставку ниже',               EN: 'Find a lower rate' },
+    powered:    { AM: 'Հաշվիչը՝',                      RU: 'Калькулятор от',                  EN: 'Calculator by' },
+    years:      { AM: 'տ.',                            RU: 'г.',                              EN: 'y' },
+    overpay:    { AM: 'Գերավճար',                      RU: 'Переплата',                       EN: 'Overpayment' },
+    // /widget page
+    badge:      { AM: 'Անվճար վիջեթ',                  RU: 'Бесплатный виджет',               EN: 'Free widget' },
+    title:      { AM: 'Վարկային հաշվիչ ձեր կայքի համար', RU: 'Кредитный калькулятор для вашего сайта', EN: 'A loan calculator for your website' },
+    subtitle:   { AM: 'Ավելացրեք հարմարվող հաշվիչ կոդի մեկ տողով։ Այն աշխատում է բոլոր սարքերում, հայերեն, ռուսերեն և անգլերեն։', RU: 'Добавьте адаптивный калькулятор одной строкой кода. Работает на всех устройствах, на армянском, русском и английском.', EN: 'Add a responsive calculator with one line of code. Works on every device, in Armenian, Russian and English.' },
+    who:        { AM: 'Հարմար է ավտոսրահների, կառուցապատողների, անշարժ գույքի գործակալությունների և ֆինանսական բլոգների համար։', RU: 'Подходит автосалонам, застройщикам, агентствам недвижимости и финансовым блогам.', EN: 'Perfect for car dealers, developers, real-estate agencies and finance blogs.' },
+    settings:   { AM: 'Կարգավորումներ',                RU: 'Настройки',                       EN: 'Settings' },
+    language:   { AM: 'Լեզու',                         RU: 'Язык',                            EN: 'Language' },
+    theme:      { AM: 'Թեմա',                          RU: 'Тема',                            EN: 'Theme' },
+    light:      { AM: 'Լուսավոր',                      RU: 'Светлая',                         EN: 'Light' },
+    dark:       { AM: 'Մութ',                          RU: 'Тёмная',                          EN: 'Dark' },
+    auto:       { AM: 'Ավտո',                          RU: 'Авто',                            EN: 'Auto' },
+    accent:     { AM: 'Գույն',                         RU: 'Цвет',                            EN: 'Colour' },
+    ref:        { AM: 'Գործընկերոջ ID (ըստ ցանկության)', RU: 'ID партнёра (необязательно)',   EN: 'Partner ID (optional)' },
+    defaults:   { AM: 'Սկզբնական արժեքներ',            RU: 'Начальные значения',              EN: 'Default values' },
+    preview:    { AM: 'Նախադիտում',                    RU: 'Предпросмотр',                    EN: 'Preview' },
+    code:       { AM: 'Տեղադրեք այս կոդը ձեր կայքում', RU: 'Вставьте этот код на свой сайт',  EN: 'Paste this code into your site' },
+    copy:       { AM: 'Պատճենել',                      RU: 'Копировать',                      EN: 'Copy' },
+    copied:     { AM: 'Պատճենված է',                   RU: 'Скопировано',                     EN: 'Copied' },
+    f1:         { AM: 'Անվճար՝ ընդմիշտ',               RU: 'Бесплатно навсегда',              EN: 'Free forever' },
+    f1d:        { AM: 'Առանց գրանցման և սահմանափակումների։', RU: 'Без регистрации и ограничений.', EN: 'No sign-up, no limits.' },
+    f2:         { AM: 'Ավտոմատ բարձրություն',          RU: 'Автоматическая высота',           EN: 'Auto height' },
+    f2d:        { AM: 'Վիջեթը ինքն է հարմարվում էջին։', RU: 'Виджет сам подстраивается под страницу.', EN: 'The widget resizes itself to fit the page.' },
+    f3:         { AM: 'Ձեր գույներն ու լեզուն',        RU: 'Ваши цвета и язык',               EN: 'Your colours and language' },
+    f3d:        { AM: 'Ընտրեք թեման, գույնը և սկզբնական պարամետրերը։', RU: 'Выберите тему, цвет и начальные параметры.', EN: 'Pick the theme, colour and default values.' },
+    proT:       { AM: 'White-label բիզնեսի համար',     RU: 'White-label для бизнеса',         EN: 'White-label for business' },
+    proD:       { AM: 'Առանց մեր լոգոյի, ձեր կոճակով (օր.՝ «Դիմել վարկի») և ձեր հայտերի հղումով։ Գրեք մեզ՝ գնի համար։', RU: 'Без нашего логотипа, с вашей кнопкой (например, «Подать заявку») и ссылкой на ваши заявки. Напишите нам, чтобы узнать цену.', EN: 'No branding, your own button (e.g. “Apply now”) linking to your lead form. Contact us for pricing.' },
+    proB:       { AM: 'Կապվել մեզ հետ',                RU: 'Связаться с нами',                EN: 'Contact us' }
+  },
+
   ai: {
     title:    { AM: 'AI Վարկային խորհրդատու',                   RU: 'ИИ кредитный советник',                 EN: 'AI loan advisor' },
     hello:    { AM: 'Բարև։ Ես տեսնում եմ ձեր ընթացիկ հաշվարկը։ Հարցրեք ինչ ուզում եք, կամ ընտրեք հարց ներքևում։', RU: 'Привет! Я вижу ваш текущий расчёт. Спросите что угодно или выберите вопрос ниже.', EN: "Hi! I can see your current calculation. Ask anything or pick a question below." },

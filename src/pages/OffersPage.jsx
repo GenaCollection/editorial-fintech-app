@@ -1,17 +1,21 @@
 import React, { useMemo } from 'react'
-import { useLoan, generateAmortization } from '../context/LoanContext.jsx'
+import { useLoan, generateAmortization, useLoanParamsFromUrl } from '../context/LoanContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { PARTNER_OFFERS, PARTNER_CONTACT_EMAIL, withUtm } from '../config/monetization.js'
 import AdSlot from '../components/AdSlot.jsx'
+import { pageSeo } from '../seo/meta.js'
+import { useSeo } from '../seo/Seo.jsx'
 
 var SYM = '֏'
 function money(n) { return SYM + Math.round(n).toLocaleString() }
 
 export default function OffersPage() {
   var loan = useLoan()
+  useLoanParamsFromUrl()
   var ls = loan.loanState
   var lang = useLanguage().language
+  useSeo(pageSeo('offers', lang))
 
   var offers = useMemo(function() {
     return PARTNER_OFFERS.map(function(o) {

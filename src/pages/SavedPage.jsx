@@ -6,6 +6,8 @@ import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { usePro } from '../context/ProContext.jsx'
 import AdSlot from '../components/AdSlot.jsx'
+import { pageSeo } from '../seo/meta.js'
+import { useSeo } from '../seo/Seo.jsx'
 
 var SYM = '\u058f'
 
@@ -23,6 +25,7 @@ export default function SavedPage() {
   var loan = useLoan()
   var setLoanState = loan.setLoanState
   var lang = useLanguage().language
+  useSeo(pageSeo('saved', lang))
   var navigate = useNavigate()
   var pro = usePro()
 

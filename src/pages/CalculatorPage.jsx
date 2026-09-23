@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useLoan, generateAmortization } from '../context/LoanContext.jsx'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useLoan, generateAmortization, useLoanParamsFromUrl } from '../context/LoanContext.jsx'
 import { useSaved } from '../context/SavedContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
@@ -8,6 +8,8 @@ import { usePdfExport } from '../hooks/usePdfExport.js'
 import { usePro } from '../context/ProContext.jsx'
 import AdSlot from '../components/AdSlot.jsx'
 import '../styles/print.css'
+import { pageSeo } from '../seo/meta.js'
+import { useSeo } from '../seo/Seo.jsx'
 
 var SYM = '\u058f'
 
@@ -341,30 +343,15 @@ export default function CalculatorPage() {
   var pro = usePro()
   var navigate = useNavigate()
   var lang = useLanguage().language
-  var searchParamsArr = useSearchParams()
-  var searchParams = searchParamsArr[0]
+  var pathname = useLocation().pathname
+  useSeo(pageSeo('home', lang, /^\/(hy|ru|en)\/?$/.test(pathname) ? pathname.replace(/\/$/, '') : '/'))
 
   // PDF export hook — new jsPDF-based approach
   var pdfHook = usePdfExport(lang)
   var exportPdf = pdfHook.exportPdf
   var exporting = pdfHook.exporting
 
-  useEffect(function() {
-    var a = Number(searchParams.get('amount')); var r = Number(searchParams.get('rate'))
-    var m = Number(searchParams.get('term'));   var tp = searchParams.get('type')
-    if (a > 0 || r > 0 || m > 0) {
-      setLoanState(function(prev) {
-        return {
-          amount:    a > 0 ? Math.min(100000000, Math.max(100000, a)) : prev.amount,
-          rate:      r > 0 ? Math.min(50, Math.max(0.1, r))           : prev.rate,
-          term:      m > 0 ? Math.min(360, Math.max(1, m))            : prev.term,
-          loanType:  tp === 'differentiated' ? 'differentiated'       : prev.loanType,
-          fee: prev.fee, insurance: prev.insurance, startDate: prev.startDate
-        }
-      })
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useLoanParamsFromUrl()
 
   var tabArr = useState('params'); var activeTab = tabArr[0]; var setTab = tabArr[1]
   var copiedArr = useState(false); var copied = copiedArr[0]; var setCopied = copiedArr[1]
