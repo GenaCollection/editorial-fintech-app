@@ -25,7 +25,7 @@ export var AD_SLOTS = {
 
 // One responsive "Display ad" unit may be reused everywhere: placements
 // without their own ID fall back to VITE_AD_SLOT_DEFAULT.
-export var AD_SLOT_DEFAULT = env.VITE_AD_SLOT_DEFAULT || ''
+export var AD_SLOT_DEFAULT = env.VITE_AD_SLOT_DEFAULT || '6914884321'
 export function adSlotFor(placement) { return AD_SLOTS[placement] || AD_SLOT_DEFAULT }
 
 // ── Pro plan ──────────────────────────────────────────────────────────────────
