@@ -46,7 +46,7 @@ npm run preview # preview production build locally
 | Layer | Tech |
 |---|---|
 | UI Framework | React 18 |
-| Router | React Router 6 |
+| Router | React Router 7 |
 | Styling | Tailwind CSS 3 (Material Design 3 tokens) |
 | Build | Vite 5 |
 | Backend | Vercel Functions (`/api`) |
