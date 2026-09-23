@@ -109,6 +109,32 @@ var PAGES = {
       AM: 'Հայաստանի բանկերի ավանդների, հիփոթեքի և վարկերի դրույքները՝ պայմաններով, սահմաններով և աղբյուրներով։'
     }
   },
+  fx: {
+    path: '/exchange-rates',
+    title: {
+      EN: 'Exchange Rates in Armenia Today — CBA Official Rate | ArmFinCredit',
+      RU: 'Курс валют в Армении сегодня — официальный курс ЦБ | ArmFinCredit',
+      AM: 'Արտարժույթի փոխարժեքն այսօր՝ ԿԲ պաշտոնական | ArmFinCredit'
+    },
+    description: {
+      EN: 'Official Central Bank of Armenia exchange rates for USD, EUR, RUB and 20+ currencies, daily change and a converter to and from drams.',
+      RU: 'Официальный курс Центробанка Армении: доллар, евро, рубль и ещё 20+ валют, изменение за день и конвертер драма.',
+      AM: 'ՀՀ ԿԲ պաշտոնական փոխարժեքներ՝ դոլար, եվրո, ռուբլի և 20+ արժույթ, օրական փոփոխություն և դրամի փոխարկիչ։'
+    }
+  },
+  partners: {
+    path: '/partners',
+    title: {
+      EN: 'For Banks: Leads and Placement | ArmFinCredit',
+      RU: 'Банкам: заявки и размещение предложений | ArmFinCredit',
+      AM: 'Բանկերի համար՝ հայտեր և տեղադրում | ArmFinCredit'
+    },
+    description: {
+      EN: 'Partner with ArmFinCredit: pay-per-lead customers who already calculated their loan, offer placement in comparisons and rate pages, and a calculator widget.',
+      RU: 'Сотрудничество с ArmFinCredit: оплата за заявку клиентов, которые уже посчитали кредит, размещение в сравнениях и на страницах ставок, виджет калькулятора.',
+      AM: 'Համագործակցություն ArmFinCredit-ի հետ՝ վճար հայտի դիմաց, տեղադրում համեմատություններում և դրույքների էջերում, հաշվիչի վիջեթ։'
+    }
+  },
   widget: {
     path: '/widget',
     title: {
@@ -212,6 +238,8 @@ export function prerenderRoutes() {
     { path: '/widget', lang: 'EN', priority: '0.6' },
     { path: '/deposit', lang: 'EN', sitemap: false },
     { path: '/banks', lang: 'EN', sitemap: false },
+    { path: '/exchange-rates', lang: 'EN', sitemap: false },
+    { path: '/partners', lang: 'EN', sitemap: false },
     { path: '/pro', lang: 'EN', priority: '0.6' },
     { path: '/privacy', lang: 'EN', priority: '0.2' },
     { path: '/terms', lang: 'EN', priority: '0.2' },
@@ -226,7 +254,7 @@ export function prerenderRoutes() {
       routes.push({ path: landingPath(landing, l), lang: l, priority: '0.9', alternates: landingSeo(landing, l).alternates })
     })
   })
-  var LOCAL_PRIORITY = { deposit: '0.9', banks: '0.8', offers: '0.8', compare: '0.8', schedule: '0.8' }
+  var LOCAL_PRIORITY = { deposit: '0.9', fx: '0.9', banks: '0.8', offers: '0.8', compare: '0.8', schedule: '0.8', partners: '0.5' }
   Object.keys(LOCAL_PAGES).forEach(function(key) {
     LANGS.forEach(function(l) {
       routes.push({ path: localPath(key, l), lang: l, priority: LOCAL_PRIORITY[key] || '0.7', alternates: localAlternates(key) })

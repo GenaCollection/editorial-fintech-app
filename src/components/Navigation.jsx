@@ -10,12 +10,13 @@ import { localPathFor } from '../seo/localPages.js'
 var LINKS = [
   { to: '/',         icon: 'calculate',      label: function(l) { return t(l,'nav','calc') } },
   { to: '/schedule', icon: 'calendar_month', label: function(l) { return t(l,'nav','sched') } },
-  { to: '/early',    icon: 'rocket_launch',  label: function(l) { return t(l,'nav','early') } },
+  { to: '/early',    icon: 'rocket_launch',  label: function(l) { return t(l,'nav','early') }, compact: true },
   { to: '/compare',  icon: 'compare_arrows', label: function(l) { return t(l,'menu','compare') } },
   { to: '/deposit',  icon: 'savings',        label: function(l) { return t(l,'menu','deposit') } },
   { to: '/banks',    icon: 'account_balance',label: function(l) { return t(l,'menu','banks') } },
+  { to: '/exchange-rates', icon: 'currency_exchange', label: function(l) { return t(l,'menu','fx') } },
   { to: '/offers',   icon: 'local_offer',    label: function(l) { return t(l,'menu','offers') } },
-  { to: '/saved',    icon: 'bookmark',       label: function(l) { return t(l,'menu','saved') } }
+  { to: '/saved',    icon: 'bookmark',       label: function(l) { return t(l,'menu','saved') }, compact: true }
 ]
 
 function ProButton(props) {
@@ -78,8 +79,9 @@ export default function Navigation(props) {
           <span className="text-base font-black text-slate-900 dark:text-white tracking-tight hidden sm:inline">ArmFin<span className="text-gradient">Credit</span></span>
         </Link>
 
+        {/* `compact` links live in the menu only, so the bar fits from 1280px. */}
         <div className="hidden xl:flex items-center gap-0.5">
-          {LINKS.map(function(l) {
+          {LINKS.filter(function(l) { return !l.compact }).map(function(l) {
             return (
               <Link key={l.to} className={lc(l.to)} to={localPathFor(l.to, language)}>
                 {l.label(language)}

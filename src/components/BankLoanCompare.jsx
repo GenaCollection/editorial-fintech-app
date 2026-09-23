@@ -4,6 +4,7 @@ import { useLoan, generateAmortization } from '../context/LoanContext.jsx'
 import { usePro } from '../context/ProContext.jsx'
 import { t } from '../i18n/labels.js'
 import { activeOffers, OFFERS_AS_OF } from '../config/bankOffers.js'
+import LeadModal from './LeadModal.jsx'
 
 // Real Armenian bank loan/mortgage offers (src/config/bankOffers.js) applied to
 // the user's own amount and term: monthly payment, overpayment and the
@@ -76,6 +77,12 @@ function Row(props) {
         </div>
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+        {props.onLead && (
+          <button type="button" onClick={function() { props.onLead(o) }}
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-extrabold hover:bg-emerald-700">
+            {t(lang, 'partners', 'lead')}
+          </button>
+        )}
         <button type="button" onClick={function() { props.onUse(o) }} className="font-bold text-blue-600 dark:text-blue-400 hover:underline">
           {t(lang, 'offers', 'useRate')} {pct(o.useRate)} →
         </button>
@@ -94,6 +101,7 @@ export default function BankLoanCompare(props) {
   // Until the user picks a tab, large amounts default to mortgages.
   var kindArr = useState(null); var setKind = kindArr[1]
   var kind = kindArr[0] || (ls.amount > 5000000 ? 'mortgage' : 'loan')
+  var leadArr = useState(null); var lead = leadArr[0]; var setLead = leadArr[1]
 
   var rows = useMemo(function() {
     return activeOffers().filter(function(o) { return o.kind === kind && o.currency === 'AMD' })
@@ -143,7 +151,7 @@ export default function BankLoanCompare(props) {
       </div>
 
       <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 overflow-hidden">
-        {open.map(function(o, i) { return <Row key={i} o={o} lang={lang} yourInterest={loan.totalInterest} onUse={applyOffer} /> })}
+        {open.map(function(o, i) { return <Row key={i} o={o} lang={lang} yourInterest={loan.totalInterest} onUse={applyOffer} onLead={setLead} /> })}
         {locked.length > 0 && (
           <div className="relative">
             <div aria-hidden="true" className="blur-sm select-none pointer-events-none opacity-60 max-h-[420px] overflow-hidden">
@@ -161,6 +169,10 @@ export default function BankLoanCompare(props) {
         )}
       </div>
       <p className="text-xs text-slate-400 leading-relaxed mt-3">{t(lang, 'offers', 'bankNote')}</p>
+      {lead && (
+        <LeadModal lang={lang} amount={ls.amount} term={ls.term} onClose={function() { setLead(null) }}
+          offer={{ bank: lead.bank, product: name(lead.product, lang), kind: lead.kind, rate: lead.useRate }} />
+      )}
     </section>
   )
 }

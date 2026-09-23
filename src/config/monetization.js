@@ -110,7 +110,9 @@ export var PARTNER_OFFERS = [
   }
 ]
 
-export var PARTNER_CONTACT_EMAIL = 'partners@armfincredit.app'
+// Banks and partners get in touch here (partner page, offers, widget).
+export var PARTNER_TELEGRAM = 'gena_collection'
+export var PARTNER_TELEGRAM_URL = 'https://t.me/' + PARTNER_TELEGRAM
 
 // Appends UTM tags so partners can attribute (and pay for) the traffic.
 export function withUtm(url, offerId) {

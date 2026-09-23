@@ -2,7 +2,9 @@ import React, { useMemo } from 'react'
 import { useLoan, generateAmortization, useLoanParamsFromUrl } from '../context/LoanContext.jsx'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
-import { PARTNER_OFFERS, PARTNER_CONTACT_EMAIL, withUtm } from '../config/monetization.js'
+import { PARTNER_OFFERS, withUtm } from '../config/monetization.js'
+import { Link } from 'react-router-dom'
+import { localPathFor } from '../seo/localPages.js'
 import AdSlot from '../components/AdSlot.jsx'
 import BankLoanCompare from '../components/BankLoanCompare.jsx'
 import { pageSeo } from '../seo/meta.js'
@@ -115,11 +117,11 @@ export default function OffersPage() {
           <p className="text-xl font-extrabold text-slate-900 dark:text-white">{t(lang,'offers','partnerT')}</p>
           <p className="text-slate-500 dark:text-slate-400 mt-1 max-w-lg">{t(lang,'offers','partnerD')}</p>
         </div>
-        <a href={'mailto:' + PARTNER_CONTACT_EMAIL + '?subject=ArmFinCredit%20partnership'}
+        <Link to={localPathFor('/partners', lang)}
           className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-extrabold hover:opacity-90">
           <span className="material-symbols-outlined" style={{fontSize:'18px'}}>handshake</span>
           {t(lang,'offers','partnerB')}
-        </a>
+        </Link>
       </div>
     </main>
   )

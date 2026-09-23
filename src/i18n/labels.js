@@ -138,6 +138,8 @@ var L = {
     saved:   { AM: 'Պահված',      RU: 'Сохранённые', EN: 'Saved' },
     deposit: { AM: 'Ավանդներ',    RU: 'Вклады',      EN: 'Deposits' },
     banks:   { AM: 'Բանկեր',      RU: 'Банки',       EN: 'Banks' },
+    fx:      { AM: 'Փոխարժեք',    RU: 'Курсы',       EN: 'Rates' },
+    partners:{ AM: 'Բանկերի համար', RU: 'Банкам',    EN: 'For banks' },
     pro:     { AM: 'Pro',         RU: 'Pro',         EN: 'Pro' },
     trial:   { AM: 'Փորձ',        RU: 'Пробный',     EN: 'Trial' },
     daysLeft:{ AM: 'օր',          RU: 'дн.',         EN: 'd left' }
@@ -288,6 +290,43 @@ var L = {
     warn:      { AM: 'Դրույքները ցուցադրական են և հաճախ փոխվում են։ Սա գովազդ կամ առաջարկ չէ․ ստուգեք պայմանները բանկի կայքում։', RU: 'Ставки ориентировочные и часто меняются. Это не реклама и не оферта — проверяйте условия на сайте банка.', EN: 'Rates are indicative and change often. This is not advertising or an offer — check the terms on the bank website.' },
     locked:    { AM: 'Ամբողջական ցանկը՝ Pro-ում',        RU: 'Полный список — в Pro',          EN: 'Full list in Pro' },
     more:      { AM: 'Ավելի շատ համեմատություններ',     RU: 'Больше сравнений',               EN: 'More comparisons' }
+  },
+
+  fx: {
+    title:     { AM: 'Արտարժույթի փոխարժեքներ', RU: 'Курс валют в Армении', EN: 'Exchange rates in Armenia' },
+    desc:      { AM: 'ՀՀ Կենտրոնական բանկի պաշտոնական փոխարժեքները և դրամի փոխարկիչ', RU: 'Официальные курсы Центрального банка Армении и конвертер драма', EN: 'Official Central Bank of Armenia rates and a dram converter' },
+    srcCba:    { AM: 'Աղբյուր՝ ՀՀ Կենտրոնական բանկ', RU: 'Источник: Центральный банк Армении', EN: 'Source: Central Bank of Armenia' },
+    srcMarket: { AM: 'ԿԲ-ն հասանելի չէ․ շուկայական ուղենիշ (open.er-api.com)', RU: 'ЦБ недоступен — рыночный ориентир (open.er-api.com)', EN: 'CBA unavailable — market reference (open.er-api.com)' },
+    on:        { AM: 'Փոխարժեքը՝', RU: 'Курс на', EN: 'Rates for' },
+    loading:   { AM: 'Բեռնվում է…', RU: 'Загрузка…', EN: 'Loading…' },
+    error:     { AM: 'Չհաջողվեց բեռնել փոխարժեքները։ Փորձեք ավելի ուշ։', RU: 'Не удалось загрузить курсы. Попробуйте позже.', EN: 'Could not load the rates. Please try again later.' },
+    converter: { AM: 'Փոխարկիչ', RU: 'Конвертер', EN: 'Converter' },
+    amount:    { AM: 'Գումար', RU: 'Сумма', EN: 'Amount' },
+    swap:      { AM: 'Փոխել ուղղությունը', RU: 'Поменять направление', EN: 'Swap direction' },
+    all:       { AM: 'Բոլոր արժույթները', RU: 'Все валюты', EN: 'All currencies' },
+    currency:  { AM: 'Արժույթ', RU: 'Валюта', EN: 'Currency' },
+    per:       { AM: 'Քանակ', RU: 'За', EN: 'Per' },
+    rate:      { AM: 'Փոխարժեք (֏)', RU: 'Курс (֏)', EN: 'Rate (֏)' },
+    change:    { AM: 'Փոփոխություն', RU: 'Изменение', EN: 'Change' },
+    banksNote: { AM: 'Բանկերում առք ու վաճառքի փոխարժեքը տարբերվում է պաշտոնականից։ Համեմատեք բանկերի փոխարժեքները՝', RU: 'Курс покупки и продажи в банках отличается от официального. Сравнить курсы банков:', EN: 'Bank buy/sell rates differ from the official rate. Compare bank rates:' }
+  },
+
+  partners: {
+    title:     { AM: 'Համագործակցություն բանկերի հետ', RU: 'Сотрудничество с банками', EN: 'Partnership for banks' },
+    desc:      { AM: 'Հաճախորդներ, ովքեր արդեն հաշվարկել են վարկը և պատրաստ են դիմել', RU: 'Клиенты, которые уже посчитали кредит и готовы подать заявку', EN: 'Customers who have already calculated their loan and are ready to apply' },
+    cta:       { AM: 'Գրել Telegram-ով', RU: 'Написать в Telegram', EN: 'Message on Telegram' },
+    lead:      { AM: 'Թողնել հայտ', RU: 'Оставить заявку', EN: 'Apply' },
+    leadTitle: { AM: 'Հայտ բանկին', RU: 'Заявка в банк', EN: 'Request to the bank' },
+    leadDesc:  { AM: 'Թողեք կոնտակտները՝ բանկը կկապվի ձեզ հետ վարկի պայմանները քննարկելու համար։', RU: 'Оставьте контакты — банк свяжется с вами, чтобы обсудить условия.', EN: 'Leave your contacts and the bank will get in touch to discuss the terms.' },
+    name:      { AM: 'Անուն', RU: 'Имя', EN: 'Name' },
+    phone:     { AM: 'Հեռախոս', RU: 'Телефон', EN: 'Phone' },
+    comment:   { AM: 'Մեկնաբանություն (ոչ պարտադիր)', RU: 'Комментарий (необязательно)', EN: 'Comment (optional)' },
+    consent:   { AM: 'Համաձայն եմ, որ ArmFinCredit-ը փոխանցի իմ տվյալներն ընտրված բանկին՝ ինձ հետ կապվելու համար։', RU: 'Я согласен(на), что ArmFinCredit передаст мои данные выбранному банку, чтобы он связался со мной.', EN: 'I agree that ArmFinCredit passes my details to the selected bank so it can contact me.' },
+    send:      { AM: 'Ուղարկել', RU: 'Отправить', EN: 'Send' },
+    sent:      { AM: 'Հայտն ուղարկված է։ Բանկը կկապվի ձեզ հետ։', RU: 'Заявка отправлена. Банк свяжется с вами.', EN: 'Request sent. The bank will contact you.' },
+    failed:    { AM: 'Չհաջողվեց ուղարկել։ Գրեք մեզ Telegram-ով՝', RU: 'Не удалось отправить. Напишите нам в Telegram:', EN: 'Could not send. Message us on Telegram:' },
+    tooMany:   { AM: 'Այսօր արդեն շատ հայտեր եք ուղարկել։', RU: 'Сегодня вы уже отправили много заявок.', EN: 'You have sent too many requests today.' },
+    notBank:   { AM: 'ArmFinCredit-ը բանկ չէ և վարկ չի տրամադրում։', RU: 'ArmFinCredit не банк и не выдаёт кредиты.', EN: 'ArmFinCredit is not a bank and does not lend.' }
   },
 
   widget: {

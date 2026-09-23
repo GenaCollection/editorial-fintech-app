@@ -9,7 +9,9 @@ export var LOCAL_PAGES = {
   compare:  { path: '/compare',  slug: { AM: 'varkeri-hamematutyun', RU: 'sravnenie-kreditov', EN: 'compare-loans' } },
   offers:   { path: '/offers',   slug: { AM: 'varkayin-arajarkner', RU: 'kreditnye-predlozheniya', EN: 'loan-offers' } },
   deposit:  { path: '/deposit',  slug: { AM: 'avandi-hashvich', RU: 'kalkulyator-vkladov', EN: 'deposit-calculator' } },
-  banks:    { path: '/banks',    slug: { AM: 'hayastani-banker', RU: 'banki-armenii', EN: 'armenian-banks' } }
+  banks:    { path: '/banks',    slug: { AM: 'hayastani-banker', RU: 'banki-armenii', EN: 'armenian-banks' } },
+  fx:       { path: '/exchange-rates', slug: { AM: 'artarzhuyti-poxarzheq', RU: 'kurs-valyut', EN: 'exchange-rates' } },
+  partners: { path: '/partners', slug: { AM: 'bankeri-hamar', RU: 'bankam', EN: 'for-banks' } }
 }
 
 var KEY_BY_PATH = {}

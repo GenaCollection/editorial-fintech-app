@@ -36,6 +36,8 @@ var WidgetPage   = lazyPage(function() { return import('./pages/WidgetPage.jsx')
 var EmbedPage    = lazyPage(function() { return import('./pages/EmbedPage.jsx') })
 var DepositPage  = lazyPage(function() { return import('./pages/DepositPage.jsx') })
 var BanksPage    = lazyPage(function() { return import('./pages/BanksPage.jsx') })
+var FxPage       = lazyPage(function() { return import('./pages/FxPage.jsx') })
+var PartnersPage = lazyPage(function() { return import('./pages/PartnersPage.jsx') })
 var LandingPage  = lazyPage(function() { return import('./pages/LandingPage.jsx') })
 var PrivacyPage  = lazyPage(function() { return import('./pages/PrivacyPage.jsx') })
 var TermsPage    = lazyPage(function() { return import('./pages/TermsPage.jsx') })
@@ -44,7 +46,7 @@ var NotFoundPage = lazyPage(function() { return import('./pages/NotFoundPage.jsx
 var PAGES = {
   '/schedule': SchedulePage, '/early': EarlyPage, '/compare': ComparePage,
   '/saved': SavedPage, '/offers': OffersPage, '/pro': PricingPage,
-  '/widget': WidgetPage, '/deposit': DepositPage, '/banks': BanksPage, '/embed': EmbedPage, '/privacy': PrivacyPage, '/terms': TermsPage
+  '/widget': WidgetPage, '/deposit': DepositPage, '/banks': BanksPage, '/exchange-rates': FxPage, '/partners': PartnersPage, '/embed': EmbedPage, '/privacy': PrivacyPage, '/terms': TermsPage
 }
 
 function isLangHome(pathname) {
@@ -187,6 +189,8 @@ function AppInner() {
           <Route path="/widget" element={<WidgetPage />} />
           <Route path="/deposit" element={<DepositPage />} />
           <Route path="/banks" element={<BanksPage />} />
+          <Route path="/exchange-rates" element={<FxPage />} />
+          <Route path="/partners" element={<PartnersPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/:lng" element={<LangHome />} />

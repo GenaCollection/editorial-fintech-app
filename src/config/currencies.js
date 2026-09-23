@@ -1,0 +1,35 @@
+// Currency names for the exchange rates page (unknown codes show the ISO code).
+function L(am, ru, en) { return { AM: am, RU: ru, EN: en } }
+
+export var CURRENCY_NAMES = {
+  USD: L('ԱՄՆ դոլար', 'Доллар США', 'US dollar'),
+  EUR: L('Եվրո', 'Евро', 'Euro'),
+  RUB: L('Ռուսական ռուբլի', 'Российский рубль', 'Russian ruble'),
+  GBP: L('Անգլիական ֆունտ', 'Фунт стерлингов', 'British pound'),
+  GEL: L('Վրացական լարի', 'Грузинский лари', 'Georgian lari'),
+  CHF: L('Շվեյցարական ֆրանկ', 'Швейцарский франк', 'Swiss franc'),
+  CNY: L('Չինական յուան', 'Китайский юань', 'Chinese yuan'),
+  AED: L('ԱՄԷ դիրհամ', 'Дирхам ОАЭ', 'UAE dirham'),
+  JPY: L('Ճապոնական իեն', 'Японская иена', 'Japanese yen'),
+  CAD: L('Կանադական դոլար', 'Канадский доллар', 'Canadian dollar'),
+  UAH: L('Ուկրաինական գրիվնա', 'Украинская гривна', 'Ukrainian hryvnia'),
+  KZT: L('Ղազախական տենգե', 'Казахстанский тенге', 'Kazakh tenge'),
+  IRR: L('Իրանական ռիալ', 'Иранский риал', 'Iranian rial'),
+  TRY: L('Թուրքական լիրա', 'Турецкая лира', 'Turkish lira'),
+  AUD: L('Ավստրալիական դոլար', 'Австралийский доллар', 'Australian dollar'),
+  BYN: L('Բելառուսական ռուբլի', 'Белорусский рубль', 'Belarusian ruble'),
+  CZK: L('Չեխական կրոն', 'Чешская крона', 'Czech koruna'),
+  DKK: L('Դանիական կրոն', 'Датская крона', 'Danish krone'),
+  HKD: L('Հոնկոնգյան դոլար', 'Гонконгский доллар', 'Hong Kong dollar'),
+  HUF: L('Հունգարական ֆորինտ', 'Венгерский форинт', 'Hungarian forint'),
+  ILS: L('Իսրայելական շեկել', 'Израильский шекель', 'Israeli shekel'),
+  INR: L('Հնդկական ռուպի', 'Индийская рупия', 'Indian rupee'),
+  KGS: L('Ղրղզական սոմ', 'Киргизский сом', 'Kyrgyz som'),
+  KRW: L('Հարավկորեական վոն', 'Южнокорейская вона', 'South Korean won'),
+  NOK: L('Նորվեգական կրոն', 'Норвежская крона', 'Norwegian krone'),
+  PLN: L('Լեհական զլոտի', 'Польский злотый', 'Polish zloty'),
+  SEK: L('Շվեդական կրոն', 'Шведская крона', 'Swedish krona'),
+  SGD: L('Սինգապուրյան դոլար', 'Сингапурский доллар', 'Singapore dollar'),
+  UZS: L('Ուզբեկական սում', 'Узбекский сум', 'Uzbek som'),
+  XDR: L('SDR (ԱՄՀ)', 'СДР (МВФ)', 'SDR (IMF)')
+}

@@ -5,11 +5,12 @@ import { AppProviders, RootSwitch, preloadAll } from './App.jsx'
 import { SeoContext, renderSeoTags } from './seo/Seo.jsx'
 import { prerenderRoutes } from './seo/meta.js'
 import { SITE_URL } from './config/site.js'
+import { setFxSnapshot } from './lib/fxSnapshot.js'
 
 // Used only at build time by scripts/prerender.js: renders each public URL to
 // static HTML so search engines (and link previews) get real content.
 
-export { prerenderRoutes, renderSeoTags, SITE_URL }
+export { prerenderRoutes, renderSeoTags, SITE_URL, setFxSnapshot }
 
 export async function render(url, lang) {
   await preloadAll()

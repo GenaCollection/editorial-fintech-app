@@ -34,6 +34,8 @@ export default function Footer() {
               <Link to={localPathFor('/deposit', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'dep', 'title')}</Link>
               <Link to={localPathFor('/banks', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'banks', 'title')}</Link>
               <Link to={localPathFor('/offers', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'offers')}</Link>
+              <Link to={localPathFor('/exchange-rates', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'fx', 'title')}</Link>
+              <Link to={localPathFor('/partners', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'partners')}</Link>
               <Link to="/pro" className="block text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">ArmFinCredit Pro</Link>
             </div>
           </div>
