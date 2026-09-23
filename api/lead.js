@@ -6,12 +6,15 @@ import { BANK_OFFERS } from '../src/config/bankOffers.js'
 // POST /api/lead — a visitor asks a bank to contact them about an offer.
 //
 // The request is kept in Redis (list "afc:leads", newest first, last 5000)
-// and, if configured, sent to the owner's Telegram:
-//   TELEGRAM_BOT_TOKEN   token from @BotFather
-//   TELEGRAM_CHAT_ID     chat that receives the requests
-//   LEAD_PER_DAY         requests per IP per day (default 5)
-// With neither Redis nor Telegram configured the endpoint answers 503 and the
-// form points the visitor to Telegram instead.
+// and, if configured, emailed to the owner via Resend (resend.com, free tier):
+//   RESEND_API_KEY   API key from resend.com
+//   LEAD_EMAIL_TO    where requests go (default: the site contact address)
+//   LEAD_EMAIL_FROM  sender; until a domain is verified in Resend keep the
+//                    default onboarding@resend.dev (it can only send to the
+//                    address the Resend account was registered with)
+//   LEAD_PER_DAY     requests per IP per day (default 5)
+// With neither Redis nor email configured the endpoint answers 503 and the
+// form shows the contact address instead.
 
 var BANKS = {}
 BANK_OFFERS.forEach(function(o) { BANKS[o.bank] = true })
@@ -39,9 +42,13 @@ function validate(b) {
   return lead
 }
 
-function telegramText(l) {
+var CONTACT_EMAIL = 'armfincredit@zohomail.com'
+
+function esc(v) { return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }
+
+function leadText(l) {
   return [
-    '🏦 Новая заявка: ' + l.bank + (l.product ? ' — ' + l.product : ''),
+    'Новая заявка: ' + l.bank + (l.product ? ' — ' + l.product : ''),
     (l.kind === 'mortgage' ? 'Ипотека' : 'Кредит') + (l.amount ? ': ' + l.amount.toLocaleString('ru-RU') + ' ֏' : '') +
       (l.term ? ', ' + l.term + ' мес.' : '') + (l.rate ? ', ставка ' + l.rate + '%' : ''),
     'Имя: ' + l.name,
@@ -51,18 +58,24 @@ function telegramText(l) {
   ].filter(Boolean).join('\n')
 }
 
-async function notifyTelegram(lead) {
-  var token = String(process.env.TELEGRAM_BOT_TOKEN || '').trim()
-  var chat = String(process.env.TELEGRAM_CHAT_ID || '').trim()
-  if (!token || !chat) return false
-  var base = (process.env.TELEGRAM_API_URL || 'https://api.telegram.org').replace(/\/+$/, '')
-  var r = await fetch(base + '/bot' + token + '/sendMessage', {
+async function notifyEmail(lead) {
+  var key = String(process.env.RESEND_API_KEY || '').trim()
+  if (!key) return false
+  var base = (process.env.RESEND_API_URL || 'https://api.resend.com').replace(/\/+$/, '')
+  var text = leadText(lead)
+  var r = await fetch(base + '/emails', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chat, text: telegramText(lead), disable_web_page_preview: true }),
+    headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: process.env.LEAD_EMAIL_FROM || 'ArmFinCredit <onboarding@resend.dev>',
+      to: [process.env.LEAD_EMAIL_TO || CONTACT_EMAIL],
+      subject: 'Заявка: ' + lead.bank + ' — ' + lead.name,
+      text: text,
+      html: '<pre style="font:15px/1.5 sans-serif;white-space:pre-wrap">' + esc(text) + '</pre>'
+    }),
     signal: AbortSignal.timeout(5000)
   })
-  if (!r.ok) throw new Error('telegram HTTP ' + r.status)
+  if (!r.ok) throw new Error('resend HTTP ' + r.status)
   return true
 }
 
@@ -89,7 +102,7 @@ export default async function handler(req, res) {
       stored = true
     } catch (e) { console.warn('[lead] Redis failed:', e && e.message) }
   }
-  try { sent = await notifyTelegram(lead) } catch (e) { console.warn('[lead] Telegram failed:', e && e.message) }
+  try { sent = await notifyEmail(lead) } catch (e) { console.warn('[lead] email failed:', e && e.message) }
 
   if (!stored && !sent) {
     await q.refund()

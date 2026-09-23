@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
-import { PARTNER_TELEGRAM, PARTNER_TELEGRAM_URL } from '../config/monetization.js'
+import { CONTACT_EMAIL, mailto, PARTNER_TELEGRAM, PARTNER_TELEGRAM_URL } from '../config/monetization.js'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
 
@@ -47,18 +47,18 @@ var WHY = [
 ]
 
 var STEPS = [
-  L('Գրեք Telegram-ով', 'Напишите в Telegram', 'Message us on Telegram'),
+  L('Գրեք մեզ էլ. փոստով', 'Напишите нам на почту', 'Email us'),
   L('Համաձայնեցնում ենք ձևաչափը և գինը', 'Согласуем формат и стоимость', 'We agree on the format and price'),
   L('Միացնում ենք հայտերի առաքումը (Telegram, email կամ API)', 'Подключаем доставку заявок (Telegram, email или API)', 'We connect lead delivery (Telegram, email or API)'),
   L('Ամսական հաշվետվություն', 'Ежемесячный отчёт', 'Monthly report')
 ]
 
-function TelegramButton(props) {
+function EmailButton(props) {
   return (
-    <a href={PARTNER_TELEGRAM_URL} target="_blank" rel="noopener noreferrer"
+    <a href={mailto('ArmFinCredit partnership')}
       className={'inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl font-extrabold shadow-lg ' + props.className}>
-      <span className="material-symbols-outlined" style={{fontSize:'18px'}}>send</span>
-      {t(props.lang, 'partners', 'cta')} · @{PARTNER_TELEGRAM}
+      <span className="material-symbols-outlined" style={{fontSize:'18px'}}>mail</span>
+      {t(props.lang, 'partners', 'cta')}
     </a>
   )
 }
@@ -72,7 +72,7 @@ export default function PartnersPage() {
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight break-words mb-3"><span className="text-gradient">{t(lang, 'partners', 'title')}</span></h1>
         <p className="text-lg text-slate-500 dark:text-slate-400 mb-6 max-w-2xl">{t(lang, 'partners', 'desc')}</p>
-        <TelegramButton lang={lang} className="bg-brand-gradient text-white shadow-blue-700/25 hover:opacity-95" />
+        <EmailButton lang={lang} className="bg-brand-gradient text-white shadow-blue-700/25 hover:opacity-95" />
       </div>
 
       <ul className="grid md:grid-cols-3 gap-3 mb-10">
@@ -111,10 +111,13 @@ export default function PartnersPage() {
 
       <div className="rounded-3xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 p-7 md:p-9 flex flex-col md:flex-row md:items-center gap-5 justify-between">
         <div>
-          <p className="text-2xl font-extrabold">Telegram: @{PARTNER_TELEGRAM}</p>
-          <p className="opacity-75 mt-1">{t(lang, 'partners', 'notBank')}</p>
+          <p className="text-2xl font-extrabold break-all">{CONTACT_EMAIL}</p>
+          <p className="opacity-75 mt-1">
+            Telegram: <a href={PARTNER_TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className="underline">@{PARTNER_TELEGRAM}</a>
+            {' · '}{t(lang, 'partners', 'notBank')}
+          </p>
         </div>
-        <TelegramButton lang={lang} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white shrink-0" />
+        <EmailButton lang={lang} className="bg-white text-slate-900 dark:bg-slate-900 dark:text-white shrink-0" />
       </div>
     </main>
   )

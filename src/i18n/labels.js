@@ -314,7 +314,7 @@ var L = {
   partners: {
     title:     { AM: 'Համագործակցություն բանկերի հետ', RU: 'Сотрудничество с банками', EN: 'Partnership for banks' },
     desc:      { AM: 'Հաճախորդներ, ովքեր արդեն հաշվարկել են վարկը և պատրաստ են դիմել', RU: 'Клиенты, которые уже посчитали кредит и готовы подать заявку', EN: 'Customers who have already calculated their loan and are ready to apply' },
-    cta:       { AM: 'Գրել Telegram-ով', RU: 'Написать в Telegram', EN: 'Message on Telegram' },
+    cta:       { AM: 'Գրել էլ. փոստով', RU: 'Написать на почту', EN: 'Email us' },
     lead:      { AM: 'Թողնել հայտ', RU: 'Оставить заявку', EN: 'Apply' },
     leadTitle: { AM: 'Հայտ բանկին', RU: 'Заявка в банк', EN: 'Request to the bank' },
     leadDesc:  { AM: 'Թողեք կոնտակտները՝ բանկը կկապվի ձեզ հետ վարկի պայմանները քննարկելու համար։', RU: 'Оставьте контакты — банк свяжется с вами, чтобы обсудить условия.', EN: 'Leave your contacts and the bank will get in touch to discuss the terms.' },
@@ -324,7 +324,7 @@ var L = {
     consent:   { AM: 'Համաձայն եմ, որ ArmFinCredit-ը փոխանցի իմ տվյալներն ընտրված բանկին՝ ինձ հետ կապվելու համար։', RU: 'Я согласен(на), что ArmFinCredit передаст мои данные выбранному банку, чтобы он связался со мной.', EN: 'I agree that ArmFinCredit passes my details to the selected bank so it can contact me.' },
     send:      { AM: 'Ուղարկել', RU: 'Отправить', EN: 'Send' },
     sent:      { AM: 'Հայտն ուղարկված է։ Բանկը կկապվի ձեզ հետ։', RU: 'Заявка отправлена. Банк свяжется с вами.', EN: 'Request sent. The bank will contact you.' },
-    failed:    { AM: 'Չհաջողվեց ուղարկել։ Գրեք մեզ Telegram-ով՝', RU: 'Не удалось отправить. Напишите нам в Telegram:', EN: 'Could not send. Message us on Telegram:' },
+    failed:    { AM: 'Չհաջողվեց ուղարկել։ Գրեք մեզ՝', RU: 'Не удалось отправить. Напишите нам:', EN: 'Could not send. Email us:' },
     tooMany:   { AM: 'Այսօր արդեն շատ հայտեր եք ուղարկել։', RU: 'Сегодня вы уже отправили много заявок.', EN: 'You have sent too many requests today.' },
     notBank:   { AM: 'ArmFinCredit-ը բանկ չէ և վարկ չի տրամադրում։', RU: 'ArmFinCredit не банк и не выдаёт кредиты.', EN: 'ArmFinCredit is not a bank and does not lend.' }
   },

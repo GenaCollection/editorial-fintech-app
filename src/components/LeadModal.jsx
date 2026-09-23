@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { t } from '../i18n/labels.js'
-import { PARTNER_TELEGRAM, PARTNER_TELEGRAM_URL } from '../config/monetization.js'
+import { CONTACT_EMAIL, mailto } from '../config/monetization.js'
 
 // "Apply" form for a bank offer: name + phone + consent → /api/lead.
 // props: offer { bank, product (text), kind, rate }, amount, term, lang, onClose
@@ -41,7 +41,7 @@ export default function LeadModal(props) {
     }).catch(function() { setState('failed') })
   }
 
-  var tg = <a href={PARTNER_TELEGRAM_URL} target="_blank" rel="noopener noreferrer" className="font-bold text-blue-600 dark:text-blue-400 hover:underline">@{PARTNER_TELEGRAM}</a>
+  var mail = <a href={mailto('ArmFinCredit: ' + o.bank)} className="font-bold text-blue-600 dark:text-blue-400 hover:underline break-all">{CONTACT_EMAIL}</a>
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-label={t(lang, 'partners', 'leadTitle')}>
@@ -81,7 +81,7 @@ export default function LeadModal(props) {
               <input type="checkbox" required checked={consent} onChange={function(e) { setConsent(e.target.checked) }} className="mt-0.5" />
               <span>{t(lang, 'partners', 'consent')}</span>
             </label>
-            {state === 'failed' && <p className="text-sm text-rose-600">{t(lang, 'partners', 'failed')} {tg}</p>}
+            {state === 'failed' && <p className="text-sm text-rose-600">{t(lang, 'partners', 'failed')} {mail}</p>}
             {state === 'tooMany' && <p className="text-sm text-rose-600">{t(lang, 'partners', 'tooMany')}</p>}
             <button type="submit" disabled={!consent || state === 'sending'}
               className="w-full py-3.5 rounded-2xl bg-brand-gradient text-white font-extrabold disabled:opacity-50">

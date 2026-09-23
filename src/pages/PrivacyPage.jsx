@@ -16,7 +16,7 @@ var SECTIONS = {
     ['7. Changes to This Policy', 'We may update this Privacy Policy from time to time. Changes are effective immediately after they are posted on this page.'],
     ['8. Contact Us', 'If you have any questions about this Privacy Policy, please contact us via the Support link in the footer of our website.'],
     ['9. AI Advisor, Pro and Partner Offers', 'When you ask the AI advisor a question, your question and the current calculation (amount, rate, term, payments) are sent through our server to a third-party AI provider (e.g. Google Gemini) to generate the answer. Do not enter personal data in the chat. Pro purchases are processed by our payment provider; we only receive the license key status. Partner offer links contain referral tags, and we may receive a commission if you apply.'],
-    ['10. Requests to Banks', 'If you send a request to a bank through the site, we receive your name, phone number, optional comment and the selected offer, amount and term, and pass them to that bank only with your consent. Requests are kept for up to 12 months. To have your request deleted, contact us on Telegram @gena_collection.']
+    ['10. Requests to Banks', 'If you send a request to a bank through the site, we receive your name, phone number, optional comment and the selected offer, amount and term, and pass them to that bank only with your consent. Requests are kept for up to 12 months. To have your request deleted, email us at armfincredit@zohomail.com.']
   ],
   RU: [
     ['1. Введение', 'ArmFinCredit («мы», «наш», «нам») управляет сайтом www.armfincredit.site (далее — «Сервис»). Настоящая страница объясняет, как мы собираем, используем и раскрываем информацию при использовании Сервиса.'],
@@ -28,7 +28,7 @@ var SECTIONS = {
     ['7. Изменения политики', 'Мы можем периодически обновлять настоящую Политику конфиденциальности. Изменения вступают в силу сразу после публикации на этой странице.'],
     ['8. Связаться с нами', 'Если у вас есть вопросы по этой Политике конфиденциальности, пожалуйста, свяжитесь с нами через ссылку Support в футере сайта.'],
     ['9. ИИ-советник, Pro и предложения партнёров', 'Когда вы задаёте вопрос ИИ-советнику, текст вопроса и текущий расчёт (сумма, ставка, срок, платежи) передаются через наш сервер стороннему ИИ-провайдеру (например, Google Gemini) для генерации ответа. Не вводите персональные данные в чат. Оплата Pro обрабатывается платёжным провайдером; мы получаем только статус лицензионного ключа. Ссылки на предложения партнёров содержат реферальные метки, и мы можем получать вознаграждение, если вы оформите продукт.'],
-    ['10. Заявки в банки', 'Если вы отправляете заявку в банк через сайт, мы получаем ваше имя, телефон, комментарий (если есть) и выбранное предложение, сумму и срок и передаём их только этому банку и только с вашего согласия. Заявки хранятся до 12 месяцев. Чтобы удалить заявку, напишите нам в Telegram @gena_collection.']
+    ['10. Заявки в банки', 'Если вы отправляете заявку в банк через сайт, мы получаем ваше имя, телефон, комментарий (если есть) и выбранное предложение, сумму и срок и передаём их только этому банку и только с вашего согласия. Заявки хранятся до 12 месяцев. Чтобы удалить заявку, напишите нам на armfincredit@zohomail.com.']
   ],
   AM: [
     ['1. Ներածություն', 'ArmFinCredit-ը («մենք», «մեր», «մեզ») կառավարում է www.armfincredit.site կայքը (այսուհետ՝ «Ծառայություն»): Այս էջը նկարագրում է, թե ինչպես ենք մենք հավաքում, օգտագործում և բացահայտում տեղեկատվությունը Ծառայությունից օգտվելիս։'],
@@ -40,7 +40,7 @@ var SECTIONS = {
     ['7. Քաղաքականության փոփոխություններ', 'Մենք կարող ենք պարբերաբար թարմացնել այս Գաղտնիության քաղաքականությունը։ Փոփոխությունները ուժի մեջ են մտնում անմիջապես այս էջում հրապարակվելուց հետո։'],
     ['8. Կապ մեզ հետ', 'Եթե ունեք հարցեր այս Գաղտնիության քաղաքականության վերաբերյալ, խնդրում ենք կապվել մեզ հետ կայքի ստորոտում գտնվող Աջակցություն հղումով։'],
     ['9. AI խորհրդատու, Pro և գործընկերների առաջարկներ', 'Երբ հարց եք տալիս AI խորհրդատուին, ձեր հարցը և ընթացիկ հաշվարկը (գումար, տոկոսադրույք, ժամկետ, վճարներ) մեր սերվերի միջոցով փոխանցվում են երրորդ կողմի AI մատակարարին (օր.՝ Google Gemini)։ Մի՛ մուտքագրեք անձնական տվյալներ չատում։ Pro վճարումները մշակվում են վճարային մատակարարի կողմից․ մենք ստանում ենք միայն լիցենզիայի կարգավիճակը։ Գործընկերների հղումները պարունակում են ուղղորդման նշիչներ, և մենք կարող ենք միջնորդավճար ստանալ։'],
-    ['10. Հայտեր բանկերին', 'Եթե կայքի միջոցով հայտ եք ուղարկում բանկին, մենք ստանում ենք ձեր անունը, հեռախոսահամարը, մեկնաբանությունը (եթե կա) և ընտրված առաջարկը, գումարը և ժամկետը և փոխանցում ենք միայն այդ բանկին՝ ձեր համաձայնությամբ։ Հայտերը պահվում են մինչև 12 ամիս։ Հայտը ջնջելու համար գրեք մեզ Telegram-ով՝ @gena_collection։']
+    ['10. Հայտեր բանկերին', 'Եթե կայքի միջոցով հայտ եք ուղարկում բանկին, մենք ստանում ենք ձեր անունը, հեռախոսահամարը, մեկնաբանությունը (եթե կա) և ընտրված առաջարկը, գումարը և ժամկետը և փոխանցում ենք միայն այդ բանկին՝ ձեր համաձայնությամբ։ Հայտերը պահվում են մինչև 12 ամիս։ Հայտը ջնջելու համար գրեք մեզ armfincredit@zohomail.com հասցեով։']
   ]
 }
 

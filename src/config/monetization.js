@@ -110,7 +110,11 @@ export var PARTNER_OFFERS = [
   }
 ]
 
-// Banks and partners get in touch here (partner page, offers, widget).
+// Contacts for visitors, banks and partners (footer, partner page, forms).
+// Switch VITE_CONTACT_EMAIL to an address on the site's domain once its
+// mailbox works (see MONETIZATION.md).
+export var CONTACT_EMAIL = env.VITE_CONTACT_EMAIL || 'armfincredit@zohomail.com'
+export function mailto(subject) { return 'mailto:' + CONTACT_EMAIL + (subject ? '?subject=' + encodeURIComponent(subject) : '') }
 export var PARTNER_TELEGRAM = 'gena_collection'
 export var PARTNER_TELEGRAM_URL = 'https://t.me/' + PARTNER_TELEGRAM
 

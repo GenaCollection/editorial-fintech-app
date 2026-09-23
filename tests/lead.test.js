@@ -3,11 +3,11 @@ import assert from 'node:assert/strict'
 import http from 'node:http'
 import { Readable } from 'node:stream'
 
-// /api/lead against local stand-ins for Redis (Upstash REST) and Telegram.
+// /api/lead against local stand-ins for Redis (Upstash REST) and Resend.
 
 var redisList = []
 var counters = new Map()
-var telegram = []
+var emails = []
 
 var server = http.createServer(function(req, res) {
   var body = ''
@@ -22,7 +22,7 @@ var server = http.createServer(function(req, res) {
       })
       return res.end(JSON.stringify(out))
     }
-    if (req.url === '/botTOKEN/sendMessage') { telegram.push(JSON.parse(body)); return res.end('{"ok":true}') }
+    if (req.url === '/emails') { assert.equal(req.headers.authorization, 'Bearer re_test'); emails.push(JSON.parse(body)); return res.end('{"id":"1"}') }
     res.statusCode = 404; res.end('{}')
   })
 })
@@ -33,9 +33,9 @@ test.before(async function() {
   var base = 'http://127.0.0.1:' + server.address().port
   process.env.KV_REST_API_URL = base + '/redis'
   process.env.KV_REST_API_TOKEN = 'secret'
-  process.env.TELEGRAM_API_URL = base
-  process.env.TELEGRAM_BOT_TOKEN = 'TOKEN'
-  process.env.TELEGRAM_CHAT_ID = '42'
+  process.env.RESEND_API_URL = base
+  process.env.RESEND_API_KEY = 're_test'
+  process.env.LEAD_EMAIL_TO = 'owner@example.com'
   process.env.LEAD_PER_DAY = '2'
   handler = (await import('../api/lead.js')).default
 })
@@ -57,15 +57,17 @@ function send(body, ip) {
 var good = { bank: 'Ardshinbank', product: 'Unsecured consumer loan', kind: 'loan', rate: 12.9, amount: 3000000, term: 36,
   name: 'Aram', phone: '+374 91 123456', comment: 'call after 6pm', lang: 'RU', consent: true }
 
-test('a valid request is stored in Redis and sent to Telegram', async function() {
+test('a valid request is stored in Redis and emailed to the owner', async function() {
   var r = await send(good)
   assert.equal(r.status, 200)
   assert.equal(redisList.length, 1)
   var saved = JSON.parse(redisList[0])
   assert.equal(saved.bank, 'Ardshinbank'); assert.equal(saved.phone, '+374 91 123456'); assert.equal(saved.amount, 3000000)
-  assert.equal(telegram.length, 1)
-  assert.equal(telegram[0].chat_id, '42')
-  assert.match(telegram[0].text, /Ardshinbank[\s\S]*3[\s ]000[\s ]000 ֏[\s\S]*Aram[\s\S]*\+374 91 123456/)
+  assert.equal(emails.length, 1)
+  assert.deepEqual(emails[0].to, ['owner@example.com'])
+  assert.match(emails[0].subject, /Ardshinbank/)
+  assert.doesNotMatch(emails[0].html, /<script/)
+  assert.match(emails[0].text, /Ardshinbank[\s\S]*3[\s ]000[\s ]000 ֏[\s\S]*Aram[\s\S]*\+374 91 123456/)
 })
 
 test('consent, a known bank and a real phone number are required', async function() {

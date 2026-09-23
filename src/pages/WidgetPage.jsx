@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { SITE_URL } from '../config/site.js'
-import { PARTNER_TELEGRAM_URL } from '../config/monetization.js'
+import { mailto } from '../config/monetization.js'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
 
@@ -168,7 +168,7 @@ export default function WidgetPage() {
           <p className="text-2xl font-extrabold">{t(lang,'widget','proT')}</p>
           <p className="opacity-85 mt-1 max-w-xl">{t(lang,'widget','proD')}</p>
         </div>
-        <a href={PARTNER_TELEGRAM_URL} target="_blank" rel="noopener noreferrer"
+        <a href={mailto('ArmFinCredit white-label widget')}
           className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 bg-white text-blue-800 rounded-2xl font-extrabold hover:bg-blue-50">
           <span className="material-symbols-outlined" style={{fontSize:'18px'}}>send</span>
           {t(lang,'widget','proB')}

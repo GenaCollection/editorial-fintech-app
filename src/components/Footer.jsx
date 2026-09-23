@@ -5,6 +5,7 @@ import { t } from '../i18n/labels.js'
 import { LANDINGS, LANDING_UI, landingPath } from '../seo/landings.js'
 import { RATE_PAGES, ratePagePath } from '../seo/rates.js'
 import { localPathFor } from '../seo/localPages.js'
+import { mailto } from '../config/monetization.js'
 
 export default function Footer() {
   var langCtx = useLanguage()
@@ -64,7 +65,7 @@ export default function Footer() {
             <div className="space-y-2">
               <Link to="/privacy" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'footer', 'privacy')}</Link>
               <Link to="/terms" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'footer', 'terms')}</Link>
-              <a href="mailto:support@armfincredit.app" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'footer', 'support')}</a>
+              <a href={mailto('ArmFinCredit')} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'footer', 'support')}</a>
             </div>
           </div>
 
