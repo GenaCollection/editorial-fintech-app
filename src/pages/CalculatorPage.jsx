@@ -405,6 +405,8 @@ export default function CalculatorPage() {
 
   // ── PDF handler: build data object and call exportPdf ──────────────────────
   function handleExportPdf() {
+    if (pro.pdfLeft <= 0) { pro.openUpgrade('pdf'); return }
+    pro.recordPdfUse()
     exportPdf({
       loanState:      loanState,
       schedule:       schedule,

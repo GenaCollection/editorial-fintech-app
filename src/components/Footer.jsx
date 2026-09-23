@@ -29,6 +29,8 @@ export default function Footer() {
               <Link to="/schedule" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'nav', 'sched')}</Link>
               <Link to="/early" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'nav', 'early')}</Link>
               <Link to="/compare" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'compare')}</Link>
+              <Link to="/deposit" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'dep', 'title')}</Link>
+              <Link to="/banks" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'banks', 'title')}</Link>
               <Link to="/offers" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'offers')}</Link>
               <Link to="/pro" className="block text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">ArmFinCredit Pro</Link>
             </div>

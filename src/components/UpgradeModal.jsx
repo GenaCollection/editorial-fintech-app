@@ -5,10 +5,10 @@ import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { PLANS } from '../config/monetization.js'
 
-var REASON_KEY = { saves: 'rSaves', csv: 'rCsv', ai: 'rAi', compare: 'rCompare', pdf: 'rPdf', generic: 'rGeneric' }
+var REASON_KEY = { saves: 'rSaves', csv: 'rCsv', ai: 'rAi', compare: 'rCompare', pdf: 'rPdf', banks: 'rBanks', generic: 'rGeneric' }
 var FEATURES = [
   ['block', 'fNoAds'], ['auto_awesome', 'fAi'], ['picture_as_pdf', 'fPdf'],
-  ['table_view', 'fCsv'], ['bookmarks', 'fSaves'], ['compare_arrows', 'fCompare']
+  ['account_balance', 'fBanks'], ['bookmarks', 'fSaves'], ['compare_arrows', 'fCompare']
 ]
 
 // Global paywall. Opened via usePro().openUpgrade(reason).

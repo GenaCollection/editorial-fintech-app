@@ -54,8 +54,8 @@ export var PLANS = [
 
 // Free-tier limits. Pro (and an active trial) removes them.
 export var LIMITS = {
-  free: { saves: 3, aiPerDay: 3,  compareSlots: 2 },
-  pro:  { saves: 50, aiPerDay: 100, compareSlots: 4 }
+  free: { saves: 3,  aiPerDay: 2,   compareSlots: 2, pdfPerDay: 2,   bankOffersVisible: 1 },
+  pro:  { saves: 50, aiPerDay: 100, compareSlots: 4, pdfPerDay: 100, bankOffersVisible: 999 }
 }
 
 // ── Partner offers (affiliate / CPA) ──────────────────────────────────────────

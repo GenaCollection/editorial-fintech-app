@@ -5,7 +5,7 @@
 //   LICENSE_PROVIDER      lemonsqueezy | gumroad            (default lemonsqueezy)
 //   LEMONSQUEEZY_STORE_ID optional — reject keys from other stores
 //   GUMROAD_PRODUCT_ID    required for gumroad
-//   PRO_DEMO_KEYS         optional comma-separated keys for testing / giveaways
+//   PRO_DEMO_KEYS         comma-separated superuser/tester keys (full Pro, plan "tester")
 
 var cache = new Map()
 var CACHE_MS = 10 * 60 * 1000
@@ -51,7 +51,7 @@ export async function validateLicense(rawKey) {
   if (!key || key.length > 200) return result(false, { error: 'invalid' })
 
   var demo = (process.env.PRO_DEMO_KEYS || '').split(',').map(function(s) { return s.trim() }).filter(Boolean)
-  if (demo.indexOf(key) !== -1) return result(true, { plan: 'lifetime', expiresAt: null })
+  if (demo.indexOf(key) !== -1) return result(true, { plan: 'tester', expiresAt: null })
 
   var hit = cache.get(key)
   if (hit && Date.now() - hit.at < CACHE_MS) return hit.res

@@ -81,6 +81,32 @@ var PAGES = {
       AM: 'Pro՝ $1.99/ամիս-ից․ առանց գովազդի, օրական 100 AI հարց, PDF առանց ջրանիշի, CSV արտահանում, 50 պահված հաշվարկ։ 7 օր անվճար։'
     }
   },
+  deposit: {
+    path: '/deposit',
+    title: {
+      EN: 'Deposit Calculator Armenia (AMD) — Savings & Interest | ArmFinCredit',
+      RU: 'Калькулятор вкладов Армения (драм) — доход и капитализация | ArmFinCredit',
+      AM: 'Ավանդի հաշվիչ (դրամ) — եկամուտ և կապիտալացում | ArmFinCredit'
+    },
+    description: {
+      EN: 'Calculate deposit income in drams: monthly top-ups, monthly or quarterly capitalisation, tax on interest and a growth chart.',
+      RU: 'Рассчитайте доход по вкладу в драмах: ежемесячные пополнения, капитализация, налог на проценты и график роста.',
+      AM: 'Հաշվեք ավանդի եկամուտը դրամով՝ ամսական համալրումներ, կապիտալացում, հարկ տոկոսից և աճի գրաֆիկ։'
+    }
+  },
+  banks: {
+    path: '/banks',
+    title: {
+      EN: 'Armenian Bank Deposit & Mortgage Rates | ArmFinCredit',
+      RU: 'Ставки банков Армении по вкладам и ипотеке | ArmFinCredit',
+      AM: 'Հայաստանի բանկերի ավանդների և հիփոթեքի դրույքներ | ArmFinCredit'
+    },
+    description: {
+      EN: 'Indicative deposit and mortgage rates of Armenian banks with sources and dates.',
+      RU: 'Ориентировочные ставки банков Армении по вкладам и ипотеке — с источниками и датами.',
+      AM: 'Հայաստանի բանկերի ավանդների և հիփոթեքի ցուցադրական դրույքները՝ աղբյուրներով և ամսաթվերով։'
+    }
+  },
   widget: {
     path: '/widget',
     title: {
@@ -177,6 +203,8 @@ export function prerenderRoutes() {
     { path: '/compare', lang: 'EN', priority: '0.8' },
     { path: '/offers', lang: 'EN', priority: '0.7' },
     { path: '/widget', lang: 'EN', priority: '0.6' },
+    { path: '/deposit', lang: 'EN', priority: '0.9' },
+    { path: '/banks', lang: 'EN', priority: '0.7' },
     { path: '/pro', lang: 'EN', priority: '0.6' },
     { path: '/privacy', lang: 'EN', priority: '0.2' },
     { path: '/terms', lang: 'EN', priority: '0.2' },

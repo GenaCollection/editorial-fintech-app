@@ -12,6 +12,7 @@ var ROWS = [
   ['bookmarks', 'fSavesFree', 'fSaves'],
   ['compare_arrows', 'fCompareFree', 'fCompare'],
   ['picture_as_pdf', 'fPdfFree', 'fPdf'],
+  ['account_balance', 'fBanksFree', 'fBanks'],
   ['table_view', null, 'fCsv'],
   ['block', null, 'fNoAds']
 ]

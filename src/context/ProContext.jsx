@@ -55,6 +55,23 @@ export function ProProvider(props) {
     })
   }, [])
 
+  // Superuser / tester access: open any page with ?access=<KEY> (one of the
+  // PRO_DEMO_KEYS set in Vercel). The key is checked by /api/license, saved on
+  // this device, and removed from the address bar.
+  useEffect(function() {
+    if (typeof window === 'undefined') return
+    var params = new URLSearchParams(window.location.search)
+    var key = params.get('access')
+    if (!key) return
+    params.delete('access')
+    var qs = params.toString()
+    window.history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : '') + window.location.hash)
+    validateLicenseRemote(key).then(function(res) {
+      if (res && res.valid) update({ license: { key: key, plan: res.plan, expiresAt: res.expiresAt || null, validatedAt: Date.now() } })
+    }).catch(function() {})
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // Periodically re-check the license so refunds/expired subscriptions lapse.
   useEffect(function() {
     var lic = state.license
@@ -107,6 +124,18 @@ export function ProProvider(props) {
 
   var deactivate = useCallback(function() { update({ license: null }) }, [update])
 
+  var pdfUsedToday = state.pdf && state.pdf.date === today() ? state.pdf.count : 0
+  var pdfLeft = Math.max(0, limits.pdfPerDay - pdfUsedToday)
+  var recordPdfUse = useCallback(function() {
+    setState(function(prev) {
+      var d = today()
+      var count = prev.pdf && prev.pdf.date === d ? prev.pdf.count + 1 : 1
+      var next = Object.assign({}, prev, { pdf: { date: d, count: count } })
+      writeLS(next)
+      return next
+    })
+  }, [])
+
   var recordAiUse = useCallback(function() {
     setState(function(prev) {
       var d = today()
@@ -125,11 +154,12 @@ export function ProProvider(props) {
       status: status, isPro: isPro, limits: limits,
       trialDaysLeft: trialDaysLeft, trialUsed: !!state.trialStartedAt, proEnabled: PRO_ENABLED,
       license: state.license || null,
-      aiLeft: aiLeft, recordAiUse: recordAiUse,
+      aiLeft: aiLeft, recordAiUse: recordAiUse, pdfLeft: pdfLeft, recordPdfUse: recordPdfUse,
+      isTester: !!(state.license && state.license.plan === 'tester'),
       startTrial: startTrial, activateLicense: activateLicense, deactivate: deactivate,
       upgradeReason: upgradeReason, openUpgrade: openUpgrade, closeUpgrade: closeUpgrade
     }
-  }, [status, isPro, limits, trialDaysLeft, state, aiLeft, recordAiUse, startTrial,
+  }, [status, isPro, limits, trialDaysLeft, state, aiLeft, recordAiUse, pdfLeft, recordPdfUse, startTrial,
       activateLicense, deactivate, upgradeReason, openUpgrade, closeUpgrade])
 
   return React.createElement(ProContext.Provider, { value: value }, props.children)

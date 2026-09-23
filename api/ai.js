@@ -13,7 +13,7 @@ import { validateLicense, readJson, clientIp } from './_lib/license.js'
 //   OpenRouter               AI_BASE_URL=https://openrouter.ai/api/v1   AI_MODEL=<any ":free" model>
 //
 // Env: AI_API_KEY (required), AI_BASE_URL, AI_MODEL,
-//      AI_FREE_PER_DAY (default 5), AI_PRO_PER_DAY (default 120)
+//      AI_FREE_PER_DAY (default 2), AI_PRO_PER_DAY (default 120)
 
 var GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/openai'
 // Tried in order when AI_MODEL is unset or no longer exists, so a retired
@@ -180,7 +180,7 @@ export default async function handler(req, res) {
 
   var isPro = false
   if (body.licenseKey) isPro = (await validateLicense(body.licenseKey)).valid
-  var limit = isPro ? num(process.env.AI_PRO_PER_DAY || 120) : num(process.env.AI_FREE_PER_DAY || 5)
+  var limit = isPro ? num(process.env.AI_PRO_PER_DAY || 120) : num(process.env.AI_FREE_PER_DAY || 2)
   var quotaId = isPro ? 'lic:' + body.licenseKey : 'ip:' + clientIp(req)
   if (overQuota(quotaId, limit)) return res.status(429).json({ error: 'quota' })
 
