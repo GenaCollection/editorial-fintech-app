@@ -97,6 +97,8 @@ function Landing(props) {
         })}
       </section>
 
+      <AdSlot placement="bottom" className="mb-12" />
+
       <section>
         <h2 className="text-xl font-extrabold text-slate-900 dark:text-white mb-4">{LANDING_UI.others[lang]}</h2>
         <div className="flex flex-wrap gap-2">

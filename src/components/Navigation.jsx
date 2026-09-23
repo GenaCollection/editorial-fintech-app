@@ -30,7 +30,7 @@ function ProButton(props) {
       <span className="material-symbols-outlined" style={{fontSize:'16px'}}>workspace_premium</span>
       {pro.status === 'trial'
         ? <span>{t(lang,'menu','trial')} · {pro.trialDaysLeft} {t(lang,'menu','daysLeft')}</span>
-        : <span>{t(lang,'menu','pro')}</span>}
+        : <span>{t(lang,'menu','pro')}{!pro.proEnabled && <span className="ml-1 text-[9px] font-black uppercase bg-white/25 rounded px-1 py-0.5 align-middle">{t(lang,'pro','soonBadge')}</span>}</span>}
     </Link>
   )
 }

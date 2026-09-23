@@ -8,7 +8,7 @@ import Navigation from './components/Navigation.jsx'
 import Footer from './components/Footer.jsx'
 import AiAdvisor from './components/AiAdvisor.jsx'
 import UpgradeModal from './components/UpgradeModal.jsx'
-import { AdsLoader } from './components/AdSlot.jsx'
+import { AdsLoader, AdRails } from './components/AdSlot.jsx'
 import CalculatorPage from './pages/CalculatorPage.jsx'
 import { URL_TO_LANG } from './config/site.js'
 import { findLanding } from './seo/landings.js'
@@ -148,6 +148,7 @@ function AppInner() {
     <div className="flex flex-col min-h-screen bg-app transition-colors duration-300">
       <ScrollToTop />
       <AdsLoader />
+      <AdRails />
       <Navigation theme={theme} toggleTheme={toggleTheme} />
       <Suspense fallback={<PageFallback />}>
         <Routes>

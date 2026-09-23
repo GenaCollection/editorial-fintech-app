@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import { usePro } from '../context/ProContext.jsx'
+import AdSlot from '../components/AdSlot.jsx'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
 
@@ -213,6 +214,8 @@ export default function ComparePage() {
           </div>
         )}
 
+        <AdSlot placement="compare" className="mb-6" />
+
         <div className="rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto bg-white dark:bg-slate-900">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 dark:bg-slate-800/60">
@@ -268,6 +271,7 @@ export default function ComparePage() {
           })}
         </div>
 
+        <AdSlot placement="bottom" className="mt-8" />
       </div>
     </main>
   )

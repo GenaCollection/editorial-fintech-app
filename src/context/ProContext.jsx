@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react'
-import { TRIAL_DAYS, LIMITS } from '../config/monetization.js'
+import { TRIAL_DAYS, LIMITS, PRO_ENABLED } from '../config/monetization.js'
 
 // Plan state for the freemium model:
 //   free          — ads, limited saves / AI questions, watermarked PDF
@@ -71,13 +71,15 @@ export function ProProvider(props) {
   }, [])
 
   var trialEndsAt = state.trialStartedAt ? state.trialStartedAt + TRIAL_DAYS * DAY : 0
-  var trialActive = trialEndsAt > now
+  // While Pro is "coming soon" a started trial is ignored; a valid license
+  // (e.g. PRO_DEMO_KEYS for testing) still works.
+  var trialActive = PRO_ENABLED && trialEndsAt > now
   var licenseActive = !!(state.license && state.license.key &&
     (!state.license.expiresAt || new Date(state.license.expiresAt).getTime() > now))
 
   var status = licenseActive ? 'pro'
     : trialActive ? 'trial'
-    : state.trialStartedAt ? 'trial_expired'
+    : PRO_ENABLED && state.trialStartedAt ? 'trial_expired'
     : 'free'
   var isPro = status === 'pro' || status === 'trial'
   var limits = isPro ? LIMITS.pro : LIMITS.free
@@ -87,7 +89,7 @@ export function ProProvider(props) {
   var aiLeft = Math.max(0, limits.aiPerDay - aiUsedToday)
 
   var startTrial = useCallback(function() {
-    if (state.trialStartedAt) return false
+    if (!PRO_ENABLED || state.trialStartedAt) return false
     update({ trialStartedAt: Date.now() })
     return true
   }, [state.trialStartedAt, update])
@@ -121,7 +123,7 @@ export function ProProvider(props) {
   var value = useMemo(function() {
     return {
       status: status, isPro: isPro, limits: limits,
-      trialDaysLeft: trialDaysLeft, trialUsed: !!state.trialStartedAt,
+      trialDaysLeft: trialDaysLeft, trialUsed: !!state.trialStartedAt, proEnabled: PRO_ENABLED,
       license: state.license || null,
       aiLeft: aiLeft, recordAiUse: recordAiUse,
       startTrial: startTrial, activateLicense: activateLicense, deactivate: deactivate,

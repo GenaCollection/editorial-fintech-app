@@ -16,10 +16,22 @@ export var AD_SLOTS = {
   offers:     env.VITE_AD_SLOT_OFFERS     || '',
   saved:      env.VITE_AD_SLOT_SAVED      || '',
   early:      env.VITE_AD_SLOT_EARLY      || '',
-  landing:    env.VITE_AD_SLOT_LANDING    || ''
+  landing:    env.VITE_AD_SLOT_LANDING    || '',
+  top:        env.VITE_AD_SLOT_TOP        || '',
+  bottom:     env.VITE_AD_SLOT_BOTTOM     || '',
+  compare:    env.VITE_AD_SLOT_COMPARE    || '',
+  rail:       env.VITE_AD_SLOT_RAIL       || ''
 }
 
+// One responsive "Display ad" unit may be reused everywhere: placements
+// without their own ID fall back to VITE_AD_SLOT_DEFAULT.
+export var AD_SLOT_DEFAULT = env.VITE_AD_SLOT_DEFAULT || ''
+export function adSlotFor(placement) { return AD_SLOTS[placement] || AD_SLOT_DEFAULT }
+
 // ── Pro plan ──────────────────────────────────────────────────────────────────
+// Pro is announced as "coming soon": free limits apply, no trial or purchase.
+// Set VITE_PRO_ENABLED=true in Vercel to open the trial and checkout.
+export var PRO_ENABLED = env.VITE_PRO_ENABLED === 'true'
 export var TRIAL_DAYS = 7
 
 // Checkout links from your payment provider (Lemon Squeezy / Gumroad / Paddle).

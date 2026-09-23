@@ -81,7 +81,17 @@ export default function PricingPage() {
 
       {statusBanner}
 
-      {pro.status === 'free' && (
+      {!pro.proEnabled && pro.status !== 'pro' && (
+        <div className="rounded-3xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-6 md:p-7 mb-10 flex items-start gap-4">
+          <span className="material-symbols-outlined text-amber-600 text-3xl">schedule</span>
+          <div>
+            <p className="text-xl font-extrabold text-amber-900 dark:text-amber-100">{t(lang,'pro','soonTitle')}</p>
+            <p className="text-amber-800 dark:text-amber-200 mt-1">{t(lang,'pro','soonDesc')}</p>
+          </div>
+        </div>
+      )}
+
+      {pro.proEnabled && pro.status === 'free' && (
         <div className="relative overflow-hidden rounded-3xl bg-brand-gradient text-white p-7 md:p-9 mb-10 shadow-xl shadow-blue-700/20">
           <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-white/10 blur-2xl" />
           <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-5">
@@ -117,7 +127,7 @@ export default function PricingPage() {
         </div>
 
         {PLANS.map(function(plan) {
-          var available = !!plan.checkoutUrl
+          var available = pro.proEnabled && !!plan.checkoutUrl
           return (
             <div key={plan.id}
               className={'relative rounded-3xl p-7 flex flex-col ' +
@@ -158,7 +168,7 @@ export default function PricingPage() {
         })}
       </div>
 
-      {pro.status !== 'pro' && (
+      {pro.proEnabled && pro.status !== 'pro' && (
         <form onSubmit={activate} className="max-w-xl mx-auto bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 mb-12">
           <label className="block font-bold text-slate-900 dark:text-white mb-3">{t(lang,'pro','haveKey')}</label>
           <div className="flex gap-2">

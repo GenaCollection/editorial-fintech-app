@@ -144,11 +144,16 @@ var L = {
   ads: {
     label:   { AM: 'Գովազդ',                RU: 'Реклама',            EN: 'Advertisement' },
     remove:  { AM: 'Հեռացնել գովազդը',      RU: 'Убрать рекламу',     EN: 'Remove ads' },
+    removeSoon: { AM: 'Առանց գովազդի՝ Pro (շուտով)', RU: 'Без рекламы — Pro (скоро)', EN: 'Ad-free with Pro (soon)' },
     sponsored: { AM: 'Գովազդային',          RU: 'Спонсор',            EN: 'Sponsored' }
   },
 
   pro: {
     badge:      { AM: 'PRO',                                     RU: 'PRO',                                   EN: 'PRO' },
+    soonBadge:  { AM: 'Շուտով',                                  RU: 'Скоро',                                 EN: 'Soon' },
+    soonTitle:  { AM: 'Pro-ն շուտով կգործարկվի',                 RU: 'Pro скоро будет доступен',              EN: 'Pro is coming soon' },
+    soonDesc:   { AM: 'Մենք պատրաստում ենք Pro-ն՝ առանց գովազդի, ավելի շատ AI հարցերով և լրացուցիչ հնարավորություններով։ Առայժմ հաշվիչը լիովին անվճար է։', RU: 'Мы готовим Pro: без рекламы, больше вопросов ИИ и дополнительные функции. Пока калькулятор полностью бесплатный.', EN: 'We are preparing Pro: no ads, more AI questions and extra features. For now the calculator is completely free.' },
+    gotIt:      { AM: 'Լավ',                                     RU: 'Понятно',                               EN: 'Got it' },
     title:      { AM: 'ArmFinCredit Pro',                        RU: 'ArmFinCredit Pro',                      EN: 'ArmFinCredit Pro' },
     subtitle:   { AM: 'Ավելի խելացի որոշումներ վարկի վերաբերյալ՝ սուրճի գնով։', RU: 'Умные решения по кредиту — по цене чашки кофе.', EN: 'Smarter loan decisions for the price of a coffee.' },
     free:       { AM: 'Անվճար',                                  RU: 'Бесплатно',                             EN: 'Free' },

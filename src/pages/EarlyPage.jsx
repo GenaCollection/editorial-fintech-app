@@ -117,6 +117,7 @@ export default function EarlyPage() {
             <p className="text-sm mt-1 opacity-80">{t(lang,'pro','subtitle')}</p>
           </Link>
         </div>
+        <AdSlot placement="bottom" className="mt-8" />
       </main>
     </div>
   )

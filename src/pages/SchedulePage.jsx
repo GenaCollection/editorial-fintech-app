@@ -198,6 +198,7 @@ export default function SchedulePage() {
             </div>
           )}
         </div>
+        <AdSlot placement="bottom" className="mt-8" />
       </main>
     </div>
   )

@@ -54,7 +54,18 @@ export default function UpgradeModal() {
               )
             })}
           </ul>
-          {!pro.trialUsed ? (
+          {!pro.proEnabled ? (
+            <>
+              <div className="rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-4 py-3 mb-4 text-sm text-amber-800 dark:text-amber-200">
+                <p className="font-extrabold mb-0.5">{t(lang,'pro','soonTitle')}</p>
+                <p>{t(lang,'pro','soonDesc')}</p>
+              </div>
+              <button onClick={pro.closeUpgrade}
+                className="w-full py-3.5 bg-brand-gradient text-white rounded-2xl font-extrabold shadow-lg shadow-blue-700/30 hover:opacity-95 active:scale-[0.98] transition-all">
+                {t(lang,'pro','gotIt')}
+              </button>
+            </>
+          ) : !pro.trialUsed ? (
             <>
               <button onClick={trial}
                 className="w-full py-3.5 bg-brand-gradient text-white rounded-2xl font-extrabold shadow-lg shadow-blue-700/30 hover:opacity-95 active:scale-[0.98] transition-all">
