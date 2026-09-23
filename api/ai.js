@@ -1,7 +1,11 @@
 import { validateLicense, readJson, clientIp } from './_lib/license.js'
 
-// POST /api/ai — proxies the AI loan advisor to any OpenAI-compatible
+// /api/ai — proxies the AI loan advisor to any OpenAI-compatible
 // chat-completions endpoint, so the API key never reaches the browser.
+//
+//   POST /api/ai   { messages, loan, lang, licenseKey? } → { reply } | { error, detail }
+//   GET  /api/ai   health check: is the key set, which model answers, and the
+//                  provider's exact error if not. Open it in a browser.
 //
 // Free options (pick one, set in Vercel env):
 //   Google Gemini (default)  AI_API_KEY from aistudio.google.com — free tier
@@ -11,9 +15,13 @@ import { validateLicense, readJson, clientIp } from './_lib/license.js'
 // Env: AI_API_KEY (required), AI_BASE_URL, AI_MODEL,
 //      AI_FREE_PER_DAY (default 5), AI_PRO_PER_DAY (default 120)
 
-var DEFAULT_BASE = 'https://generativelanguage.googleapis.com/v1beta/openai'
-var DEFAULT_MODEL = 'gemini-2.5-flash'
+var GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/openai'
+// Tried in order when AI_MODEL is unset or no longer exists, so a retired
+// model name does not silently break the advisor.
+var GEMINI_MODELS = ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-2.0-flash']
 var LANG_NAME = { AM: 'Armenian', RU: 'Russian', EN: 'English' }
+var ATTEMPT_TIMEOUT_MS = 20000
+var TOTAL_BUDGET_MS = 26000
 
 // Best-effort per-instance quota. Serverless instances are short-lived, so this
 // only stops casual abuse; the client-side counter drives the upsell UX.
@@ -31,6 +39,74 @@ function overQuota(id, limit) {
 }
 
 function num(v) { var n = Number(v); return isFinite(n) ? n : 0 }
+
+function providerConfig() {
+  // Trim: a pasted key often carries a trailing space or newline.
+  var key = String(process.env.AI_API_KEY || '').trim()
+  var base = String(process.env.AI_BASE_URL || GEMINI_BASE).trim().replace(/\/+$/, '')
+  var isGemini = base.indexOf('generativelanguage.googleapis.com') !== -1
+  var models = []
+  var configured = String(process.env.AI_MODEL || '').trim()
+  if (configured) models.push(configured)
+  if (isGemini) GEMINI_MODELS.forEach(function(m) { if (models.indexOf(m) === -1) models.push(m) })
+  return { key: key, base: base, isGemini: isGemini, models: models }
+}
+
+function providerMessage(j, status) {
+  var e = Array.isArray(j) ? (j[0] && j[0].error) : j && j.error
+  var msg = e && (e.message || e.status || (typeof e === 'string' ? e : ''))
+  return String(msg || ('HTTP ' + status)).slice(0, 300)
+}
+
+// Tries the configured models in order. Gemini 2.5+ "thinks" before
+// answering and the thinking counts toward max_tokens, so thinking is kept
+// low and the token budget generous — otherwise replies come back empty.
+async function callProvider(cfg, messages, maxTokens) {
+  var started = Date.now()
+  var last = { ok: false, status: 0, detail: 'no_model' }
+  for (var i = 0; i < cfg.models.length; i++) {
+    var model = cfg.models[i]
+    var reasoning = cfg.isGemini ? 'low' : null
+    for (var pass = 0; pass < 2; pass++) {
+      if (Date.now() - started > TOTAL_BUDGET_MS) return Object.assign(last, { detail: last.detail + ' (time budget exhausted)' })
+      var body = { model: model, temperature: 0.4, max_tokens: maxTokens, messages: messages }
+      if (reasoning) body.reasoning_effort = reasoning
+      var ctrl = new AbortController()
+      var timer = setTimeout(function() { ctrl.abort() }, ATTEMPT_TIMEOUT_MS)
+      var r, j
+      try {
+        r = await fetch(cfg.base + '/chat/completions', {
+          method: 'POST',
+          signal: ctrl.signal,
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + cfg.key },
+          body: JSON.stringify(body)
+        })
+        j = await r.json().catch(function() { return {} })
+      } catch (e) {
+        clearTimeout(timer)
+        return { ok: false, status: 504, detail: e && e.name === 'AbortError' ? 'provider timeout' : 'network error: ' + (e && e.message), model: model }
+      }
+      clearTimeout(timer)
+
+      var choice = j && j.choices && j.choices[0]
+      var reply = choice && choice.message && choice.message.content
+      if (r.ok && reply && String(reply).trim()) {
+        return { ok: true, reply: String(reply).trim(), model: model }
+      }
+      var detail = r.ok ? 'empty reply (finish_reason: ' + (choice && choice.finish_reason) + ')' : providerMessage(j, r.status)
+      last = { ok: false, status: r.ok ? 502 : r.status, detail: detail, model: model }
+
+      // Provider rejected the reasoning parameter → same model without it.
+      if (reasoning && r.status === 400 && /reason|thinking/i.test(detail)) { reasoning = null; continue }
+      break
+    }
+    // Only a missing/unsupported model or an empty reply is worth trying the
+    // next model; bad key, quota and similar errors will not change.
+    var retryable = last.status === 404 || (last.status === 400 && /model/i.test(last.detail)) || /^empty reply/.test(last.detail)
+    if (!retryable) break
+  }
+  return last
+}
 
 function systemPrompt(lang, loan) {
   var l = loan || {}
@@ -53,15 +129,45 @@ function systemPrompt(lang, loan) {
   ].join('\n')
 }
 
+async function healthCheck(req, res) {
+  var cfg = providerConfig()
+  var out = {
+    configured: !!cfg.key,
+    keyHint: cfg.key ? cfg.key.slice(0, 4) + '…' + cfg.key.slice(-2) + ' (' + cfg.key.length + ' chars)' : null,
+    provider: cfg.base.replace(/^https?:\/\//, '').split('/')[0],
+    models: cfg.models
+  }
+  if (!cfg.key) {
+    out.ok = false
+    out.hint = 'AI_API_KEY is not set for this deployment. Add it in Vercel → Settings → Environment Variables (Production), then Redeploy.'
+    return res.status(200).json(out)
+  }
+  if (!cfg.models.length) {
+    out.ok = false
+    out.hint = 'Set AI_MODEL for a non-Gemini provider.'
+    return res.status(200).json(out)
+  }
+  if (overQuota('health:' + clientIp(req), 20)) return res.status(429).json({ error: 'quota' })
+  var t0 = Date.now()
+  var r = await callProvider(cfg, [{ role: 'user', content: 'Reply with the single word OK.' }], 512)
+  out.ok = r.ok
+  out.model = r.model
+  out.latencyMs = Date.now() - t0
+  if (r.ok) out.reply = r.reply.slice(0, 40)
+  else { out.status = r.status; out.detail = r.detail }
+  return res.status(200).json(out)
+}
+
 export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store')
+  if (req.method === 'GET') return healthCheck(req, res)
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST')
+    res.setHeader('Allow', 'GET, POST')
     return res.status(405).json({ error: 'method_not_allowed' })
   }
-  res.setHeader('Cache-Control', 'no-store')
 
-  var apiKey = process.env.AI_API_KEY
-  if (!apiKey) return res.status(503).json({ error: 'not_configured' })
+  var cfg = providerConfig()
+  if (!cfg.key) return res.status(503).json({ error: 'not_configured' })
 
   var body = await readJson(req)
   var messages = (Array.isArray(body.messages) ? body.messages : [])
@@ -78,30 +184,11 @@ export default async function handler(req, res) {
   var quotaId = isPro ? 'lic:' + body.licenseKey : 'ip:' + clientIp(req)
   if (overQuota(quotaId, limit)) return res.status(429).json({ error: 'quota' })
 
-  var base = (process.env.AI_BASE_URL || DEFAULT_BASE).replace(/\/+$/, '')
-  var ctrl = new AbortController()
-  var timer = setTimeout(function() { ctrl.abort() }, 25000)
-  try {
-    var r = await fetch(base + '/chat/completions', {
-      method: 'POST',
-      signal: ctrl.signal,
-      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + apiKey },
-      body: JSON.stringify({
-        model: process.env.AI_MODEL || DEFAULT_MODEL,
-        temperature: 0.4,
-        max_tokens: 700,
-        messages: [{ role: 'system', content: systemPrompt(body.lang, body.loan) }].concat(messages)
-      })
-    })
-    var j = await r.json().catch(function() { return {} })
-    var reply = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content
-    if (!r.ok || !reply) {
-      return res.status(502).json({ error: r.status === 429 ? 'provider_quota' : 'provider_error' })
-    }
-    return res.status(200).json({ reply: String(reply).trim() })
-  } catch (e) {
-    return res.status(504).json({ error: 'timeout' })
-  } finally {
-    clearTimeout(timer)
-  }
+  var r = await callProvider(cfg, [{ role: 'system', content: systemPrompt(body.lang, body.loan) }].concat(messages), 2048)
+  if (r.ok) return res.status(200).json({ reply: r.reply })
+  console.error('[api/ai] provider error', r.status, r.model, r.detail)
+  return res.status(r.status === 429 ? 429 : 502).json({
+    error: r.status === 429 ? 'provider_quota' : 'provider_error',
+    detail: r.detail
+  })
 }

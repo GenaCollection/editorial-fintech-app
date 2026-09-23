@@ -64,18 +64,22 @@ export default function AiAdvisor() {
           .map(function(m) { return { role: m.role, content: m.content } })
       })
     }).then(function(r) {
-      return r.json().catch(function() { return {} }).then(function(j) { return { ok: r.ok, body: j } })
+      return r.json().catch(function() { return {} }).then(function(j) { return { ok: r.ok, status: r.status, body: j } })
     }).then(function(res) {
       if (res.ok && res.body.reply) {
         pro.recordAiUse()
         setMessages(function(prev) { return prev.concat([{ role: 'assistant', content: res.body.reply }]) })
       } else {
-        throw new Error(res.body.error || 'unavailable')
+        throw new Error('HTTP ' + res.status + ' ' + (res.body.error || 'unavailable') + (res.body.detail ? ': ' + res.body.detail : ''))
       }
-    }).catch(function() {
+    }).catch(function(err) {
       // No provider configured / quota hit / offline → local rule-based analysis.
+      // The reason is logged and shown on hover to make setup problems visible;
+      // GET /api/ai gives the full diagnosis.
+      var reason = (err && err.message) || 'network error'
+      console.warn('[AI advisor] offline fallback:', reason, '— details: /api/ai')
       var reply = analyzeLoan(snap, topic || 'all', lang)
-      setMessages(function(prev) { return prev.concat([{ role: 'assistant', content: reply, offline: true }]) })
+      setMessages(function(prev) { return prev.concat([{ role: 'assistant', content: reply, offline: true, reason: reason }]) })
     }).then(function() { setBusy(false) })
   }
 
@@ -117,7 +121,7 @@ export default function AiAdvisor() {
                   <div className={'rounded-2xl px-4 py-3 max-w-[88%] leading-relaxed ' +
                     (mine ? 'bg-blue-700 text-white rounded-tr-md' : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-tl-md')}>
                     {m.offline && (
-                      <div className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-1">{t(lang,'ai','offline')}</div>
+                      <div className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-1" title={m.reason}>{t(lang,'ai','offline')}</div>
                     )}
                     {mine ? m.content : <RichText text={m.content} />}
                   </div>
