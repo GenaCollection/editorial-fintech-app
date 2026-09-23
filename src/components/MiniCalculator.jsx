@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { generateAmortization } from '../context/LoanContext.jsx'
 import { t } from '../i18n/labels.js'
 import { SITE_URL } from '../config/site.js'
+import { localPathFor } from '../seo/localPages.js'
 
 // Compact, self-contained calculator used by the SEO landing pages and the
 // embeddable widget. It keeps its own state (not LoanContext) so an embed
@@ -160,7 +161,7 @@ export default function MiniCalculator(props) {
         <Cta to={'/' + query} className="text-center py-3 rounded-xl font-extrabold text-white hover:opacity-90 active:scale-[0.98] transition-all" style={{ backgroundColor: accent }}>
           {t(lang, 'widget', 'full')} &rarr;
         </Cta>
-        <Cta to={'/offers' + query} className="text-center py-3 rounded-xl font-extrabold border-2 border-emerald-500 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all">
+        <Cta to={localPathFor('/offers', lang) + query} className="text-center py-3 rounded-xl font-extrabold border-2 border-emerald-500 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all">
           {t(lang, 'widget', 'lower')}
         </Cta>
       </div>

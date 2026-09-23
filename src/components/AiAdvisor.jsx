@@ -7,6 +7,19 @@ import { buildLoanSnapshot, analyzeLoan } from '../lib/insights.js'
 
 var SUGGESTIONS = [['s1', 'summary'], ['s2', 'save'], ['s3', 'type'], ['s4', 'rate']]
 
+// Random anonymous id of this browser, used only for the daily AI limit.
+function clientId() {
+  try {
+    var id = localStorage.getItem('afc_cid')
+    if (!id) {
+      id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+        : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12)
+      localStorage.setItem('afc_cid', id)
+    }
+    return id
+  } catch (e) { return undefined }
+}
+
 // Renders **bold** and "- " bullets from model output without a markdown lib.
 function RichText(props) {
   var lines = String(props.text || '').split('\n')
@@ -60,6 +73,7 @@ export default function AiAdvisor() {
       body: JSON.stringify({
         lang: lang, loan: snap,
         licenseKey: pro.license ? pro.license.key : undefined,
+        clientId: clientId(),
         messages: history.filter(function(m) { return !m.offline }).slice(-8)
           .map(function(m) { return { role: m.role, content: m.content } })
       })
@@ -67,9 +81,11 @@ export default function AiAdvisor() {
       return r.json().catch(function() { return {} }).then(function(j) { return { ok: r.ok, status: r.status, body: j } })
     }).then(function(res) {
       if (res.ok && res.body.reply) {
-        pro.recordAiUse()
+        pro.recordAiUse(res.body.left)
         setMessages(function(prev) { return prev.concat([{ role: 'assistant', content: res.body.reply }]) })
       } else {
+        // Daily limit reached on the server (e.g. used in another tab).
+        if (res.status === 429 && res.body.error === 'quota') { pro.recordAiUse(0); pro.openUpgrade('ai') }
         throw new Error('HTTP ' + res.status + ' ' + (res.body.error || 'unavailable') + (res.body.detail ? ': ' + res.body.detail : ''))
       }
     }).catch(function(err) {

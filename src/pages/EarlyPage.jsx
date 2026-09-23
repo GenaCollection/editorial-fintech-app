@@ -7,6 +7,7 @@ import { usePro } from '../context/ProContext.jsx'
 import AdSlot from '../components/AdSlot.jsx'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
+import { localPathFor } from '../seo/localPages.js'
 
 var SYM = '\u058f'
 
@@ -101,7 +102,7 @@ export default function EarlyPage() {
         <AdSlot placement="early" className="mb-8" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <Link to="/offers" className="group bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900 p-7 rounded-3xl hover:border-emerald-300 transition-all">
+          <Link to={localPathFor('/offers', lang)} className="group bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900 p-7 rounded-3xl hover:border-emerald-300 transition-all">
             <span className="material-symbols-outlined text-emerald-600 text-4xl mb-4 block">savings</span>
             <p className="font-extrabold text-lg text-slate-900 dark:text-white">{t(lang,'offers','title')}</p>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t(lang,'offers','desc')}</p>

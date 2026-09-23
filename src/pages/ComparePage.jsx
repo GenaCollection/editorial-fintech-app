@@ -179,10 +179,10 @@ export default function ComparePage() {
 
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
-              <span className="material-symbols-outlined align-middle mr-2 text-blue-600">compare_arrows</span>
-              {tr('title')}
-            </h1>
+            <div className="flex items-center gap-2">
+              <span aria-hidden="true" className="material-symbols-outlined text-blue-600">compare_arrows</span>
+              <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-slate-50 tracking-tight">{tr('title')}</h1>
+            </div>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{tr('desc')}</p>
           </div>
           {loans.length < 4 && (

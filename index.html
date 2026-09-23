@@ -51,7 +51,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=__ICON_NAMES__&display=block" rel="stylesheet" />
 
     <!-- Apply the saved theme before first paint to avoid a light flash -->
     <script>
@@ -63,6 +63,11 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Vercel Web Analytics: cookie-free page views, including client-side
+         navigation. Enable it in Vercel → Project → Analytics; the script is
+         served by Vercel itself (404 locally, which is harmless). -->
+    <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments) }</script>
+    <script defer src="/_vercel/insights/script.js"></script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

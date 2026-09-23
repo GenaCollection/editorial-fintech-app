@@ -7,8 +7,8 @@ import { PLANS } from '../config/monetization.js'
 
 var REASON_KEY = { saves: 'rSaves', csv: 'rCsv', ai: 'rAi', compare: 'rCompare', pdf: 'rPdf', banks: 'rBanks', generic: 'rGeneric' }
 var FEATURES = [
-  ['block', 'fNoAds'], ['auto_awesome', 'fAi'], ['picture_as_pdf', 'fPdf'],
-  ['account_balance', 'fBanks'], ['bookmarks', 'fSaves'], ['compare_arrows', 'fCompare']
+  { icon: 'block', key: 'fNoAds' }, { icon: 'auto_awesome', key: 'fAi' }, { icon: 'picture_as_pdf', key: 'fPdf' },
+  { icon: 'account_balance', key: 'fBanks' }, { icon: 'bookmarks', key: 'fSaves' }, { icon: 'compare_arrows', key: 'fCompare' }
 ]
 
 // Global paywall. Opened via usePro().openUpgrade(reason).
@@ -47,9 +47,9 @@ export default function UpgradeModal() {
           <ul className="grid grid-cols-2 gap-x-4 gap-y-3 mb-6">
             {FEATURES.map(function(f) {
               return (
-                <li key={f[1]} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-                  <span className="material-symbols-outlined text-emerald-500" style={{fontSize:'18px'}}>{f[0]}</span>
-                  {t(lang,'pro',f[1])}
+                <li key={f.key} className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                  <span className="material-symbols-outlined text-emerald-500" style={{fontSize:'18px'}}>{f.icon}</span>
+                  {t(lang,'pro',f.key)}
                 </li>
               )
             })}

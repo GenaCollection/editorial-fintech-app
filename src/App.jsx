@@ -13,6 +13,7 @@ import CalculatorPage from './pages/CalculatorPage.jsx'
 import { URL_TO_LANG } from './config/site.js'
 import { findLanding } from './seo/landings.js'
 import { findRatePage } from './seo/rates.js'
+import { findLocalPage } from './seo/localPages.js'
 
 // Code-split pages that can be preloaded before the first render, so a
 // prerendered page is replaced by the same page instead of a spinner.
@@ -56,6 +57,8 @@ export function preloadRoute(pathname) {
   var path = (pathname || '/').replace(/\/+$/, '') || '/'
   if (path === '/' || isLangHome(path)) return Promise.resolve()
   if (PAGES[path]) return PAGES[path].preload()
+  var local = findLocalPage(path)
+  if (local) return PAGES[local.path].preload()
   if (findLanding(path) || findRatePage(path)) return LandingPage.preload()
   return NotFoundPage.preload()
 }
@@ -114,13 +117,32 @@ function ScrollToTop() {
 function LangHome() {
   var path = useLocation().pathname
   var lang = URL_TO_LANG[path.split('/').filter(Boolean)[0]]
+  useUrlLanguage(lang)
+  if (!lang) return <NotFoundPage />
+  return <CalculatorPage />
+}
+
+// Keeps the UI language in step with a language-prefixed URL.
+function useUrlLanguage(lang) {
   var langCtx = useLanguage()
   React.useEffect(function() {
     if (lang && langCtx.language !== lang) langCtx.setLanguage(lang)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang])
-  if (!lang) return <NotFoundPage />
-  return <CalculatorPage />
+}
+
+// /hy|ru|en/<slug>: a tool page in that language, or an SEO landing page.
+function LangSlug() {
+  var path = useLocation().pathname
+  var local = findLocalPage(path)
+  if (local) return <LocalPage key={path} lang={local.lang} Page={PAGES[local.path]} />
+  return <LandingPage />
+}
+
+function LocalPage(props) {
+  useUrlLanguage(props.lang)
+  var Page = props.Page
+  return <Page />
 }
 
 function PageFallback() {
@@ -168,7 +190,7 @@ function AppInner() {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/:lng" element={<LangHome />} />
-          <Route path="/:lng/:slug" element={<LandingPage />} />
+          <Route path="/:lng/:slug" element={<LangSlug />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>

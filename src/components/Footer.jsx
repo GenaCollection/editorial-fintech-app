@@ -4,6 +4,7 @@ import { useLanguage } from '../context/LanguageContext.jsx'
 import { t } from '../i18n/labels.js'
 import { LANDINGS, LANDING_UI, landingPath } from '../seo/landings.js'
 import { RATE_PAGES, ratePagePath } from '../seo/rates.js'
+import { localPathFor } from '../seo/localPages.js'
 
 export default function Footer() {
   var langCtx = useLanguage()
@@ -27,12 +28,12 @@ export default function Footer() {
             </div>
             <div className="space-y-2">
               <Link to="/" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'nav', 'calc')}</Link>
-              <Link to="/schedule" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'nav', 'sched')}</Link>
+              <Link to={localPathFor('/schedule', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'nav', 'sched')}</Link>
               <Link to="/early" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'nav', 'early')}</Link>
-              <Link to="/compare" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'compare')}</Link>
-              <Link to="/deposit" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'dep', 'title')}</Link>
-              <Link to="/banks" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'banks', 'title')}</Link>
-              <Link to="/offers" className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'offers')}</Link>
+              <Link to={localPathFor('/compare', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'compare')}</Link>
+              <Link to={localPathFor('/deposit', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'dep', 'title')}</Link>
+              <Link to={localPathFor('/banks', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'banks', 'title')}</Link>
+              <Link to={localPathFor('/offers', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'offers')}</Link>
               <Link to="/pro" className="block text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">ArmFinCredit Pro</Link>
             </div>
           </div>

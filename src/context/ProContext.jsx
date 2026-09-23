@@ -136,15 +136,19 @@ export function ProProvider(props) {
     })
   }, [])
 
-  var recordAiUse = useCallback(function() {
+  // One AI request used. `serverLeft` (from /api/ai) keeps the counter in
+  // step with the server, which counts per browser across tabs and devices.
+  var aiPerDay = limits.aiPerDay
+  var recordAiUse = useCallback(function(serverLeft) {
     setState(function(prev) {
       var d = today()
       var count = prev.ai && prev.ai.date === d ? prev.ai.count + 1 : 1
+      if (typeof serverLeft === 'number' && isFinite(serverLeft)) count = Math.max(count, aiPerDay - serverLeft)
       var next = Object.assign({}, prev, { ai: { date: d, count: count } })
       writeLS(next)
       return next
     })
-  }, [])
+  }, [aiPerDay])
 
   var openUpgrade = useCallback(function(reason) { setUpgradeReason(reason || 'generic') }, [])
   var closeUpgrade = useCallback(function() { setUpgradeReason(null) }, [])

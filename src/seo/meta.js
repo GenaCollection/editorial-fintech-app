@@ -1,6 +1,7 @@
 import { LANGS, LANG_TO_URL } from '../config/site.js'
 import { LANDINGS, landingPath } from './landings.js'
 import { RATE_PAGES, ratePagePath, ratePageSeo } from './rates.js'
+import { LOCAL_PAGES, localPath, localAlternates } from './localPages.js'
 
 // Titles and descriptions for the app's own pages (per language).
 var PAGES = {
@@ -172,6 +173,11 @@ export function pageSeo(key, lang, path) {
   }
   if (p.noindex) m.noindex = true
   if (key === 'home') m.alternates = LANG_HOMES
+  // Tools with per-language URLs: canonical is the URL of the shown language.
+  if (LOCAL_PAGES[key] && !path) {
+    m.path = localPath(key, LANG_TO_URL[lang] ? lang : 'EN')
+    m.alternates = localAlternates(key)
+  }
   return m
 }
 
@@ -199,13 +205,13 @@ export function landingSeo(landing, lang) {
 export function prerenderRoutes() {
   var routes = [
     { path: '/', lang: 'EN', priority: '1.0' },
-    { path: '/schedule', lang: 'EN', priority: '0.8' },
+    { path: '/schedule', lang: 'EN', sitemap: false },
     { path: '/early', lang: 'EN', priority: '0.8' },
-    { path: '/compare', lang: 'EN', priority: '0.8' },
-    { path: '/offers', lang: 'EN', priority: '0.7' },
+    { path: '/compare', lang: 'EN', sitemap: false },
+    { path: '/offers', lang: 'EN', sitemap: false },
     { path: '/widget', lang: 'EN', priority: '0.6' },
-    { path: '/deposit', lang: 'EN', priority: '0.9' },
-    { path: '/banks', lang: 'EN', priority: '0.7' },
+    { path: '/deposit', lang: 'EN', sitemap: false },
+    { path: '/banks', lang: 'EN', sitemap: false },
     { path: '/pro', lang: 'EN', priority: '0.6' },
     { path: '/privacy', lang: 'EN', priority: '0.2' },
     { path: '/terms', lang: 'EN', priority: '0.2' },
@@ -218,6 +224,12 @@ export function prerenderRoutes() {
   LANDINGS.forEach(function(landing) {
     LANGS.forEach(function(l) {
       routes.push({ path: landingPath(landing, l), lang: l, priority: '0.9', alternates: landingSeo(landing, l).alternates })
+    })
+  })
+  var LOCAL_PRIORITY = { deposit: '0.9', banks: '0.8', offers: '0.8', compare: '0.8', schedule: '0.8' }
+  Object.keys(LOCAL_PAGES).forEach(function(key) {
+    LANGS.forEach(function(l) {
+      routes.push({ path: localPath(key, l), lang: l, priority: LOCAL_PRIORITY[key] || '0.7', alternates: localAlternates(key) })
     })
   })
   RATE_PAGES.forEach(function(page) {

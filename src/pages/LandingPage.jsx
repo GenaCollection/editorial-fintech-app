@@ -5,6 +5,8 @@ import { t } from '../i18n/labels.js'
 import { LANDINGS, LANDING_UI, findLanding, landingPath } from '../seo/landings.js'
 import { RATE_PAGES, RATES_UI, findRatePage, ratePagePath, ratePageSeo, ratePageText, rateRows, rateFaq, rateLabel } from '../seo/rates.js'
 import { OFFERS_AS_OF } from '../config/bankOffers.js'
+import { LANG_TO_URL } from '../config/site.js'
+import { localPathFor } from '../seo/localPages.js'
 import { landingSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
 import MiniCalculator from '../components/MiniCalculator.jsx'
@@ -124,7 +126,7 @@ function Landing(props) {
               </Link>
             )
           })}
-          <Link to="/compare" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm font-bold text-slate-700 dark:text-slate-200 hover:border-blue-400">
+          <Link to={localPathFor('/compare', lang)} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm font-bold text-slate-700 dark:text-slate-200 hover:border-blue-400">
             <span className="material-symbols-outlined text-blue-600" style={{fontSize:'18px'}}>compare_arrows</span>
             {t(lang, 'menu', 'compare')}
           </Link>
@@ -159,7 +161,7 @@ function RatesLanding(props) {
       <nav aria-label="Breadcrumb" className="text-xs text-slate-400 mb-4">
         <Link to="/" className="hover:text-blue-600">ArmFinCredit</Link>
         <span className="mx-1.5">/</span>
-        <Link to="/banks" className="hover:text-blue-600">{t(lang, 'banks', 'title')}</Link>
+        <Link to={localPathFor('/banks', lang)} className="hover:text-blue-600">{t(lang, 'banks', 'title')}</Link>
         <span className="mx-1.5">/</span>
         <span>{page.short[lang]}</span>
       </nav>
@@ -170,11 +172,11 @@ function RatesLanding(props) {
       <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed mb-6 max-w-3xl">{tx.intro}</p>
 
       <div className="flex flex-wrap gap-3 mb-8">
-        <Link to={page.calc} className="inline-flex items-center gap-2 px-5 py-3 bg-brand-gradient text-white rounded-2xl font-extrabold shadow-lg shadow-blue-700/25 hover:opacity-95">
+        <Link to={page.calc === '/' ? '/' + LANG_TO_URL[lang] : localPathFor(page.calc, lang)} className="inline-flex items-center gap-2 px-5 py-3 bg-brand-gradient text-white rounded-2xl font-extrabold shadow-lg shadow-blue-700/25 hover:opacity-95">
           <span className="material-symbols-outlined" style={{fontSize:'18px'}}>calculate</span>{RATES_UI.calc[lang]}
         </Link>
         {page.kind !== 'deposit' && (
-          <Link to="/offers" className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-extrabold border-2 border-blue-600 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20">
+          <Link to={localPathFor('/offers', lang)} className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-extrabold border-2 border-blue-600 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20">
             {RATES_UI.compare[lang]}
           </Link>
         )}
@@ -209,7 +211,7 @@ function RatesLanding(props) {
       </div>
       <p className="text-xs text-slate-400 mb-2">{RATES_UI.asOf[lang]} {OFFERS_AS_OF}. {RATES_UI.warn[lang]}</p>
       <p className="text-sm mb-10">
-        <Link to="/banks" className="font-bold text-blue-600 dark:text-blue-400 hover:underline">{RATES_UI.more[lang]} →</Link>
+        <Link to={localPathFor('/banks', lang)} className="font-bold text-blue-600 dark:text-blue-400 hover:underline">{RATES_UI.more[lang]} →</Link>
       </p>
 
       <AdSlot placement="landing" className="mb-12" />

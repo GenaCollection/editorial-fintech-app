@@ -10,6 +10,7 @@ import AdSlot from '../components/AdSlot.jsx'
 import '../styles/print.css'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
+import { localPathFor } from '../seo/localPages.js'
 
 var SYM = '\u058f'
 
@@ -570,7 +571,7 @@ export default function CalculatorPage() {
 
           {/* Action buttons */}
           <div className="flex gap-3">
-            <button onClick={function() { navigate('/schedule') }}
+            <button onClick={function() { navigate(localPathFor('/schedule', lang)) }}
               className="flex-1 bg-blue-700 text-white py-4 rounded-xl font-bold hover:bg-blue-800 active:scale-95 transition-all">
               {t(lang,'calc','viewFull')}
             </button>
@@ -599,7 +600,7 @@ export default function CalculatorPage() {
           </div>
 
           {/* Affiliate funnel: compare the current calculation with partner offers */}
-          <button onClick={function() { navigate('/offers') }}
+          <button onClick={function() { navigate(localPathFor('/offers', lang)) }}
             className="w-full group flex items-center gap-4 text-left rounded-3xl border border-emerald-200 dark:border-emerald-900 bg-emerald-50/70 dark:bg-emerald-950/30 px-5 py-4 hover:border-emerald-400 transition-all">
             <span className="w-11 h-11 shrink-0 rounded-2xl bg-emerald-500 text-white flex items-center justify-center">
               <span className="material-symbols-outlined">savings</span>

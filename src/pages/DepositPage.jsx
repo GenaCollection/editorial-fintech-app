@@ -5,6 +5,7 @@ import { t } from '../i18n/labels.js'
 import { projectDeposit } from '../lib/deposit.js'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
+import { localPathFor } from '../seo/localPages.js'
 import AdSlot from '../components/AdSlot.jsx'
 
 var SYM = '֏'
@@ -174,7 +175,7 @@ export default function DepositPage() {
             </div>
             <GrowthChart rows={res.rows} lang={lang} />
           </div>
-          <Link to="/banks" className="group flex items-center gap-4 rounded-3xl border border-blue-200 dark:border-blue-900 bg-blue-50/70 dark:bg-blue-950/30 px-5 py-4 hover:border-blue-400 transition-all">
+          <Link to={localPathFor('/banks', lang)} className="group flex items-center gap-4 rounded-3xl border border-blue-200 dark:border-blue-900 bg-blue-50/70 dark:bg-blue-950/30 px-5 py-4 hover:border-blue-400 transition-all">
             <span className="w-11 h-11 shrink-0 rounded-2xl bg-blue-700 text-white flex items-center justify-center">
               <span className="material-symbols-outlined">account_balance</span>
             </span>

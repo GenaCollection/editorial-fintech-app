@@ -1,4 +1,5 @@
 import { validateLicense, readJson, clientIp } from './_lib/license.js'
+import { takeQuota, quotaStore, hashId } from './_lib/quota.js'
 
 // /api/ai — proxies the AI loan advisor to any OpenAI-compatible
 // chat-completions endpoint, so the API key never reaches the browser.
@@ -13,7 +14,10 @@ import { validateLicense, readJson, clientIp } from './_lib/license.js'
 //   OpenRouter               AI_BASE_URL=https://openrouter.ai/api/v1   AI_MODEL=<any ":free" model>
 //
 // Env: AI_API_KEY (required), AI_BASE_URL, AI_MODEL,
-//      AI_FREE_PER_DAY (default 2), AI_PRO_PER_DAY (default 120)
+//      AI_FREE_PER_DAY (default 2), AI_PRO_PER_DAY (default 120),
+//      AI_IP_PER_DAY (default 30, free requests per IP across browsers)
+//      Counters live in Redis when KV_REST_API_URL/KV_REST_API_TOKEN are set
+//      (Vercel Storage → Upstash Redis), see api/_lib/quota.js.
 
 var GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/openai'
 // Tried in order when AI_MODEL is unset or no longer exists, so a retired
@@ -23,20 +27,6 @@ var LANG_NAME = { AM: 'Armenian', RU: 'Russian', EN: 'English' }
 var ATTEMPT_TIMEOUT_MS = 20000
 var TOTAL_BUDGET_MS = 26000
 
-// Best-effort per-instance quota. Serverless instances are short-lived, so this
-// only stops casual abuse; the client-side counter drives the upsell UX.
-var usage = new Map()
-
-function overQuota(id, limit) {
-  var day = new Date().toISOString().slice(0, 10)
-  var u = usage.get(id)
-  if (!u || u.day !== day) u = { day: day, count: 0 }
-  if (u.count >= limit) return true
-  u.count++
-  usage.set(id, u)
-  if (usage.size > 5000) usage.clear()
-  return false
-}
 
 function num(v) { var n = Number(v); return isFinite(n) ? n : 0 }
 
@@ -134,6 +124,7 @@ async function healthCheck(req, res) {
   var out = {
     configured: !!cfg.key,
     keyHint: cfg.key ? cfg.key.slice(0, 4) + '…' + cfg.key.slice(-2) + ' (' + cfg.key.length + ' chars)' : null,
+    quotaStore: quotaStore(),
     provider: cfg.base.replace(/^https?:\/\//, '').split('/')[0],
     models: cfg.models
   }
@@ -147,7 +138,9 @@ async function healthCheck(req, res) {
     out.hint = 'Set AI_MODEL for a non-Gemini provider.'
     return res.status(200).json(out)
   }
-  if (overQuota('health:' + clientIp(req), 20)) return res.status(429).json({ error: 'quota' })
+  var hq = await takeQuota([{ id: 'health:' + hashId(clientIp(req)), limit: 20 }])
+  out.quotaStore = hq.store
+  if (!hq.ok) return res.status(429).json({ error: 'quota' })
   var t0 = Date.now()
   var r = await callProvider(cfg, [{ role: 'user', content: 'Reply with the single word OK.' }], 512)
   out.ok = r.ok
@@ -180,12 +173,20 @@ export default async function handler(req, res) {
 
   var isPro = false
   if (body.licenseKey) isPro = (await validateLicense(body.licenseKey)).valid
-  var limit = isPro ? num(process.env.AI_PRO_PER_DAY || 120) : num(process.env.AI_FREE_PER_DAY || 2)
-  var quotaId = isPro ? 'lic:' + body.licenseKey : 'ip:' + clientIp(req)
-  if (overQuota(quotaId, limit)) return res.status(429).json({ error: 'quota' })
+  // Free: per browser (anonymous id) plus a per-IP cap against scripted
+  // abuse — high enough for people sharing one mobile-carrier IP.
+  var ipId = hashId(clientIp(req))
+  var cid = typeof body.clientId === 'string' && /^[A-Za-z0-9-]{8,64}$/.test(body.clientId) ? body.clientId : 'ip-' + ipId
+  var checks = isPro
+    ? [{ id: 'lic:' + hashId(body.licenseKey), limit: num(process.env.AI_PRO_PER_DAY || 120) }]
+    : [{ id: 'cid:' + hashId(cid), limit: num(process.env.AI_FREE_PER_DAY || 2) },
+       { id: 'ip:' + ipId, limit: num(process.env.AI_IP_PER_DAY || 30) }]
+  var q = await takeQuota(checks)
+  if (!q.ok) return res.status(429).json({ error: 'quota', left: 0 })
 
   var r = await callProvider(cfg, [{ role: 'system', content: systemPrompt(body.lang, body.loan) }].concat(messages), 2048)
-  if (r.ok) return res.status(200).json({ reply: r.reply })
+  if (r.ok) return res.status(200).json({ reply: r.reply, left: q.left })
+  await q.refund() // a failed answer does not use up the daily allowance
   console.error('[api/ai] provider error', r.status, r.model, r.detail)
   return res.status(r.status === 429 ? 429 : 502).json({
     error: r.status === 429 ? 'provider_quota' : 'provider_error',

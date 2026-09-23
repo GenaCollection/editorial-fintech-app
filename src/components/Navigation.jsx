@@ -5,6 +5,7 @@ import { useSaved } from '../context/SavedContext.jsx'
 import { usePro } from '../context/ProContext.jsx'
 import { t } from '../i18n/labels.js'
 import { alternatePath } from '../seo/landings.js'
+import { localPathFor } from '../seo/localPages.js'
 
 var LINKS = [
   { to: '/',         icon: 'calculate',      label: function(l) { return t(l,'nav','calc') } },
@@ -55,8 +56,12 @@ export default function Navigation(props) {
   }, [])
   useEffect(function() { setOpen(false) }, [loc.pathname])
 
+  function isActive(path) {
+    return loc.pathname === path || (path !== '/' && loc.pathname === localPathFor(path, language))
+  }
+
   function lc(path) {
-    var active = loc.pathname === path
+    var active = isActive(path)
     return 'relative px-2.5 py-2 rounded-xl text-sm font-bold transition-colors ' +
       (active ? 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-slate-800/70')
@@ -76,7 +81,7 @@ export default function Navigation(props) {
         <div className="hidden xl:flex items-center gap-0.5">
           {LINKS.map(function(l) {
             return (
-              <Link key={l.to} className={lc(l.to)} to={l.to}>
+              <Link key={l.to} className={lc(l.to)} to={localPathFor(l.to, language)}>
                 {l.label(language)}
                 {l.to === '/saved' && saves.length > 0 && (
                   <span className="ml-1.5 bg-blue-700 text-white text-[10px] font-black min-w-4 h-4 px-1 rounded-full inline-flex items-center justify-center align-middle">
@@ -120,9 +125,9 @@ export default function Navigation(props) {
           <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm animate-fade-in" onClick={function() { setOpen(false) }} />
           <div className="absolute top-16 left-3 right-3 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl p-2 animate-slide-down border border-slate-200/60 dark:border-slate-800">
             {LINKS.map(function(l) {
-              var active = loc.pathname === l.to
+              var active = isActive(l.to)
               return (
-                <Link key={l.to} to={l.to}
+                <Link key={l.to} to={localPathFor(l.to, language)}
                   className={'flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold ' +
                     (active ? 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800')}>
                   <span className="material-symbols-outlined" style={{fontSize:'20px'}}>{l.icon}</span>

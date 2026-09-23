@@ -69,7 +69,7 @@ export default function WidgetPage() {
     else done()
   }
 
-  var features = [['volunteer_activism', 'f1'], ['height', 'f2'], ['palette', 'f3']]
+  var features = [{ icon: 'volunteer_activism', key: 'f1' }, { icon: 'height', key: 'f2' }, { icon: 'palette', key: 'f3' }]
 
   return (
     <main className="flex-1 pt-24 pb-24 px-4 md:px-8 w-full max-w-6xl mx-auto animate-fade-up">
@@ -87,10 +87,10 @@ export default function WidgetPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
         {features.map(function(f) {
           return (
-            <div key={f[1]} className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 p-5">
-              <span className="material-symbols-outlined text-blue-600 mb-2 block">{f[0]}</span>
-              <p className="font-extrabold text-slate-900 dark:text-white">{t(lang,'widget',f[1])}</p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">{t(lang,'widget',f[1] + 'd')}</p>
+            <div key={f.key} className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 p-5">
+              <span className="material-symbols-outlined text-blue-600 mb-2 block">{f.icon}</span>
+              <p className="font-extrabold text-slate-900 dark:text-white">{t(lang,'widget',f.key)}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{t(lang,'widget',f.key + 'd')}</p>
             </div>
           )
         })}

@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import prerender from './scripts/prerender.js'
+import { scanIcons } from './scripts/icons.js'
 
 // Serves the Vercel functions in /api during `npm run dev`, so the AI advisor
 // and license checks work locally without the Vercel CLI.
@@ -26,11 +27,24 @@ function vercelApiDev() {
   }
 }
 
+// Loads only the Material Symbols glyphs the app uses (icon_names=…, sorted),
+// a few KB instead of the whole icon font.
+function iconSubset() {
+  return {
+    name: 'icon-subset',
+    transformIndexHtml(html) {
+      var names = scanIcons(new URL('./src', import.meta.url).pathname)
+      if (!names.length) throw new Error('icon-subset: no icons found in src/')
+      return html.replace('__ICON_NAMES__', names.join(','))
+    }
+  }
+}
+
 export default defineConfig(function(ctx) {
   // Expose non-VITE_ vars (AI_API_KEY, …) to the dev API handlers only.
   Object.assign(process.env, loadEnv(ctx.mode, process.cwd(), ''))
   return {
-    plugins: [react(), vercelApiDev(), prerender()],
+    plugins: [react(), iconSubset(), vercelApiDev(), prerender()],
     base: '/',
     build: ctx.isSsrBuild ? {} : {
       rollupOptions: {
