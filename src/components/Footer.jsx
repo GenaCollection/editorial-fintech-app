@@ -6,6 +6,7 @@ import { LANDINGS, LANDING_UI, landingPath } from '../seo/landings.js'
 import { RATE_PAGES, ratePagePath } from '../seo/rates.js'
 import { localPathFor } from '../seo/localPages.js'
 import { mailto } from '../config/monetization.js'
+import { guidesIndexPath } from '../content/articles.js'
 
 export default function Footer() {
   var langCtx = useLanguage()
@@ -37,6 +38,8 @@ export default function Footer() {
               <Link to={localPathFor('/offers', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'offers')}</Link>
               <Link to={localPathFor('/exchange-rates', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'fx', 'title')}</Link>
               <Link to={localPathFor('/partners', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'partners')}</Link>
+              <Link to={guidesIndexPath(lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'guides')}</Link>
+              <Link to={localPathFor('/about', lang)} className="block text-sm text-slate-500 hover:text-blue-600 transition-colors">{t(lang, 'menu', 'about')}</Link>
               <Link to="/pro" className="block text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">ArmFinCredit Pro</Link>
             </div>
           </div>

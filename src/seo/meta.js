@@ -1,7 +1,8 @@
-import { LANGS, LANG_TO_URL } from '../config/site.js'
+import { LANGS, LANG_TO_URL, SITE_URL } from '../config/site.js'
 import { LANDINGS, landingPath } from './landings.js'
 import { RATE_PAGES, ratePagePath, ratePageSeo } from './rates.js'
 import { LOCAL_PAGES, localPath, localAlternates } from './localPages.js'
+import { ARTICLES, ARTICLES_UPDATED, GUIDES_INDEX, articlePath, guidesIndexPath, articleAlternates, guidesAlternates } from '../content/articles.js'
 
 // Titles and descriptions for the app's own pages (per language).
 var PAGES = {
@@ -135,6 +136,19 @@ var PAGES = {
       AM: 'Համագործակցություն ArmFinCredit-ի հետ՝ վճար հայտի դիմաց, տեղադրում համեմատություններում և դրույքների էջերում, հաշվիչի վիջեթ։'
     }
   },
+  about: {
+    path: '/about',
+    title: {
+      EN: 'About ArmFinCredit — Data Sources and Contacts',
+      RU: 'О проекте ArmFinCredit — источники данных и контакты',
+      AM: 'ArmFinCredit-ի մասին՝ տվյալների աղբյուրներ և կոնտակտներ'
+    },
+    description: {
+      EN: 'Who runs ArmFinCredit, where the rates and exchange rates come from, how the free calculators are funded and how to contact us.',
+      RU: 'Кто делает ArmFinCredit, откуда ставки банков и курсы валют, как финансируются бесплатные калькуляторы и как с нами связаться.',
+      AM: 'Ով է ստեղծում ArmFinCredit-ը, որտեղից են բանկերի դրույքներն ու փոխարժեքները, ինչպես են ֆինանսավորվում հաշվիչները և ինչպես կապվել մեզ հետ։'
+    }
+  },
   widget: {
     path: '/widget',
     title: {
@@ -240,6 +254,7 @@ export function prerenderRoutes() {
     { path: '/banks', lang: 'EN', sitemap: false },
     { path: '/exchange-rates', lang: 'EN', sitemap: false },
     { path: '/partners', lang: 'EN', sitemap: false },
+    { path: '/about', lang: 'EN', sitemap: false },
     { path: '/pro', lang: 'EN', priority: '0.6' },
     { path: '/privacy', lang: 'EN', priority: '0.2' },
     { path: '/terms', lang: 'EN', priority: '0.2' },
@@ -254,10 +269,16 @@ export function prerenderRoutes() {
       routes.push({ path: landingPath(landing, l), lang: l, priority: '0.9', alternates: landingSeo(landing, l).alternates })
     })
   })
-  var LOCAL_PRIORITY = { deposit: '0.9', fx: '0.9', banks: '0.8', offers: '0.8', compare: '0.8', schedule: '0.8', partners: '0.5' }
+  var LOCAL_PRIORITY = { deposit: '0.9', fx: '0.9', banks: '0.8', offers: '0.8', compare: '0.8', schedule: '0.8', partners: '0.5', about: '0.5' }
   Object.keys(LOCAL_PAGES).forEach(function(key) {
     LANGS.forEach(function(l) {
       routes.push({ path: localPath(key, l), lang: l, priority: LOCAL_PRIORITY[key] || '0.7', alternates: localAlternates(key) })
+    })
+  })
+  LANGS.forEach(function(l) {
+    routes.push({ path: guidesIndexPath(l), lang: l, priority: '0.7', alternates: guidesAlternates() })
+    ARTICLES.forEach(function(a) {
+      routes.push({ path: articlePath(a, l), lang: l, priority: '0.8', alternates: articleAlternates(a) })
     })
   })
   RATE_PAGES.forEach(function(page) {
@@ -267,4 +288,39 @@ export function prerenderRoutes() {
   })
   routes[0].alternates = LANG_HOMES
   return routes
+}
+
+var ORG = { '@type': 'Organization', name: 'ArmFinCredit', url: SITE_URL + '/' }
+
+export function articleSeo(a, lang) {
+  var c = a.content[lang]
+  var path = articlePath(a, lang)
+  return {
+    title: c.title, description: c.description, path: path, lang: LANG_TO_URL[lang],
+    alternates: articleAlternates(a),
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Article', headline: c.h1, description: c.description, inLanguage: LANG_TO_URL[lang],
+          dateModified: ARTICLES_UPDATED, author: ORG, publisher: ORG, mainEntityOfPage: SITE_URL + path
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'ArmFinCredit', item: SITE_URL + '/' },
+            { '@type': 'ListItem', position: 2, name: GUIDES_INDEX.h1[lang], item: SITE_URL + guidesIndexPath(lang) },
+            { '@type': 'ListItem', position: 3, name: c.h1, item: SITE_URL + path }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+export function guidesSeo(lang) {
+  return {
+    title: GUIDES_INDEX.title[lang], description: GUIDES_INDEX.description[lang],
+    path: guidesIndexPath(lang), lang: LANG_TO_URL[lang], alternates: guidesAlternates()
+  }
 }

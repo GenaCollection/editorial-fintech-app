@@ -4,6 +4,8 @@ import { prerenderRoutes, pageSeo, landingSeo } from '../src/seo/meta.js'
 import { LANDINGS, landingPath, findLanding, alternatePath } from '../src/seo/landings.js'
 import { RATE_PAGES, ratePagePath, ratePageSeo, findRatePage, rateFaq } from '../src/seo/rates.js'
 import { LOCAL_PAGES, localPath, findLocalPage, localPathFor } from '../src/seo/localPages.js'
+import { ARTICLES, GUIDES_INDEX, articlePath, guidesIndexPath, findArticle } from '../src/content/articles.js'
+import { articleSeo, guidesSeo } from '../src/seo/meta.js'
 
 var LANGS = ['AM', 'RU', 'EN']
 
@@ -30,6 +32,8 @@ test('/<lang>/<slug> URLs never collide between landings, rate pages and tools',
     LANDINGS.forEach(function(x) { claim(landingPath(x, l), 'landing ' + x.key) })
     RATE_PAGES.forEach(function(x) { claim(ratePagePath(x, l), 'rates ' + x.key) })
     Object.keys(LOCAL_PAGES).forEach(function(k) { claim(localPath(k, l), 'tool ' + k) })
+    ARTICLES.forEach(function(a) { claim(articlePath(a, l), 'article ' + a.key) })
+    claim(guidesIndexPath(l), 'guides index')
   })
 })
 
@@ -64,6 +68,8 @@ test('titles and descriptions are present and sane in every language', function(
     ;['home', 'early', 'pro', 'widget'].concat(Object.keys(LOCAL_PAGES)).forEach(function(k) { metas.push(pageSeo(k, l)) })
     LANDINGS.forEach(function(x) { metas.push(landingSeo(x, l)) })
     RATE_PAGES.forEach(function(x) { metas.push(ratePageSeo(x, l)) })
+    ARTICLES.forEach(function(a) { metas.push(articleSeo(a, l)) })
+    metas.push(guidesSeo(l))
   })
   metas.forEach(function(m) {
     assert.ok(m.title && m.title.length >= 15 && m.title.length <= 100, 'title: ' + m.title)
@@ -80,4 +86,18 @@ test('rate pages have FAQ answers built from data', function() {
       faq.forEach(function(q) { assert.ok(q[0] && q[1] && !/undefined|NaN/.test(q[1]), x.key + ' ' + l) })
     })
   })
+})
+
+test('guides are complete in every language and resolve from their URLs', function() {
+  LANGS.forEach(function(l) {
+    assert.ok(findArticle(guidesIndexPath(l)).index)
+    ARTICLES.forEach(function(a) {
+      var c = a.content[l]
+      assert.ok(c && c.h1 && c.intro && c.sections.length >= 3, a.key + ' ' + l)
+      c.sections.forEach(function(s) { assert.ok(s[0] && s[1].length && s[1].every(Boolean), a.key + ' ' + l + ' section') })
+      assert.equal(findArticle(articlePath(a, l)).article.key, a.key)
+      assert.equal(alternatePath(articlePath(a, 'EN'), l), articlePath(a, l))
+    })
+  })
+  assert.ok(GUIDES_INDEX.h1.RU)
 })

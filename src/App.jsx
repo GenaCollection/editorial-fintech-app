@@ -14,6 +14,7 @@ import { URL_TO_LANG } from './config/site.js'
 import { findLanding } from './seo/landings.js'
 import { findRatePage } from './seo/rates.js'
 import { findLocalPage } from './seo/localPages.js'
+import { findArticle } from './content/articles.js'
 
 // Code-split pages that can be preloaded before the first render, so a
 // prerendered page is replaced by the same page instead of a spinner.
@@ -38,6 +39,8 @@ var DepositPage  = lazyPage(function() { return import('./pages/DepositPage.jsx'
 var BanksPage    = lazyPage(function() { return import('./pages/BanksPage.jsx') })
 var FxPage       = lazyPage(function() { return import('./pages/FxPage.jsx') })
 var PartnersPage = lazyPage(function() { return import('./pages/PartnersPage.jsx') })
+var AboutPage    = lazyPage(function() { return import('./pages/AboutPage.jsx') })
+var ArticlePage  = lazyPage(function() { return import('./pages/ArticlePage.jsx') })
 var LandingPage  = lazyPage(function() { return import('./pages/LandingPage.jsx') })
 var PrivacyPage  = lazyPage(function() { return import('./pages/PrivacyPage.jsx') })
 var TermsPage    = lazyPage(function() { return import('./pages/TermsPage.jsx') })
@@ -46,7 +49,7 @@ var NotFoundPage = lazyPage(function() { return import('./pages/NotFoundPage.jsx
 var PAGES = {
   '/schedule': SchedulePage, '/early': EarlyPage, '/compare': ComparePage,
   '/saved': SavedPage, '/offers': OffersPage, '/pro': PricingPage,
-  '/widget': WidgetPage, '/deposit': DepositPage, '/banks': BanksPage, '/exchange-rates': FxPage, '/partners': PartnersPage, '/embed': EmbedPage, '/privacy': PrivacyPage, '/terms': TermsPage
+  '/widget': WidgetPage, '/deposit': DepositPage, '/banks': BanksPage, '/exchange-rates': FxPage, '/partners': PartnersPage, '/about': AboutPage, '/embed': EmbedPage, '/privacy': PrivacyPage, '/terms': TermsPage
 }
 
 function isLangHome(pathname) {
@@ -61,13 +64,14 @@ export function preloadRoute(pathname) {
   if (PAGES[path]) return PAGES[path].preload()
   var local = findLocalPage(path)
   if (local) return PAGES[local.path].preload()
+  if (findArticle(path)) return ArticlePage.preload()
   if (findLanding(path) || findRatePage(path)) return LandingPage.preload()
   return NotFoundPage.preload()
 }
 
 export function preloadAll() {
   return Promise.all(Object.keys(PAGES).map(function(k) { return PAGES[k].preload() })
-    .concat([LandingPage.preload(), NotFoundPage.preload()]))
+    .concat([LandingPage.preload(), ArticlePage.preload(), NotFoundPage.preload()]))
 }
 
 function getInitialTheme() {
@@ -138,6 +142,8 @@ function LangSlug() {
   var path = useLocation().pathname
   var local = findLocalPage(path)
   if (local) return <LocalPage key={path} lang={local.lang} Page={PAGES[local.path]} />
+  var article = findArticle(path)
+  if (article) return <LocalPage key={path} lang={article.lang} Page={ArticlePage} />
   return <LandingPage />
 }
 
@@ -191,6 +197,7 @@ function AppInner() {
           <Route path="/banks" element={<BanksPage />} />
           <Route path="/exchange-rates" element={<FxPage />} />
           <Route path="/partners" element={<PartnersPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/:lng" element={<LangHome />} />

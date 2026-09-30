@@ -1,6 +1,7 @@
 import { LANG_TO_URL, URL_TO_LANG } from '../config/site.js'
 import { findRatePage, ratePagePath } from './rates.js'
 import { localKeyOf, localPath } from './localPages.js'
+import { findArticle, articlePath, guidesIndexPath } from '../content/articles.js'
 
 // SEO landing pages: one topic × three languages, each with its own URL
 // (/hy/…, /ru/…, /en/…) so every language version can rank on its own.
@@ -273,6 +274,8 @@ export function alternatePath(pathname, lang) {
   if (rp) return ratePagePath(rp.page, lang)
   var localKey = localKeyOf(pathname)
   if (localKey) return localPath(localKey, lang)
+  var art = findArticle(pathname)
+  if (art) return art.index ? guidesIndexPath(lang) : articlePath(art.article, lang)
   var parts = String(pathname || '').split('/').filter(Boolean)
   if (parts.length === 1 && URL_TO_LANG[parts[0]]) return '/' + LANG_TO_URL[lang]
   return null

@@ -143,6 +143,8 @@ var L = {
     banks:   { AM: 'Բանկեր',      RU: 'Банки',       EN: 'Banks' },
     fx:      { AM: 'Փոխարժեք',    RU: 'Курсы',       EN: 'Rates' },
     partners:{ AM: 'Բանկերի համար', RU: 'Банкам',    EN: 'For banks' },
+    guides:  { AM: 'Ուղեցույցներ', RU: 'Гайды',      EN: 'Guides' },
+    about:   { AM: 'Մեր մասին',   RU: 'О проекте',   EN: 'About' },
     pro:     { AM: 'Pro',         RU: 'Pro',         EN: 'Pro' },
     trial:   { AM: 'Փորձ',        RU: 'Пробный',     EN: 'Trial' },
     daysLeft:{ AM: 'օր',          RU: 'дн.',         EN: 'd left' }

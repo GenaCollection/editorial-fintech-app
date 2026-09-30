@@ -3,6 +3,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { scanIcons } from './icons.js'
 import { fetchRates } from '../api/_lib/fx.js'
+import { submitIndexNow } from './indexnow.js'
 
 // Vite plugin: after the client build, builds src/entry-server.jsx for Node,
 // renders every public route to static HTML (dist/<route>.html, served by
@@ -73,6 +74,8 @@ export default function prerender() {
           '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
           sitemap.join('\n') + '\n</urlset>\n')
         config.logger.info('\n✓ prerendered ' + routes.length + ' pages + sitemap.xml')
+        await submitIndexNow(mod.SITE_URL, routes.filter(function(r) { return r.sitemap !== false })
+          .map(function(r) { return mod.SITE_URL + (r.path === '/' ? '/' : r.path) }), config.logger)
       } finally {
         fs.rmSync(ssrDir, { recursive: true, force: true })
       }
