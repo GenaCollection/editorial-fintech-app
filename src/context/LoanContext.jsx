@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useMemo, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { generateAmortization, calcAPR } from '../lib/loan.js'
+import { LOAN_CURRENCIES, clampAmount } from '../lib/currency.js'
 
 // Loan math lives in src/lib/loan.js; re-exported for existing imports.
 export { generateAnnuity, generateDifferentiated, generateAmortization, calcAPR } from '../lib/loan.js'
@@ -9,7 +10,7 @@ var LoanContext = createContext(null)
 
 export function useLoan() { return useContext(LoanContext) }
 
-// Applies ?amount=&rate=&term=&type= (share links, widget, landing pages) to
+// Applies ?amount=&rate=&term=&type=&cur= (share links, widget, landing pages) to
 // the shared loan state once, when the page mounts.
 export function useLoanParamsFromUrl() {
   var setLoanState = useContext(LoanContext).setLoanState
@@ -17,15 +18,18 @@ export function useLoanParamsFromUrl() {
   useEffect(function() {
     var a = Number(searchParams.get('amount')); var r = Number(searchParams.get('rate'))
     var m = Number(searchParams.get('term'));   var tp = searchParams.get('type')
-    if (a > 0 || r > 0 || m > 0) {
+    var c = String(searchParams.get('cur') || '').toUpperCase()
+    if (!LOAN_CURRENCIES[c]) c = ''
+    if (a > 0 || r > 0 || m > 0 || c) {
       setLoanState(function(prev) {
-        return {
-          amount:    a > 0 ? Math.min(100000000, Math.max(100000, a)) : prev.amount,
+        var cur = c || prev.currency || 'AMD'
+        return Object.assign({}, prev, {
+          currency:  cur,
+          amount:    a > 0 ? clampAmount(a, cur) : clampAmount(prev.amount, cur),
           rate:      r > 0 ? Math.min(50, Math.max(0.1, r))           : prev.rate,
           term:      m > 0 ? Math.min(360, Math.max(1, Math.round(m))) : prev.term,
-          loanType:  tp === 'differentiated' ? 'differentiated'       : prev.loanType,
-          fee: prev.fee, insurance: prev.insurance, startDate: prev.startDate
-        }
+          loanType:  tp === 'differentiated' ? 'differentiated'       : prev.loanType
+        })
       })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -36,6 +40,7 @@ export function useLoanParamsFromUrl() {
 export function LoanProvider(props) {
   var initialState = {
     amount: 5000000, rate: 12, term: 24,
+    currency: 'AMD',
     loanType: 'annuity',
     fee: 0,
     insurance: 0,

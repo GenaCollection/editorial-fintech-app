@@ -10,9 +10,10 @@ import AdSlot from '../components/AdSlot.jsx'
 import '../styles/print.css'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
+import { CURRENCY_CODES, currencyInfo, currencySymbol, convertAmount, amdPerUnit, shortAmount } from '../lib/currency.js'
+import { useFxRates } from '../lib/fxClient.js'
 import { localPathFor } from '../seo/localPages.js'
 
-var SYM = '\u058f'
 
 // ── Pie chart (SVG, no deps) ──────────────────────────────────────────────────
 function PieChart(props) {
@@ -176,6 +177,7 @@ function StatCard(props) {
       <div className={'text-xs font-bold uppercase tracking-widest mb-1 ' + (props.accent ? 'opacity-70' : 'text-slate-400')}>{props.label}</div>
       <div className={'text-2xl md:text-3xl font-extrabold tabular-nums tracking-tight ' + (props.accent ? '' : 'text-slate-900 dark:text-white')}>{props.value}</div>
       {props.sub && <div className={'text-xs mt-1 ' + (props.accent ? 'opacity-60' : 'text-slate-400')}>{props.sub}</div>}
+      {props.note && <div className={'text-xs mt-1 font-semibold tabular-nums ' + (props.accent ? 'opacity-80' : 'text-slate-500')}>{props.note}</div>}
     </div>
   )
 }
@@ -185,6 +187,7 @@ function EarlyPanel(props) {
   var ctx = props.ctx; var loanState = ctx.loanState; var extraPayments = ctx.extraPayments
   var addExtraPayment = ctx.addExtraPayment; var removeExtraPayment = ctx.removeExtraPayment
   var schedule = ctx.schedule; var totalInterest = ctx.totalInterest; var lang = props.lang
+  var SYM = currencySymbol(loanState.currency)
   var mArr = useState(1); var epMonth = mArr[0]; var setEpMonth = mArr[1]
   var aArr = useState(''); var epAmount = aArr[0]; var setEpAmount = aArr[1]
   var baseComputed = useMemo(function() {
@@ -195,7 +198,7 @@ function EarlyPanel(props) {
   var monthsSaved = baseComputed.months > schedule.length ? baseComputed.months - schedule.length : 0
   var interestSaved = baseComputed.interest > totalInterest ? baseComputed.interest - totalInterest : 0
   var scenarios = useMemo(function() {
-    return [50000, 100000, 200000, 500000].map(function(extra) {
+    return currencyInfo(loanState.currency).extras.map(function(extra) {
       var eps = []
       for (var i = 1; i <= loanState.term; i++) eps.push({ month: i, amount: extra })
       var res = generateAmortization(loanState.amount, loanState.rate, loanState.term, eps, loanState.loanType)
@@ -286,10 +289,11 @@ function EarlyPanel(props) {
 // ── Advanced params panel ─────────────────────────────────────────────────────
 function AdvancedPanel(props) {
   var loanState = props.loanState; var setLoanState = props.setLoanState; var lang = props.lang
+  var SYM = currencySymbol(props.loanState.currency)
   function set(key) {
     return function(val) {
       setLoanState(function(prev) {
-        var n = { amount: prev.amount, rate: prev.rate, term: prev.term, loanType: prev.loanType, fee: prev.fee, insurance: prev.insurance, startDate: prev.startDate }
+        var n = Object.assign({}, prev)
         n[key] = val; return n
       })
     }
@@ -360,19 +364,33 @@ export default function CalculatorPage() {
   var printingArr = useState(false); var printing = printingArr[0]; var setPrinting = printingArr[1]
 
   var amount = loanState.amount; var rate = loanState.rate; var term = loanState.term
+  var cur = loanState.currency || 'AMD'
+  var SYM = currencySymbol(cur); var ci = currencyInfo(cur)
+  var fx = useFxRates()
+  var amdRate = cur === 'AMD' ? null : amdPerUnit(fx, cur)
+
+  // Switching currency converts the amount at the CBA rate (or resets it to a
+  // typical amount when the rate is not loaded yet).
+  function setCurrency(next) {
+    if (next === cur) return
+    setLoanState(function(prev) {
+      var conv = convertAmount(prev.amount, prev.currency || 'AMD', next, fx)
+      return Object.assign({}, prev, { currency: next, amount: conv || currencyInfo(next).def, fee: 0, insurance: 0 })
+    })
+  }
 
   function set(key, min, max) {
     return function(val) {
       var v = Math.max(min, Math.min(max, val))
       setLoanState(function(prev) {
-        var n = { amount: prev.amount, rate: prev.rate, term: prev.term, loanType: prev.loanType, fee: prev.fee, insurance: prev.insurance, startDate: prev.startDate }
+        var n = Object.assign({}, prev)
         n[key] = v; return n
       })
     }
   }
 
   function handleShare() {
-    var url = window.location.origin + '/?amount=' + amount + '&rate=' + rate + '&term=' + term + '&type=' + loanState.loanType
+    var url = window.location.origin + '/?amount=' + amount + '&rate=' + rate + '&term=' + term + '&type=' + loanState.loanType + (cur !== 'AMD' ? '&cur=' + cur : '')
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(function() { setCopied(true); setTimeout(function() { setCopied(false) }, 2000) })
     } else {
@@ -474,11 +492,25 @@ export default function CalculatorPage() {
             <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">{t(lang,'calc','payType')}</p>
               <LoanTypeToggle value={loanState.loanType}
-                onChange={function(v) { setLoanState(function(prev) { return { amount: prev.amount, rate: prev.rate, term: prev.term, loanType: v, fee: prev.fee, insurance: prev.insurance, startDate: prev.startDate } }) }}
+                onChange={function(v) { setLoanState(function(prev) { return Object.assign({}, prev, { loanType: v }) }) }}
                 lang={lang} />
-              <DualInput label={t(lang,'calc','amount')} value={amount} min={100000} max={100000000} step={100000}
-                onChange={set('amount',100000,100000000)} format={function(v) { return SYM + v.toLocaleString() }}
-                minLabel={SYM+'100K'} maxLabel={SYM+'100M'} />
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <span className="text-xs font-bold uppercase tracking-widest text-slate-400">{t(lang,'calc','currency')}</span>
+                <div className="flex bg-slate-100 dark:bg-slate-800 rounded-xl p-1 gap-1" role="group" aria-label={t(lang,'calc','currency')}>
+                  {CURRENCY_CODES.map(function(c) {
+                    var on = c === cur
+                    return (
+                      <button key={c} type="button" onClick={function() { setCurrency(c) }} aria-pressed={on}
+                        className={'px-2 py-1.5 text-xs font-black rounded-lg whitespace-nowrap transition-colors ' + (on ? 'bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-300 shadow-sm' : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200')}>
+                        {currencySymbol(c)} {c}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+              <DualInput label={t(lang,'calc','amount')} value={amount} min={ci.min} max={ci.max} step={ci.step}
+                onChange={set('amount',ci.min,ci.max)} format={function(v) { return SYM + v.toLocaleString() }}
+                minLabel={shortAmount(ci.min, cur)} maxLabel={shortAmount(ci.max, cur)} />
               <DualInput label={t(lang,'calc','rate')} value={rate} min={1} max={50} step={0.5}
                 onChange={set('rate',0.1,50)} format={function(v) { return v }} suffix="%" minLabel="1%" maxLabel="50%" />
               <DualInput label={t(lang,'calc','term')} value={term} min={1} max={360} step={1}
@@ -517,7 +549,8 @@ export default function CalculatorPage() {
           <div className="grid grid-cols-2 gap-4">
             <StatCard accent label={t(lang,'calc','monthly')}
               value={isDiff ? (SYM+Math.round(firstPayment).toLocaleString()) : (SYM+Math.round(monthlyPayment).toLocaleString())}
-              sub={isDiff ? (t(lang,'calc','firstDown')+' '+SYM+Math.round(lastPayment).toLocaleString()) : (term+' '+t(lang,'calc','months'))} />
+              sub={isDiff ? (t(lang,'calc','firstDown')+' '+SYM+Math.round(lastPayment).toLocaleString()) : (term+' '+t(lang,'calc','months'))}
+              note={amdRate ? '≈ ֏' + Math.round((isDiff ? firstPayment : monthlyPayment) * amdRate).toLocaleString() + ' · ' + t(lang,'calc','cbaRate') + ' ' + amdRate.toFixed(2) : null} />
             <StatCard label={t(lang,'calc','totalInt')} value={SYM+Math.round(totalInterest).toLocaleString()}
               sub={t(lang,'calc','total')+': '+SYM+Math.round(totalPay).toLocaleString()} />
           </div>

@@ -9,25 +9,29 @@ import AdSlot from '../components/AdSlot.jsx'
 import BankLoanCompare from '../components/BankLoanCompare.jsx'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
+import { formatMoney, amdPerUnit } from '../lib/currency.js'
+import { useFxRates } from '../lib/fxClient.js'
 
-var SYM = '֏'
-function money(n) { return SYM + Math.round(n).toLocaleString() }
 
 export default function OffersPage() {
   var loan = useLoan()
   useLoanParamsFromUrl()
   var ls = loan.loanState
+  function fmtMoney(n) { return formatMoney(n, ls.currency) }
+  // Partner limits are in drams; compare using the CBA rate for other currencies.
+  var fx = useFxRates()
+  var toAmd = amdPerUnit(fx, ls.currency || 'AMD')
   var lang = useLanguage().language
   useSeo(pageSeo('offers', lang))
 
   var offers = useMemo(function() {
     return PARTNER_OFFERS.map(function(o) {
-      var fits = ls.amount <= o.maxAmount && ls.term <= o.maxTerm
+      var fits = (!toAmd || ls.amount * toAmd <= o.maxAmount) && ls.term <= o.maxTerm
       var res = generateAmortization(ls.amount, o.rateFrom, ls.term, [], ls.loanType)
       var interest = 0; for (var i = 0; i < res.schedule.length; i++) interest += res.schedule[i].interest
       return Object.assign({}, o, { fits: fits, monthly: res.monthlyPayment, saving: loan.totalInterest - interest })
     }).sort(function(a, b) { return (b.fits - a.fits) || (a.rateFrom - b.rateFrom) })
-  }, [ls, loan.totalInterest])
+  }, [ls, loan.totalInterest, toAmd])
 
   return (
     <main className="flex-1 pt-24 pb-20 px-4 md:px-8 w-full max-w-5xl mx-auto animate-fade-up">
@@ -38,10 +42,10 @@ export default function OffersPage() {
 
       <div className="flex flex-wrap items-center gap-2 mb-6 text-sm">
         <span className="text-slate-400 font-semibold mr-1">{t(lang,'offers','yourCalc')}:</span>
-        <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 font-bold text-slate-700 dark:text-slate-200">{money(ls.amount)}</span>
+        <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 font-bold text-slate-700 dark:text-slate-200">{fmtMoney(ls.amount)}</span>
         <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 font-bold text-slate-700 dark:text-slate-200">{ls.rate}%</span>
         <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 font-bold text-slate-700 dark:text-slate-200">{ls.term} {t(lang,'calc','months')}</span>
-        <span className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 font-bold text-blue-700 dark:text-blue-300">{money(loan.monthlyPayment)}/{t(lang,'calc','months')}</span>
+        <span className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 font-bold text-blue-700 dark:text-blue-300">{fmtMoney(loan.monthlyPayment)}/{t(lang,'calc','months')}</span>
       </div>
 
       <BankLoanCompare lang={lang} />
@@ -77,12 +81,12 @@ export default function OffersPage() {
                   </div>
                   <div>
                     <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">{t(lang,'offers','estPay')}</div>
-                    <div className="text-xl font-extrabold text-slate-900 dark:text-white">{money(o.monthly)}</div>
+                    <div className="text-xl font-extrabold text-slate-900 dark:text-white">{fmtMoney(o.monthly)}</div>
                   </div>
                   <div>
                     <div className="text-[11px] uppercase tracking-wider text-slate-400 font-bold">{t(lang,'offers','save')}</div>
                     <div className={'text-xl font-extrabold ' + (o.saving > 0 ? 'text-emerald-600' : 'text-slate-400')}>
-                      {o.saving > 0 ? money(o.saving) : '—'}
+                      {o.saving > 0 ? fmtMoney(o.saving) : '—'}
                     </div>
                   </div>
                 </div>
@@ -103,7 +107,7 @@ export default function OffersPage() {
                 {(o.perks[lang] || o.perks.EN).map(function(p) {
                   return <span key={p} className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400">{p}</span>
                 })}
-                <span className="text-xs text-slate-400 px-1 py-1">{t(lang,'offers','upTo')} {money(o.maxAmount)} · {o.maxTerm} {t(lang,'calc','months')}</span>
+                <span className="text-xs text-slate-400 px-1 py-1">{t(lang,'offers','upTo')} {formatMoney(o.maxAmount, 'AMD')} · {o.maxTerm} {t(lang,'calc','months')}</span>
               </div>
             </div>
           )

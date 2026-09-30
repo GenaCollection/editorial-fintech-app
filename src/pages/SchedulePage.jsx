@@ -6,8 +6,8 @@ import { usePro } from '../context/ProContext.jsx'
 import AdSlot from '../components/AdSlot.jsx'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
+import { currencySymbol } from '../lib/currency.js'
 
-var SYM = '\u058f'
 var PER = 12
 
 // ── F: CSV export helper ──────────────────────────────────────────────────────────
@@ -18,7 +18,7 @@ function exportCSV(schedule, loanState, lang) {
   })
   var meta = [
     ['ArmFinCredit — Amortization Schedule'],
-    ['Amount', loanState.amount, 'Rate', loanState.rate + '%', 'Term', loanState.term + ' mo.', 'Type', loanState.loanType],
+    ['Amount', loanState.amount, 'Currency', loanState.currency || 'AMD', 'Rate', loanState.rate + '%', 'Term', loanState.term + ' mo.', 'Type', loanState.loanType],
     []
   ]
   var csv = meta.map(function(r) { return r.join(',') }).join('\n')
@@ -37,6 +37,7 @@ export default function SchedulePage() {
   var ctx = useLoan()
   var schedule = ctx.schedule
   var loanState = ctx.loanState
+  var SYM = currencySymbol(loanState.currency)
   var totalInterest = ctx.totalInterest
   var addExtraPayment = ctx.addExtraPayment
   var extraPayments = ctx.extraPayments

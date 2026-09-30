@@ -1,16 +1,26 @@
-import { generateAmortization } from '../context/LoanContext.jsx'
+import { generateAmortization } from './loan.js'
 
 // Rule-based loan analysis. Used as the AI advisor's offline fallback when no
 // AI provider is configured or the free quota of the provider is exhausted.
 
-var SYM = '֏'
-function money(n) { return SYM + Math.round(n).toLocaleString() }
+import { currencySymbol } from './currency.js'
+
+// Currency of the loan being analysed (set by analyzeLoan).
+var CUR = 'AMD'
+function money(n) { return currencySymbol(CUR) + Math.round(n).toLocaleString() }
+
+// "for a loan in …" per language and currency.
+var IN_CUR = {
+  EN: { AMD: 'in drams', USD: 'in US dollars', EUR: 'in euros', RUB: 'in rubles' },
+  RU: { AMD: 'в драмах', USD: 'в долларах', EUR: 'в евро', RUB: 'в рублях' },
+  AM: { AMD: 'դրամային', USD: 'դոլարային', EUR: 'եվրոյով', RUB: 'ռուբլով' }
+}
 function sumInterest(s) { var x = 0; for (var i = 0; i < s.length; i++) x += s[i].interest; return x }
 
 export function buildLoanSnapshot(ctx) {
   var ls = ctx.loanState
   return {
-    amount: ls.amount, rate: ls.rate, term: ls.term, loanType: ls.loanType,
+    amount: ls.amount, rate: ls.rate, term: ls.term, loanType: ls.loanType, currency: ls.currency || 'AMD',
     fee: ls.fee || 0, insurance: ls.insurance || 0,
     monthlyPayment: Math.round(ctx.monthlyPayment),
     totalInterest: Math.round(ctx.totalInterest),
@@ -40,8 +50,8 @@ var TXT = {
         'Differentiated saves ' + money(Math.max(0, d.annInterest - d.diffInterest)) + ' but needs a higher budget at the start.'
     },
     rate: function(d) {
-      var lvl = d.rate < 10 ? 'relatively low' : d.rate <= 16 ? 'moderate' : 'high'
-      return 'As a rough guide, ' + d.rate + '% is ' + lvl + ' for a loan in drams. Every 1 point of rate costs you about ' + money(d.perPoint) + ' over this term. ' +
+      var lvl = d.rate < d.lo ? 'relatively low' : d.rate <= d.hi ? 'moderate' : 'high'
+      return 'As a rough guide, ' + d.rate + '% is ' + lvl + ' for a loan ' + d.inCur + '. Every 1 point of rate costs you about ' + money(d.perPoint) + ' over this term. ' +
         'Compare at least 3 offers by APR, not only by the nominal rate.'
     }
   },
@@ -63,8 +73,8 @@ var TXT = {
         'Дифференцированный экономит ' + money(Math.max(0, d.annInterest - d.diffInterest)) + ', но требует большего бюджета в начале.'
     },
     rate: function(d) {
-      var lvl = d.rate < 10 ? 'относительно низкая' : d.rate <= 16 ? 'средняя' : 'высокая'
-      return 'Ориентировочно ставка ' + d.rate + '% для кредита в драмах — ' + lvl + '. Каждый 1 п.п. ставки стоит вам примерно ' + money(d.perPoint) + ' за этот срок. ' +
+      var lvl = d.rate < d.lo ? 'относительно низкая' : d.rate <= d.hi ? 'средняя' : 'высокая'
+      return 'Ориентировочно ставка ' + d.rate + '% для кредита ' + d.inCur + ' — ' + lvl + '. Каждый 1 п.п. ставки стоит вам примерно ' + money(d.perPoint) + ' за этот срок. ' +
         'Сравните минимум 3 предложения по APR, а не только по номинальной ставке.'
     }
   },
@@ -86,8 +96,8 @@ var TXT = {
         'Դիֆերենցվածը խնայում է ' + money(Math.max(0, d.annInterest - d.diffInterest)) + ', բայց սկզբում ավելի մեծ բյուջե է պահանջում։'
     },
     rate: function(d) {
-      var lvl = d.rate < 10 ? 'համեմատաբար ցածր' : d.rate <= 16 ? 'միջին' : 'բարձր'
-      return 'Մոտավոր գնահատմամբ՝ ' + d.rate + '%-ը դրամային վարկի համար ' + lvl + ' է։ Տոկոսադրույքի յուրաքանչյուր 1 կետը արժե մոտ ' + money(d.perPoint) + '։ ' +
+      var lvl = d.rate < d.lo ? 'համեմատաբար ցածր' : d.rate <= d.hi ? 'միջին' : 'բարձր'
+      return 'Մոտավոր գնահատմամբ՝ ' + d.rate + '%-ը ' + d.inCur + ' վարկի համար ' + lvl + ' է։ Տոկոսադրույքի յուրաքանչյուր 1 կետը արժե մոտ ' + money(d.perPoint) + '։ ' +
         'Համեմատեք առնվազն 3 առաջարկ ըստ APR-ի։'
     }
   }
@@ -97,6 +107,10 @@ export function analyzeLoan(snap, topic, lang) {
   var L = TXT[lang] || TXT.EN
   var a = snap.amount, r = snap.rate, n = snap.term
   var d = Object.assign({}, snap)
+  CUR = snap.currency || 'AMD'
+  // Foreign-currency loans in Armenia carry lower rates than dram loans.
+  d.lo = CUR === 'AMD' ? 10 : 7; d.hi = CUR === 'AMD' ? 16 : 11
+  d.inCur = (IN_CUR[lang] || IN_CUR.EN)[CUR] || IN_CUR.EN.AMD
   d.overpayPct = Math.round(snap.totalInterest / a * 100)
   d.aprGap = snap.apr - r
 

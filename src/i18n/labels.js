@@ -19,6 +19,9 @@ var L = {
   },
 
   calc: {
+    currency: { AM: 'Արժույթ', RU: 'Валюта', EN: 'Currency' },
+    cbaRate:  { AM: 'ԿԲ փոխարժեք', RU: 'курс ЦБ', EN: 'CBA rate' },
+    fxOnlyAmd:{ AM: 'Բանկերի առաջարկները համեմատվում են դրամով։ Փոխեք արժույթը AMD-ի՝ համեմատելու համար։', RU: 'Предложения банков сравниваются в драмах. Переключите валюту на AMD, чтобы сравнить.', EN: 'Bank offers are compared in drams. Switch the currency to AMD to compare.' },
     title:     { AM: 'Վարկային Հաշվիչ',             RU: 'Кредитный калькулятор',     EN: 'Loan Calculator' },
     desc:      { AM: 'Սահմանեք վարկի պարամետրերը', RU: 'Задайте параметры кредита', EN: 'Configure your loan parameters.' },
     params:    { AM: 'Վարկի Պարամետրեր',            RU: 'Параметры кредита',         EN: 'Loan Parameters' },

@@ -127,6 +127,20 @@ export default function BankLoanCompare(props) {
     navigate('/')
   }
 
+  // Bank offers are dram loans: other currencies get a note instead of wrong numbers.
+  if ((ls.currency || 'AMD') !== 'AMD') {
+    return (
+      <section className="mb-10">
+        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-2">{t(lang, 'offers', 'bankT')}</h2>
+        <div className="rounded-3xl border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30 p-5 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-amber-800 dark:text-amber-200 max-w-xl">{t(lang, 'calc', 'fxOnlyAmd')}</p>
+          <button type="button" onClick={function() { loan.setLoanState(function(prev) { return Object.assign({}, prev, { currency: 'AMD', amount: 5000000, fee: 0, insurance: 0 }) }) }}
+            className="px-4 py-2 rounded-xl bg-blue-700 text-white text-sm font-extrabold hover:bg-blue-800">֏ AMD</button>
+        </div>
+      </section>
+    )
+  }
+
   var visible = pro.limits.bankOffersVisible
   var open = rows.slice(0, visible); var locked = rows.slice(visible)
 

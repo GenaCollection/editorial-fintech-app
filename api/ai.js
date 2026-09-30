@@ -100,21 +100,22 @@ async function callProvider(cfg, messages, maxTokens) {
 
 function systemPrompt(lang, loan) {
   var l = loan || {}
+  var cur = ({ AMD: 'Armenian dram (AMD, ֏)', USD: 'US dollar (USD, $)', EUR: 'euro (EUR, €)', RUB: 'Russian ruble (RUB, ₽)' })[l.currency] || 'Armenian dram (AMD, ֏)'
   var extras = Array.isArray(l.extraPayments) ? l.extraPayments.slice(0, 24).map(function(e) {
     return 'month ' + num(e.month) + ': ' + num(e.amount)
   }).join('; ') : ''
   return [
-    'You are ArmFinCredit, a friendly and precise loan advisor inside a loan calculator for Armenia. Currency is Armenian dram (AMD, symbol ֏).',
+    'You are ArmFinCredit, a friendly and precise loan advisor inside a loan calculator for Armenia. The loan currency is ' + cur + '.',
     'Answer in ' + (LANG_NAME[lang] || 'English') + '. Be concise: at most ~150 words, short paragraphs or bullets, concrete numbers.',
     'Use the user\'s current calculation below. Do not invent specific bank names, bank rates or promotions. If asked for something outside personal loans and budgeting, briefly steer back.',
     'End with one practical next step. You are not a licensed financial advisor.',
     '',
     'Current calculation:',
-    '- amount: ' + num(l.amount) + ' AMD',
+    '- amount: ' + num(l.amount) + ' ' + cur,
     '- nominal rate: ' + num(l.rate) + '% per year, term: ' + num(l.term) + ' months, type: ' + (l.loanType === 'differentiated' ? 'differentiated' : 'annuity'),
-    '- origination fee: ' + num(l.fee) + ' AMD, insurance: ' + num(l.insurance) + ' AMD/month',
-    '- monthly payment: ' + num(l.monthlyPayment) + ' AMD' + (l.loanType === 'differentiated' ? ' (first payment, then decreasing)' : ''),
-    '- total interest: ' + num(l.totalInterest) + ' AMD, total paid: ' + num(l.totalPayment) + ' AMD, APR: ' + num(l.apr) + '%',
+    '- origination fee: ' + num(l.fee) + ' ' + cur + ', insurance: ' + num(l.insurance) + ' ' + cur + '/month',
+    '- monthly payment: ' + num(l.monthlyPayment) + ' ' + cur + (l.loanType === 'differentiated' ? ' (first payment, then decreasing)' : ''),
+    '- total interest: ' + num(l.totalInterest) + ' ' + cur + ', total paid: ' + num(l.totalPayment) + ' ' + cur + ', APR: ' + num(l.apr) + '%',
     '- number of payments: ' + num(l.payments) + (extras ? ', extra payments: ' + extras : '')
   ].join('\n')
 }

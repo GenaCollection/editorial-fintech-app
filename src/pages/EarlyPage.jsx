@@ -7,13 +7,14 @@ import { usePro } from '../context/ProContext.jsx'
 import AdSlot from '../components/AdSlot.jsx'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
+import { currencySymbol, currencyInfo } from '../lib/currency.js'
 import { localPathFor } from '../seo/localPages.js'
 
-var SYM = '\u058f'
 
 export default function EarlyPage() {
   var ctx = useLoan()
   var loanState = ctx.loanState
+  var SYM = currencySymbol(loanState.currency)
   var monthlyPayment = ctx.monthlyPayment
   var totalInterest = ctx.totalInterest
   var schedule = ctx.schedule
@@ -22,7 +23,7 @@ export default function EarlyPage() {
   var pro = usePro()
 
   var scenarios = useMemo(function() {
-    return [50000, 100000, 200000].map(function(extra) {
+    return currencyInfo(loanState.currency).extras.slice(0, 3).map(function(extra) {
       var eps = []
       for (var i = 1; i <= loanState.term; i++) { eps.push({ month: i, amount: extra }) }
       var res = generateAmortization(loanState.amount, loanState.rate, loanState.term, eps, loanState.loanType)

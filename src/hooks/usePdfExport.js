@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { t } from '../i18n/labels.js'
+import { pdfSymbol } from '../lib/currency.js'
 
-var SYM = '\u058f'
 var SITE = 'www.armfincredit.site'
 function fmt(n) { return Math.round(n).toLocaleString('en-US') }
 function fmtR(n) { return Number(n).toFixed(2) }
@@ -105,6 +105,7 @@ export function usePdfExport(lang) {
       var y = mt
 
       var loanState      = data.loanState
+      var SYM            = pdfSymbol(loanState.currency)
       var schedule       = data.schedule
       var monthlyPayment = data.monthlyPayment
       var totalInterest  = data.totalInterest

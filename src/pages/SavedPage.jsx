@@ -8,8 +8,8 @@ import { usePro } from '../context/ProContext.jsx'
 import AdSlot from '../components/AdSlot.jsx'
 import { pageSeo } from '../seo/meta.js'
 import { useSeo } from '../seo/Seo.jsx'
+import { currencySymbol } from '../lib/currency.js'
 
-var SYM = '\u058f'
 
 function formatDate(iso, lang) {
   try {
@@ -33,7 +33,7 @@ export default function SavedPage() {
   var confirmId = confirmArr[0]; var setConfirmId = confirmArr[1]
 
   function handleLoad(entry) {
-    setLoanState(entry.loanState)
+    setLoanState(Object.assign({ currency: 'AMD' }, entry.loanState))
     navigate('/')
   }
 
@@ -105,6 +105,7 @@ export default function SavedPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {saves.map(function(entry) {
               var ls = entry.loanState
+              var SYM = currencySymbol(ls.currency)
               var isDiff = ls.loanType === 'differentiated'
               return (
                 <div key={entry.id}
